@@ -1,18 +1,12 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.vepanimas.intellijprisma</id>
-    <name>intellij-prisma</name>
+    <id>com.github.vepanimas.intellij.prisma</id>
+    <name>Prisma</name>
     <vendor>vepanimas</vendor>
+    <resource-bundle>messages.PrismaBundle</resource-bundle>
 
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.vepanimas.intellijprisma.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.vepanimas.intellijprisma.services.MyProjectService"/>
     </extensions>
-
-    <applicationListeners>
-        <listener class="com.github.vepanimas.intellijprisma.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
 </idea-plugin>

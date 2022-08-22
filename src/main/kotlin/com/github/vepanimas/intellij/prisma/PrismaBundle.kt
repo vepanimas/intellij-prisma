@@ -1,13 +1,13 @@
-package com.github.vepanimas.intellijprisma
+package com.github.vepanimas.intellij.prisma
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 
 @NonNls
-private const val BUNDLE = "messages.MyBundle"
+private const val BUNDLE = "messages.PrismaBundle"
 
-object MyBundle : DynamicBundle(BUNDLE) {
+object PrismaBundle : DynamicBundle(BUNDLE) {
 
     @Suppress("SpreadOperator")
     @JvmStatic
