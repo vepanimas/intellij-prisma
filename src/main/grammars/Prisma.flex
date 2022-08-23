@@ -27,7 +27,7 @@ WHITE_SPACE      = {WHITE_SPACE_CHAR}+
 DIGIT            = [:digit:]
 
 NAME_START       = [a-zA-Z]
-NAME_BODY        = [a-zA-z\-_]
+NAME_BODY        = [a-zA-Z\-_]
 IDENTIFIER       = {NAME_START} ({NAME_BODY})*
 
 STRING_LITERAL   = \"([^\\\"\r\n]|\\[^\r\n])*\"?

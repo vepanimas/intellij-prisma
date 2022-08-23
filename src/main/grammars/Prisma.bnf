@@ -39,7 +39,7 @@
 
     STRING_LITERAL  = 'regexp:\"([^\\\"\r\n]|\\[^\r\n])*\"?'
     NUMERIC_LITERAL = 'regexp:-?\d+(\.\d+)?'
-    IDENTIFIER      = 'regexp:[a-zA-z][a-zA-Z\-_]*'
+    IDENTIFIER      = 'regexp:[a-zA-Z][a-zA-Z\-_]*'
     WHITE_SPACE     = 'regexp:\s+'
   ]
 
