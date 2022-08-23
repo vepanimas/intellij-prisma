@@ -15,5 +15,9 @@
                   fieldName="INSTANCE"/>
         <lang.parserDefinition language="Prisma"
                                implementationClass="com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition"/>
+
+        <lang.syntaxHighlighter language="Prisma"
+                                implementationClass="com.vepanimas.intellij.prisma.ide.highlighting.PrismaHighlighter"/>
+        <colorSettingsPage implementation="com.vepanimas.intellij.prisma.ide.highlighting.PrismaColorSettingsPage"/>
     </extensions>
 </idea-plugin>
