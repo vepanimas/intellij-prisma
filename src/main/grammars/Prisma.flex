@@ -5,6 +5,7 @@ import com.intellij.psi.tree.IElementType;
 import static com.intellij.psi.TokenType.*;
 
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
+import static com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition.*;
 
 %%
 
@@ -65,5 +66,8 @@ LINE_COMMENT = "//" .*
 {NUMERIC_LITERAL}  { return NUMERIC_LITERAL; }
 {STRING_LITERAL}   { return STRING_LITERAL; }
 {WHITE_SPACE}      { return WHITE_SPACE; }
+
+{DOC_COMMENT}      { return DOC_COMMENT; }
+{LINE_COMMENT}     { return LINE_COMMENT; }
 
 [^]                { return BAD_CHARACTER; }

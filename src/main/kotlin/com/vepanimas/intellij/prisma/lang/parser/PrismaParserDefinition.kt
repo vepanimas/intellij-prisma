@@ -1,6 +1,5 @@
 package com.vepanimas.intellij.prisma.lang.parser
 
-import com.vepanimas.intellij.prisma.lang.lexer.PrismaLexer
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
 import com.intellij.lang.PsiParser
@@ -11,6 +10,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
+import com.vepanimas.intellij.prisma.lang.lexer.PrismaLexer
 import com.vepanimas.intellij.prisma.lang.psi.*
 
 class PrismaParserDefinition : ParserDefinition {
@@ -27,4 +27,12 @@ class PrismaParserDefinition : ParserDefinition {
     override fun createElement(node: ASTNode?): PsiElement = PrismaElementTypes.Factory.createElement(node)
 
     override fun createFile(viewProvider: FileViewProvider): PsiFile = PrismaFile(viewProvider)
+
+    companion object {
+        @JvmField
+        val DOC_COMMENT = PrismaTokenType("DOC_COMMENT")
+
+        @JvmField
+        val LINE_COMMENT = PrismaTokenType("LINE_COMMENT")
+    }
 }
