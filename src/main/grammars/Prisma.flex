@@ -1,10 +1,10 @@
-package com.github.vepanimas.intellij.prisma.lang.lexer;
+package com.vepanimas.intellij.prisma.lang.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-
-import static com.github.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import static com.intellij.psi.TokenType.*;
+
+import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 
 %%
 

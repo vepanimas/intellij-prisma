@@ -1,17 +1,17 @@
 {
-  parserClass='com.github.vepanimas.intellij.prisma.lang.parser.PrismaParser'
+  parserClass='com.vepanimas.intellij.prisma.lang.parser.PrismaParser'
 
-  implements='com.github.vepanimas.intellij.prisma.lang.psi.PrismaElement'
-  extends='com.github.vepanimas.intellij.prisma.lang.psi.impl.PrismaElementImpl'
+  implements='com.vepanimas.intellij.prisma.lang.psi.PrismaElement'
+  extends='com.vepanimas.intellij.prisma.lang.psi.impl.PrismaElementImpl'
 
-  elementTypeHolderClass='com.github.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes'
-  elementTypeClass='com.github.vepanimas.intellij.prisma.lang.psi.PrismaElementType'
-  tokenTypeClass='com.github.vepanimas.intellij.prisma.lang.psi.PrismaTokenType'
+  elementTypeHolderClass='com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes'
+  elementTypeClass='com.vepanimas.intellij.prisma.lang.psi.PrismaElementType'
+  tokenTypeClass='com.vepanimas.intellij.prisma.lang.psi.PrismaTokenType'
 
   psiClassPrefix='Prisma'
   psiImplClassSuffix='Impl'
-  psiPackage='com.github.vepanimas.intellij.prisma.lang.psi'
-  psiImplPackage='com.github.vepanimas.intellij.prisma.lang.psi.impl'
+  psiPackage='com.vepanimas.intellij.prisma.lang.psi'
+  psiImplPackage='com.vepanimas.intellij.prisma.lang.psi.impl'
 
   tokens=[
     MODEL = 'model'

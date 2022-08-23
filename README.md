@@ -1,8 +1,8 @@
 # intellij-prisma
 
 ![Build](https://github.com/vepanimas/intellij-prisma/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/com.github.vepanimas.intellij.prisma.svg)](https://plugins.jetbrains.com/plugin/com.github.vepanimas.intellij.prisma)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/com.github.vepanimas.intellij.prisma.svg)](https://plugins.jetbrains.com/plugin/com.github.vepanimas.intellij.prisma)
+[![Version](https://img.shields.io/jetbrains/plugin/v/com.vepanimas.intellij.prisma.svg)](https://plugins.jetbrains.com/plugin/com.vepanimas.intellij.prisma)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/com.vepanimas.intellij.prisma.svg)](https://plugins.jetbrains.com/plugin/com.vepanimas.intellij.prisma)
 
 <!-- Plugin description -->
 Adds support for [Prisma](https://www.prisma.io/) language (.prisma).
