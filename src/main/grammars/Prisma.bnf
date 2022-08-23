@@ -14,12 +14,95 @@
   psiImplPackage='com.vepanimas.intellij.prisma.lang.psi.impl'
 
   tokens=[
-    MODEL = 'model'
+    MODEL           = 'model'
+    TYPE            = 'type'
+    ENUM            = 'enum'
+    GENERATOR       = 'generator'
+    DATASOURCE      = 'datasource'
+
+    UNSUPPORTED     = 'Unsupported'
+
+    LBRACE          = '{'
+    RBRACE          = '}'
+    LPAREN          = '('
+    RPAREN          = ')'
+    LBRACKET        = '['
+    RBRACKET        = ']'
+    EQ              = '='
+    DOT             = '.'
+    COLON           = ':'
+    QUEST           = '?'
+    EXCL            = '!'
+    AT              = '@'
+    ATAT            = '@@'
+    COMMA           = ','
+
+    STRING_LITERAL  = 'regexp:\"([^\\\"\r\n]|\\[^\r\n])*\"?'
+    NUMERIC_LITERAL = 'regexp:-?\d+(\.\d+)?'
+    IDENTIFIER      = 'regexp:[a-zA-z][a-zA-Z\-_]*'
+    WHITE_SPACE     = 'regexp:\s+'
   ]
+
+  pin("ModelDeclaration|EnumDeclaration|ConfigBlock|TypeAlias") = 3
 }
 
-PrismaFile ::= Declaration*
+Schema ::= Declaration*
 
-Declaration ::= ModelDeclaration
+private Declaration ::=
+    ModelDeclaration
+    | EnumDeclaration
+    | ConfigBlock
+    | TypeAlias
 
-ModelDeclaration ::= MODEL IDENTIFIER
+ModelDeclaration ::= (MODEL | TYPE) Identifier '{' (FieldDeclaration | BlockAttribute)* '}'
+FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute*
+
+EnumDeclaration ::= ENUM Identifier '{' (EnumValueDeclaration | BlockAttribute)* '}'
+EnumValueDeclaration ::= Identifier FieldAttribute*
+
+ConfigBlock ::= (DATASOURCE | GENERATOR) Identifier '{' KeyValue* '}'
+KeyValue ::= Identifier '=' Expression
+
+TypeAlias ::= TYPE Identifier '=' BaseType FieldAttribute*
+
+/* Types */
+FieldType ::=
+    UnsupportedOptionalListType
+    | ListType
+    | OptionalType
+    | LegacyRequiredType
+    | LegacyListType
+    | BaseType
+
+UnsupportedType ::= UNSUPPORTED '(' STRING_LITERAL ')'
+BaseType ::= UnsupportedType | Identifier
+UnsupportedOptionalListType ::= BaseType '[' ']' '?'
+ListType ::= BaseType '[' ']'
+OptionalType ::= BaseType '?'
+LegacyRequiredType ::= BaseType '!'
+LegacyListType ::= '[' BaseType ']'
+
+/* Attributes */
+BlockAttribute ::= '@@' Path ArgumentsList?
+FieldAttribute ::= '@' Path ArgumentsList?
+
+/* Arguments */
+ArgumentsList ::= '(' [Argument (',' Argument)*] ','? ')'
+Argument ::= NamedArgument | EmptyArgument | Expression
+EmptyArgument ::= Identifier ':'
+NamedArgument ::= Identifier ':' Expression
+
+/* Expressions */
+Expression ::=
+    FunctionCall
+    | ArrayExpression
+    | NUMERIC_LITERAL
+    | STRING_LITERAL
+    | Path
+
+FunctionCall ::= Path ArgumentsList
+ArrayExpression ::= '[' [Expression (',' Expression)*] ']'
+
+/* Identifiers */
+private Identifier ::= IDENTIFIER
+Path ::= Identifier ('.' Path?)*

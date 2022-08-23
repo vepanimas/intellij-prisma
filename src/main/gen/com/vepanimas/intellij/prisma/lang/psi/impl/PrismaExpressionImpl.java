@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaModelDeclarationImpl extends PrismaElementImpl implements PrismaModelDeclaration {
+public class PrismaExpressionImpl extends PrismaElementImpl implements PrismaExpression {
 
-  public PrismaModelDeclarationImpl(@NotNull ASTNode node) {
+  public PrismaExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PrismaVisitor visitor) {
-    visitor.visitModelDeclaration(this);
+    visitor.visitExpression(this);
   }
 
   @Override
@@ -27,21 +27,33 @@ public class PrismaModelDeclarationImpl extends PrismaElementImpl implements Pri
   }
 
   @Override
-  @NotNull
-  public List<PrismaBlockAttribute> getBlockAttributeList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaBlockAttribute.class);
+  @Nullable
+  public PrismaArrayExpression getArrayExpression() {
+    return findChildByClass(PrismaArrayExpression.class);
   }
 
   @Override
-  @NotNull
-  public List<PrismaFieldDeclaration> getFieldDeclarationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaFieldDeclaration.class);
+  @Nullable
+  public PrismaFunctionCall getFunctionCall() {
+    return findChildByClass(PrismaFunctionCall.class);
   }
 
   @Override
-  @NotNull
-  public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+  @Nullable
+  public PrismaPath getPath() {
+    return findChildByClass(PrismaPath.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getNumericLiteral() {
+    return findChildByType(NUMERIC_LITERAL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getStringLiteral() {
+    return findChildByType(STRING_LITERAL);
   }
 
 }

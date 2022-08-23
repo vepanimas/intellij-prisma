@@ -5,15 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaModelDeclaration extends PrismaElement {
+public interface PrismaFunctionCall extends PrismaElement {
 
   @NotNull
-  List<PrismaBlockAttribute> getBlockAttributeList();
+  PrismaArgumentsList getArgumentsList();
 
   @NotNull
-  List<PrismaFieldDeclaration> getFieldDeclarationList();
-
-  @NotNull
-  PsiElement getIdentifier();
+  PrismaPath getPath();
 
 }

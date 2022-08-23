@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaModelDeclarationImpl extends PrismaElementImpl implements PrismaModelDeclaration {
+public class PrismaEnumDeclarationImpl extends PrismaElementImpl implements PrismaEnumDeclaration {
 
-  public PrismaModelDeclarationImpl(@NotNull ASTNode node) {
+  public PrismaEnumDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PrismaVisitor visitor) {
-    visitor.visitModelDeclaration(this);
+    visitor.visitEnumDeclaration(this);
   }
 
   @Override
@@ -34,8 +34,8 @@ public class PrismaModelDeclarationImpl extends PrismaElementImpl implements Pri
 
   @Override
   @NotNull
-  public List<PrismaFieldDeclaration> getFieldDeclarationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaFieldDeclaration.class);
+  public List<PrismaEnumValueDeclaration> getEnumValueDeclarationList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaEnumValueDeclaration.class);
   }
 
   @Override

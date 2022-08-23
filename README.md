@@ -5,7 +5,7 @@
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/com.vepanimas.intellij.prisma.svg)](https://plugins.jetbrains.com/plugin/com.vepanimas.intellij.prisma)
 
 <!-- Plugin description -->
-Adds support for [Prisma](https://www.prisma.io/) language (.prisma).
+Adds support for [Prisma](https://www.prisma.io/) language.
 <!-- Plugin description end -->
 
 ## Installation

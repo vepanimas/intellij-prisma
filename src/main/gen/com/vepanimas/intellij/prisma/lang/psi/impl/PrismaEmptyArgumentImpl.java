@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaDeclarationImpl extends PrismaElementImpl implements PrismaDeclaration {
+public class PrismaEmptyArgumentImpl extends PrismaElementImpl implements PrismaEmptyArgument {
 
-  public PrismaDeclarationImpl(@NotNull ASTNode node) {
+  public PrismaEmptyArgumentImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PrismaVisitor visitor) {
-    visitor.visitDeclaration(this);
+    visitor.visitEmptyArgument(this);
   }
 
   @Override
@@ -28,8 +28,8 @@ public class PrismaDeclarationImpl extends PrismaElementImpl implements PrismaDe
 
   @Override
   @NotNull
-  public PrismaModelDeclaration getModelDeclaration() {
-    return findNotNullChildByClass(PrismaModelDeclaration.class);
+  public PsiElement getIdentifier() {
+    return findNotNullChildByType(IDENTIFIER);
   }
 
 }
