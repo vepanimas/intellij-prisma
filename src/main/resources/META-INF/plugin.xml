@@ -13,5 +13,7 @@
                   implementationClass="com.github.vepanimas.intellij.prisma.lang.PrismaFileType"
                   extensions="prisma"
                   fieldName="INSTANCE"/>
+        <lang.parserDefinition language="Prisma"
+                               implementationClass="com.github.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition"/>
     </extensions>
 </idea-plugin>

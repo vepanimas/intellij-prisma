@@ -1,0 +1,25 @@
+{
+  parserClass='com.github.vepanimas.intellij.prisma.lang.parser.PrismaParser'
+
+  implements='com.github.vepanimas.intellij.prisma.lang.psi.PrismaElement'
+  extends='com.github.vepanimas.intellij.prisma.lang.psi.impl.PrismaElementImpl'
+
+  elementTypeHolderClass='com.github.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes'
+  elementTypeClass='com.github.vepanimas.intellij.prisma.lang.psi.PrismaElementType'
+  tokenTypeClass='com.github.vepanimas.intellij.prisma.lang.psi.PrismaTokenType'
+
+  psiClassPrefix='Prisma'
+  psiImplClassSuffix='Impl'
+  psiPackage='com.github.vepanimas.intellij.prisma.lang.psi'
+  psiImplPackage='com.github.vepanimas.intellij.prisma.lang.psi.impl'
+
+  tokens=[
+    MODEL = 'model'
+  ]
+}
+
+PrismaFile ::= Declaration*
+
+Declaration ::= ModelDeclaration
+
+ModelDeclaration ::= MODEL IDENTIFIER

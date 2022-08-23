@@ -23,6 +23,20 @@ repositories {
     mavenCentral()
 }
 
+idea {
+    module {
+        generatedSourceDirs.add(file("src/main/gen"))
+    }
+}
+
+java {
+    sourceSets {
+        main {
+            java.srcDir("src/main/gen")
+        }
+    }
+}
+
 // Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
 kotlin {
     jvmToolchain {
