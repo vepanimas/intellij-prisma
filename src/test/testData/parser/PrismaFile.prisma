@@ -45,6 +45,7 @@ model Course {
     members       CourseEnrollment[]
     tests         Test[]
     feedback      CourseFeedback[]
+    unsupported   Unsupported("MyCustomType")
 
     @@fulltext([name, courseDetails])
 }

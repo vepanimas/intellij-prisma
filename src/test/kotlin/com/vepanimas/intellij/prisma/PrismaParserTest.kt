@@ -9,8 +9,6 @@ class PrismaParserTest: ParsingTestCase(
     PrismaParserDefinition()
 ) {
     override fun getTestDataPath(): String = "src/test/testData"
-
-    override fun includeRanges(): Boolean = true
-
+    
     fun testPrismaFile() = doTest(true, true)
 }
