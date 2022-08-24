@@ -7,6 +7,7 @@ import com.intellij.openapi.options.OptionsBundle
 import com.intellij.openapi.options.colors.AttributesDescriptor
 import com.intellij.openapi.options.colors.ColorDescriptor
 import com.intellij.openapi.options.colors.ColorSettingsPage
+import com.vepanimas.intellij.prisma.PrismaBundle
 import com.vepanimas.intellij.prisma.PrismaIcons
 import com.vepanimas.intellij.prisma.lang.PrismaLanguage
 import javax.swing.Icon
@@ -65,13 +66,31 @@ class PrismaColorSettingsPage : ColorSettingsPage {
                 OptionsBundle.messagePointer("options.language.defaults.operation"),
                 PrismaColors.OPERATION_SIGN
             ),
-            AttributesDescriptor("Type name", PrismaColors.TYPE_NAME),
-            AttributesDescriptor("Type reference", PrismaColors.TYPE_REFERENCE),
-            AttributesDescriptor("Attribute", PrismaColors.ATTRIBUTE),
-            AttributesDescriptor("Parameter", PrismaColors.PARAMETER),
-            AttributesDescriptor("Field name", PrismaColors.FIELD_NAME),
-            AttributesDescriptor("Field reference", PrismaColors.FIELD_REFERENCE),
-            AttributesDescriptor("Function", PrismaColors.FUNCTION),
+            AttributesDescriptor(
+                PrismaBundle.messagePointer("prisma.color.settings.type.name"),
+                PrismaColors.TYPE_NAME
+            ),
+            AttributesDescriptor(
+                PrismaBundle.messagePointer("prisma.color.settings.type.reference"),
+                PrismaColors.TYPE_REFERENCE
+            ),
+            AttributesDescriptor(
+                PrismaBundle.messagePointer("prisma.color.settings.attribute"),
+                PrismaColors.ATTRIBUTE
+            ),
+            AttributesDescriptor(
+                PrismaBundle.messagePointer("prisma.color.settings.parameter"),
+                PrismaColors.PARAMETER
+            ),
+            AttributesDescriptor(
+                PrismaBundle.messagePointer("prisma.color.settings.field.name"),
+                PrismaColors.FIELD_NAME
+            ),
+            AttributesDescriptor(
+                PrismaBundle.messagePointer("prisma.color.settings.field.reference"),
+                PrismaColors.FIELD_REFERENCE
+            ),
+            AttributesDescriptor(PrismaBundle.messagePointer("prisma.color.settings.function"), PrismaColors.FUNCTION),
         )
 
         private val additionalDescriptors = mapOf(
