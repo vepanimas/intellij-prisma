@@ -39,28 +39,36 @@
 
     STRING_LITERAL  = 'regexp:\"([^\\\"\r\n]|\\[^\r\n])*\"?'
     NUMERIC_LITERAL = 'regexp:-?\d+(\.\d+)?'
-    IDENTIFIER      = 'regexp:[a-zA-Z][a-zA-Z\-_]*'
+    IDENTIFIER      = 'regexp:[a-zA-Z][a-zA-Z0-9\-_]*'
     WHITE_SPACE     = 'regexp:\s+'
   ]
 
-  pin("ModelDeclaration|EnumDeclaration|ConfigBlock|TypeAlias") = 3
+  implements('(Model|Type|Enum|Datasource|Generator)Declaration|TypeAlias') = "com.vepanimas.intellij.prisma.lang.psi.PrismaDeclaration"
 }
 
 Schema ::= Declaration*
 
 private Declaration ::=
     ModelDeclaration
+    | TypeDeclaration
     | EnumDeclaration
-    | ConfigBlock
+    | DatasourceDeclaration
+    | GeneratorDeclaration
     | TypeAlias
 
-ModelDeclaration ::= (MODEL | TYPE) Identifier '{' (FieldDeclaration | BlockAttribute)* '}'
+ModelDeclaration ::= MODEL Identifier FieldDeclarationBlock
+TypeDeclaration ::= TYPE Identifier FieldDeclarationBlock
+
+private FieldDeclarationBlock ::= '{' (FieldDeclaration | BlockAttribute)* '}'
 FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute*
 
 EnumDeclaration ::= ENUM Identifier '{' (EnumValueDeclaration | BlockAttribute)* '}'
 EnumValueDeclaration ::= Identifier FieldAttribute*
 
-ConfigBlock ::= (DATASOURCE | GENERATOR) Identifier '{' KeyValue* '}'
+DatasourceDeclaration ::= DATASOURCE Identifier KeyValueBlock
+GeneratorDeclaration ::= GENERATOR Identifier KeyValueBlock
+
+private KeyValueBlock ::= '{' KeyValue* '}'
 KeyValue ::= Identifier '=' Expression
 
 TypeAlias ::= TYPE Identifier '=' BaseType FieldAttribute*

@@ -13,7 +13,7 @@ public interface PrismaElementTypes {
   IElementType ARRAY_EXPRESSION = new PrismaElementType("ARRAY_EXPRESSION");
   IElementType BASE_TYPE = new PrismaElementType("BASE_TYPE");
   IElementType BLOCK_ATTRIBUTE = new PrismaElementType("BLOCK_ATTRIBUTE");
-  IElementType CONFIG_BLOCK = new PrismaElementType("CONFIG_BLOCK");
+  IElementType DATASOURCE_DECLARATION = new PrismaElementType("DATASOURCE_DECLARATION");
   IElementType EMPTY_ARGUMENT = new PrismaElementType("EMPTY_ARGUMENT");
   IElementType ENUM_DECLARATION = new PrismaElementType("ENUM_DECLARATION");
   IElementType ENUM_VALUE_DECLARATION = new PrismaElementType("ENUM_VALUE_DECLARATION");
@@ -22,6 +22,7 @@ public interface PrismaElementTypes {
   IElementType FIELD_DECLARATION = new PrismaElementType("FIELD_DECLARATION");
   IElementType FIELD_TYPE = new PrismaElementType("FIELD_TYPE");
   IElementType FUNCTION_CALL = new PrismaElementType("FUNCTION_CALL");
+  IElementType GENERATOR_DECLARATION = new PrismaElementType("GENERATOR_DECLARATION");
   IElementType KEY_VALUE = new PrismaElementType("KEY_VALUE");
   IElementType LEGACY_LIST_TYPE = new PrismaElementType("LEGACY_LIST_TYPE");
   IElementType LEGACY_REQUIRED_TYPE = new PrismaElementType("LEGACY_REQUIRED_TYPE");
@@ -31,6 +32,7 @@ public interface PrismaElementTypes {
   IElementType OPTIONAL_TYPE = new PrismaElementType("OPTIONAL_TYPE");
   IElementType PATH = new PrismaElementType("PATH");
   IElementType TYPE_ALIAS = new PrismaElementType("TYPE_ALIAS");
+  IElementType TYPE_DECLARATION = new PrismaElementType("TYPE_DECLARATION");
   IElementType UNSUPPORTED_OPTIONAL_LIST_TYPE = new PrismaElementType("UNSUPPORTED_OPTIONAL_LIST_TYPE");
   IElementType UNSUPPORTED_TYPE = new PrismaElementType("UNSUPPORTED_TYPE");
 
@@ -76,8 +78,8 @@ public interface PrismaElementTypes {
       else if (type == BLOCK_ATTRIBUTE) {
         return new PrismaBlockAttributeImpl(node);
       }
-      else if (type == CONFIG_BLOCK) {
-        return new PrismaConfigBlockImpl(node);
+      else if (type == DATASOURCE_DECLARATION) {
+        return new PrismaDatasourceDeclarationImpl(node);
       }
       else if (type == EMPTY_ARGUMENT) {
         return new PrismaEmptyArgumentImpl(node);
@@ -102,6 +104,9 @@ public interface PrismaElementTypes {
       }
       else if (type == FUNCTION_CALL) {
         return new PrismaFunctionCallImpl(node);
+      }
+      else if (type == GENERATOR_DECLARATION) {
+        return new PrismaGeneratorDeclarationImpl(node);
       }
       else if (type == KEY_VALUE) {
         return new PrismaKeyValueImpl(node);
@@ -129,6 +134,9 @@ public interface PrismaElementTypes {
       }
       else if (type == TYPE_ALIAS) {
         return new PrismaTypeAliasImpl(node);
+      }
+      else if (type == TYPE_DECLARATION) {
+        return new PrismaTypeDeclarationImpl(node);
       }
       else if (type == UNSUPPORTED_OPTIONAL_LIST_TYPE) {
         return new PrismaUnsupportedOptionalListTypeImpl(node);

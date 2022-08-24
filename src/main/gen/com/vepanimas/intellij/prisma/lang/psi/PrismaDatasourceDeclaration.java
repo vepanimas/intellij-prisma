@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaConfigBlock extends PrismaElement {
+public interface PrismaDatasourceDeclaration extends PrismaDeclaration {
 
   @NotNull
   List<PrismaKeyValue> getKeyValueList();

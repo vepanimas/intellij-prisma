@@ -199,53 +199,34 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (DATASOURCE | GENERATOR) Identifier '{' KeyValue* '}'
-  public static boolean ConfigBlock(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ConfigBlock")) return false;
-    if (!nextTokenIs(b, "<config block>", DATASOURCE, GENERATOR)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, CONFIG_BLOCK, "<config block>");
-    r = ConfigBlock_0(b, l + 1);
-    r = r && Identifier(b, l + 1);
-    r = r && consumeToken(b, LBRACE);
-    p = r; // pin = 3
-    r = r && report_error_(b, ConfigBlock_3(b, l + 1));
-    r = p && consumeToken(b, RBRACE) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // DATASOURCE | GENERATOR
-  private static boolean ConfigBlock_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ConfigBlock_0")) return false;
+  // DATASOURCE Identifier KeyValueBlock
+  public static boolean DatasourceDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "DatasourceDeclaration")) return false;
+    if (!nextTokenIs(b, DATASOURCE)) return false;
     boolean r;
+    Marker m = enter_section_(b);
     r = consumeToken(b, DATASOURCE);
-    if (!r) r = consumeToken(b, GENERATOR);
+    r = r && Identifier(b, l + 1);
+    r = r && KeyValueBlock(b, l + 1);
+    exit_section_(b, m, DATASOURCE_DECLARATION, r);
     return r;
-  }
-
-  // KeyValue*
-  private static boolean ConfigBlock_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ConfigBlock_3")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!KeyValue(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "ConfigBlock_3", c)) break;
-    }
-    return true;
   }
 
   /* ********************************************************** */
   // ModelDeclaration
+  //     | TypeDeclaration
   //     | EnumDeclaration
-  //     | ConfigBlock
+  //     | DatasourceDeclaration
+  //     | GeneratorDeclaration
   //     | TypeAlias
   static boolean Declaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Declaration")) return false;
     boolean r;
     r = ModelDeclaration(b, l + 1);
+    if (!r) r = TypeDeclaration(b, l + 1);
     if (!r) r = EnumDeclaration(b, l + 1);
-    if (!r) r = ConfigBlock(b, l + 1);
+    if (!r) r = DatasourceDeclaration(b, l + 1);
+    if (!r) r = GeneratorDeclaration(b, l + 1);
     if (!r) r = TypeAlias(b, l + 1);
     return r;
   }
@@ -268,16 +249,15 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   public static boolean EnumDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumDeclaration")) return false;
     if (!nextTokenIs(b, ENUM)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, ENUM_DECLARATION, null);
+    boolean r;
+    Marker m = enter_section_(b);
     r = consumeToken(b, ENUM);
     r = r && Identifier(b, l + 1);
     r = r && consumeToken(b, LBRACE);
-    p = r; // pin = 3
-    r = r && report_error_(b, EnumDeclaration_3(b, l + 1));
-    r = p && consumeToken(b, RBRACE) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    r = r && EnumDeclaration_3(b, l + 1);
+    r = r && consumeToken(b, RBRACE);
+    exit_section_(b, m, ENUM_DECLARATION, r);
+    return r;
   }
 
   // (EnumValueDeclaration | BlockAttribute)*
@@ -405,6 +385,40 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // '{' (FieldDeclaration | BlockAttribute)* '}'
+  static boolean FieldDeclarationBlock(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FieldDeclarationBlock")) return false;
+    if (!nextTokenIs(b, LBRACE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LBRACE);
+    r = r && FieldDeclarationBlock_1(b, l + 1);
+    r = r && consumeToken(b, RBRACE);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (FieldDeclaration | BlockAttribute)*
+  private static boolean FieldDeclarationBlock_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FieldDeclarationBlock_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!FieldDeclarationBlock_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "FieldDeclarationBlock_1", c)) break;
+    }
+    return true;
+  }
+
+  // FieldDeclaration | BlockAttribute
+  private static boolean FieldDeclarationBlock_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FieldDeclarationBlock_1_0")) return false;
+    boolean r;
+    r = FieldDeclaration(b, l + 1);
+    if (!r) r = BlockAttribute(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
   // UnsupportedOptionalListType
   //     | ListType
   //     | OptionalType
@@ -439,6 +453,20 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // GENERATOR Identifier KeyValueBlock
+  public static boolean GeneratorDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "GeneratorDeclaration")) return false;
+    if (!nextTokenIs(b, GENERATOR)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, GENERATOR);
+    r = r && Identifier(b, l + 1);
+    r = r && KeyValueBlock(b, l + 1);
+    exit_section_(b, m, GENERATOR_DECLARATION, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // IDENTIFIER
   static boolean Identifier(PsiBuilder b, int l) {
     return consumeToken(b, IDENTIFIER);
@@ -456,6 +484,31 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     r = r && Expression(b, l + 1);
     exit_section_(b, m, KEY_VALUE, r);
     return r;
+  }
+
+  /* ********************************************************** */
+  // '{' KeyValue* '}'
+  static boolean KeyValueBlock(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "KeyValueBlock")) return false;
+    if (!nextTokenIs(b, LBRACE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LBRACE);
+    r = r && KeyValueBlock_1(b, l + 1);
+    r = r && consumeToken(b, RBRACE);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // KeyValue*
+  private static boolean KeyValueBlock_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "KeyValueBlock_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!KeyValue(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "KeyValueBlock_1", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */
@@ -499,48 +552,16 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (MODEL | TYPE) Identifier '{' (FieldDeclaration | BlockAttribute)* '}'
+  // MODEL Identifier FieldDeclarationBlock
   public static boolean ModelDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ModelDeclaration")) return false;
-    if (!nextTokenIs(b, "<model declaration>", MODEL, TYPE)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, MODEL_DECLARATION, "<model declaration>");
-    r = ModelDeclaration_0(b, l + 1);
-    r = r && Identifier(b, l + 1);
-    r = r && consumeToken(b, LBRACE);
-    p = r; // pin = 3
-    r = r && report_error_(b, ModelDeclaration_3(b, l + 1));
-    r = p && consumeToken(b, RBRACE) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  // MODEL | TYPE
-  private static boolean ModelDeclaration_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ModelDeclaration_0")) return false;
+    if (!nextTokenIs(b, MODEL)) return false;
     boolean r;
+    Marker m = enter_section_(b);
     r = consumeToken(b, MODEL);
-    if (!r) r = consumeToken(b, TYPE);
-    return r;
-  }
-
-  // (FieldDeclaration | BlockAttribute)*
-  private static boolean ModelDeclaration_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ModelDeclaration_3")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!ModelDeclaration_3_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "ModelDeclaration_3", c)) break;
-    }
-    return true;
-  }
-
-  // FieldDeclaration | BlockAttribute
-  private static boolean ModelDeclaration_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "ModelDeclaration_3_0")) return false;
-    boolean r;
-    r = FieldDeclaration(b, l + 1);
-    if (!r) r = BlockAttribute(b, l + 1);
+    r = r && Identifier(b, l + 1);
+    r = r && FieldDeclarationBlock(b, l + 1);
+    exit_section_(b, m, MODEL_DECLARATION, r);
     return r;
   }
 
@@ -630,16 +651,15 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   public static boolean TypeAlias(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "TypeAlias")) return false;
     if (!nextTokenIs(b, TYPE)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, TYPE_ALIAS, null);
+    boolean r;
+    Marker m = enter_section_(b);
     r = consumeToken(b, TYPE);
     r = r && Identifier(b, l + 1);
     r = r && consumeToken(b, EQ);
-    p = r; // pin = 3
-    r = r && report_error_(b, BaseType(b, l + 1));
-    r = p && TypeAlias_4(b, l + 1) && r;
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    r = r && BaseType(b, l + 1);
+    r = r && TypeAlias_4(b, l + 1);
+    exit_section_(b, m, TYPE_ALIAS, r);
+    return r;
   }
 
   // FieldAttribute*
@@ -651,6 +671,20 @@ public class PrismaParser implements PsiParser, LightPsiParser {
       if (!empty_element_parsed_guard_(b, "TypeAlias_4", c)) break;
     }
     return true;
+  }
+
+  /* ********************************************************** */
+  // TYPE Identifier FieldDeclarationBlock
+  public static boolean TypeDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "TypeDeclaration")) return false;
+    if (!nextTokenIs(b, TYPE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, TYPE);
+    r = r && Identifier(b, l + 1);
+    r = r && FieldDeclarationBlock(b, l + 1);
+    exit_section_(b, m, TYPE_DECLARATION, r);
+    return r;
   }
 
   /* ********************************************************** */

@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaTypeAliasImpl extends PrismaElementImpl implements PrismaTypeAlias {
+public class PrismaTypeDeclarationImpl extends PrismaElementImpl implements PrismaTypeDeclaration {
 
-  public PrismaTypeAliasImpl(@NotNull ASTNode node) {
+  public PrismaTypeDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PrismaVisitor visitor) {
-    visitor.visitTypeAlias(this);
+    visitor.visitTypeDeclaration(this);
   }
 
   @Override
@@ -28,14 +28,14 @@ public class PrismaTypeAliasImpl extends PrismaElementImpl implements PrismaType
 
   @Override
   @NotNull
-  public PrismaBaseType getBaseType() {
-    return findNotNullChildByClass(PrismaBaseType.class);
+  public List<PrismaBlockAttribute> getBlockAttributeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaBlockAttribute.class);
   }
 
   @Override
   @NotNull
-  public List<PrismaFieldAttribute> getFieldAttributeList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaFieldAttribute.class);
+  public List<PrismaFieldDeclaration> getFieldDeclarationList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaFieldDeclaration.class);
   }
 
   @Override

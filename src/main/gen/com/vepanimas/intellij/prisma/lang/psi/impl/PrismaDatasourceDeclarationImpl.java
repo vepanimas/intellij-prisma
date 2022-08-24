@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaConfigBlockImpl extends PrismaElementImpl implements PrismaConfigBlock {
+public class PrismaDatasourceDeclarationImpl extends PrismaElementImpl implements PrismaDatasourceDeclaration {
 
-  public PrismaConfigBlockImpl(@NotNull ASTNode node) {
+  public PrismaDatasourceDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PrismaVisitor visitor) {
-    visitor.visitConfigBlock(this);
+    visitor.visitDatasourceDeclaration(this);
   }
 
   @Override

@@ -26,8 +26,8 @@ public class PrismaVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
-  public void visitConfigBlock(@NotNull PrismaConfigBlock o) {
-    visitElement(o);
+  public void visitDatasourceDeclaration(@NotNull PrismaDatasourceDeclaration o) {
+    visitDeclaration(o);
   }
 
   public void visitEmptyArgument(@NotNull PrismaEmptyArgument o) {
@@ -35,7 +35,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitEnumDeclaration(@NotNull PrismaEnumDeclaration o) {
-    visitElement(o);
+    visitDeclaration(o);
   }
 
   public void visitEnumValueDeclaration(@NotNull PrismaEnumValueDeclaration o) {
@@ -62,6 +62,10 @@ public class PrismaVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
+  public void visitGeneratorDeclaration(@NotNull PrismaGeneratorDeclaration o) {
+    visitDeclaration(o);
+  }
+
   public void visitKeyValue(@NotNull PrismaKeyValue o) {
     visitElement(o);
   }
@@ -79,7 +83,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitModelDeclaration(@NotNull PrismaModelDeclaration o) {
-    visitElement(o);
+    visitDeclaration(o);
   }
 
   public void visitNamedArgument(@NotNull PrismaNamedArgument o) {
@@ -95,7 +99,11 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitTypeAlias(@NotNull PrismaTypeAlias o) {
-    visitElement(o);
+    visitDeclaration(o);
+  }
+
+  public void visitTypeDeclaration(@NotNull PrismaTypeDeclaration o) {
+    visitDeclaration(o);
   }
 
   public void visitUnsupportedOptionalListType(@NotNull PrismaUnsupportedOptionalListType o) {
@@ -103,6 +111,10 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitUnsupportedType(@NotNull PrismaUnsupportedType o) {
+    visitElement(o);
+  }
+
+  public void visitDeclaration(@NotNull PrismaDeclaration o) {
     visitElement(o);
   }
 
