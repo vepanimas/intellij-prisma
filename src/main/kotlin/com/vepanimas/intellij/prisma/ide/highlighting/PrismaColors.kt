@@ -20,9 +20,9 @@ object PrismaColors {
 
     val TYPE_NAME = createTextAttributesKey("PRISMA_TYPE_NAME", DefaultLanguageHighlighterColors.CLASS_NAME)
     val TYPE_REFERENCE = createTextAttributesKey("PRISMA_TYPE_REFERENCE", TYPE_NAME)
-    val ATTRIBUTE = createTextAttributesKey("PRISMA_ATTRIBUTE", TYPE_NAME)
+    val ATTRIBUTE = createTextAttributesKey("PRISMA_ATTRIBUTE", DefaultLanguageHighlighterColors.METADATA)
     val PARAMETER = createTextAttributesKey("PRISMA_PARAMETER", DefaultLanguageHighlighterColors.PARAMETER)
     val FIELD_NAME = createTextAttributesKey("PRISMA_FIELD_NAME", DefaultLanguageHighlighterColors.INSTANCE_FIELD)
-    val FIELD_REFERENCE = createTextAttributesKey("PRISMA_FIELD_REFERENCE", DefaultLanguageHighlighterColors.CONSTANT)
-    val FUNCTION = createTextAttributesKey("PRISMA_FUNCTION", DefaultLanguageHighlighterColors.FUNCTION_CALL)
+    val FIELD_REFERENCE = createTextAttributesKey("PRISMA_FIELD_REFERENCE", FIELD_NAME)
+    val FUNCTION = createTextAttributesKey("PRISMA_FUNCTION", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
 }

@@ -129,7 +129,7 @@ class PrismaColorSettingsPage : ColorSettingsPage {
           <fn>updatedAt</fn> <tr>DateTime</tr> @<attr>updatedAt</attr>
           <fn>title</fn>     <tr>String</tr>
           <fn>content</fn>   <tr>String</tr>?
-          <fn>published</fn> <tr>Boolean</tr>  @<attr>default</attr>(false)
+          <fn>published</fn> <tr>Boolean</tr>  @<attr>default</attr>(<fr>false</fr>)
           <fn>viewCount</fn> <tr>Int</tr>      @<attr>default</attr>(0)
           <fn>author</fn>    <tr>User</tr>?    @<attr>relation</attr>(<param>fields</param>: [<fr>authorId</fr>], <param>references</param>: [<fr>id</fr>])
           <fn>authorId</fn>  <tr>Int</tr>?
