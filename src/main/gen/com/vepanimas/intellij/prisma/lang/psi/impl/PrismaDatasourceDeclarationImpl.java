@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaDatasourceDeclarationImpl extends PrismaElementImpl implements PrismaDatasourceDeclaration {
+public class PrismaDatasourceDeclarationImpl extends PrismaConfigBlockDeclarationMixin implements PrismaDatasourceDeclaration {
 
   public PrismaDatasourceDeclarationImpl(@NotNull ASTNode node) {
     super(node);

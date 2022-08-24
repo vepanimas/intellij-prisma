@@ -43,7 +43,7 @@
     WHITE_SPACE     = 'regexp:\s+'
   ]
 
-  implements('(Model|Type|Enum|Datasource|Generator)Declaration|TypeAlias') = "com.vepanimas.intellij.prisma.lang.psi.PrismaDeclaration"
+  implements('(Model|Type|Enum|Datasource|Generator)Declaration|TypeAlias')="com.vepanimas.intellij.prisma.lang.psi.PrismaDeclaration"
 }
 
 Schema ::= Declaration*
@@ -56,22 +56,34 @@ private Declaration ::=
     | GeneratorDeclaration
     | TypeAlias
 
-ModelDeclaration ::= MODEL Identifier FieldDeclarationBlock
-TypeDeclaration ::= TYPE Identifier FieldDeclarationBlock
+ModelDeclaration ::= MODEL Identifier FieldDeclarationBlock {
+    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
+}
+TypeDeclaration ::= TYPE Identifier FieldDeclarationBlock {
+    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
+}
 
 private FieldDeclarationBlock ::= '{' (FieldDeclaration | BlockAttribute)* '}'
 FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute*
 
-EnumDeclaration ::= ENUM Identifier '{' (EnumValueDeclaration | BlockAttribute)* '}'
+EnumDeclaration ::= ENUM Identifier '{' (EnumValueDeclaration | BlockAttribute)* '}' {
+    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEnumDeclarationMixin"
+}
 EnumValueDeclaration ::= Identifier FieldAttribute*
 
-DatasourceDeclaration ::= DATASOURCE Identifier KeyValueBlock
-GeneratorDeclaration ::= GENERATOR Identifier KeyValueBlock
+DatasourceDeclaration ::= DATASOURCE Identifier KeyValueBlock {
+    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaConfigBlockDeclarationMixin"
+}
+GeneratorDeclaration ::= GENERATOR Identifier KeyValueBlock {
+    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaConfigBlockDeclarationMixin"
+}
 
 private KeyValueBlock ::= '{' KeyValue* '}'
 KeyValue ::= Identifier '=' Expression
 
-TypeAlias ::= TYPE Identifier '=' BaseType FieldAttribute*
+TypeAlias ::= TYPE Identifier '=' BaseType FieldAttribute* {
+    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaTypeAliasMixin"
+}
 
 /* Types */
 FieldType ::=
