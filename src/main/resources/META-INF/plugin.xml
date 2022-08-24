@@ -8,6 +8,7 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!-- Language -->
         <fileType name="Prisma"
                   language="Prisma"
                   implementationClass="com.vepanimas.intellij.prisma.lang.PrismaFileType"
@@ -16,8 +17,11 @@
         <lang.parserDefinition language="Prisma"
                                implementationClass="com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition"/>
 
+        <!-- Syntax Highlighting -->
         <lang.syntaxHighlighter language="Prisma"
-                                implementationClass="com.vepanimas.intellij.prisma.ide.highlighting.PrismaHighlighter"/>
+                                implementationClass="com.vepanimas.intellij.prisma.ide.highlighting.PrismaSyntaxHighlighter"/>
         <colorSettingsPage implementation="com.vepanimas.intellij.prisma.ide.highlighting.PrismaColorSettingsPage"/>
+        <annotator language="Prisma"
+                   implementationClass="com.vepanimas.intellij.prisma.ide.highlighting.PrismaHighlightingAnnotator"/>
     </extensions>
 </idea-plugin>

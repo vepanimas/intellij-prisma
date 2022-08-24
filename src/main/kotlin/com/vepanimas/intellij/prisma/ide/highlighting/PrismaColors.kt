@@ -15,6 +15,14 @@ object PrismaColors {
     val BRACES = createTextAttributesKey("PRISMA_BRACES", DefaultLanguageHighlighterColors.BRACES)
     val DOT = createTextAttributesKey("PRISMA_DOT", DefaultLanguageHighlighterColors.DOT)
     val COMMA = createTextAttributesKey("PRISMA_COMMA", DefaultLanguageHighlighterColors.COMMA)
-    val OPERATION_SIGN = createTextAttributesKey("PRISMA_OPERATION_SIGN", DefaultLanguageHighlighterColors.OPERATION_SIGN)
-    val UNSUPPORTED_TYPE = createTextAttributesKey("PRISMA_UNSUPPORTED_TYPE", DefaultLanguageHighlighterColors.CONSTANT)
+    val OPERATION_SIGN =
+        createTextAttributesKey("PRISMA_OPERATION_SIGN", DefaultLanguageHighlighterColors.OPERATION_SIGN)
+
+    val TYPE_NAME = createTextAttributesKey("PRISMA_TYPE_NAME", DefaultLanguageHighlighterColors.CLASS_NAME)
+    val TYPE_REFERENCE = createTextAttributesKey("PRISMA_TYPE_REFERENCE", TYPE_NAME)
+    val ATTRIBUTE = createTextAttributesKey("PRISMA_ATTRIBUTE", TYPE_NAME)
+    val PARAMETER = createTextAttributesKey("PRISMA_PARAMETER", DefaultLanguageHighlighterColors.PARAMETER)
+    val FIELD_NAME = createTextAttributesKey("PRISMA_FIELD_NAME", DefaultLanguageHighlighterColors.INSTANCE_FIELD)
+    val FIELD_REFERENCE = createTextAttributesKey("PRISMA_FIELD_REFERENCE", DefaultLanguageHighlighterColors.CONSTANT)
+    val FUNCTION = createTextAttributesKey("PRISMA_FUNCTION", DefaultLanguageHighlighterColors.FUNCTION_CALL)
 }

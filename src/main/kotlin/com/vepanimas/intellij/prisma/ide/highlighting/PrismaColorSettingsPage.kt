@@ -25,7 +25,7 @@ class PrismaColorSettingsPage : ColorSettingsPage {
 
     override fun getAttributeDescriptors(): Array<AttributesDescriptor> = descriptors
 
-    override fun getAdditionalHighlightingTagToDescriptorMap(): MutableMap<String, TextAttributesKey>? = null
+    override fun getAdditionalHighlightingTagToDescriptorMap(): Map<String, TextAttributesKey> = additionalDescriptors
 
     companion object {
         private val descriptors = arrayOf(
@@ -65,38 +65,55 @@ class PrismaColorSettingsPage : ColorSettingsPage {
                 OptionsBundle.messagePointer("options.language.defaults.operation"),
                 PrismaColors.OPERATION_SIGN
             ),
+            AttributesDescriptor("Type name", PrismaColors.TYPE_NAME),
+            AttributesDescriptor("Type reference", PrismaColors.TYPE_REFERENCE),
+            AttributesDescriptor("Attribute", PrismaColors.ATTRIBUTE),
+            AttributesDescriptor("Parameter", PrismaColors.PARAMETER),
+            AttributesDescriptor("Field name", PrismaColors.FIELD_NAME),
+            AttributesDescriptor("Field reference", PrismaColors.FIELD_REFERENCE),
+            AttributesDescriptor("Function", PrismaColors.FUNCTION),
+        )
+
+        private val additionalDescriptors = mapOf(
+            "tn" to PrismaColors.TYPE_NAME,
+            "tr" to PrismaColors.TYPE_REFERENCE,
+            "attr" to PrismaColors.ATTRIBUTE,
+            "param" to PrismaColors.PARAMETER,
+            "fn" to PrismaColors.FIELD_NAME,
+            "fr" to PrismaColors.FIELD_REFERENCE,
+            "func" to PrismaColors.FUNCTION,
         )
 
         private val DEMO_TEXT = """
         /// Doc
         /// Comment
-        generator client {
-          provider = "prisma-client-js"
+        generator <tn>client</tn> {
+          <fn>provider</fn> = "prisma-client-js"
         }
         
         // Line comment
-        datasource db {
-          provider = "sqlite" // property comment
-          url      = "file:./dev.db"
+        datasource <tn>db</tn> {
+          <fn>provider</fn> = "sqlite" // property comment
+          <fn>url</fn>      = "file:./dev.db"
         }
         
-        model User {
-          id    Int     @id @default(autoincrement())
-          email String  @unique
-          name  String?
-          posts Post[]
+        model <tn>User</tn> {
+          <fn>id</fn>    <tr>Int</tr>     @<attr>id</attr> @<attr>default</attr>(<func>autoincrement</func>())
+          <fn>email</fn> <tr>String</tr>  @<attr>unique</attr>
+          <fn>name</fn>  <tr>String</tr>?
+          <fn>posts</fn> <tr>Post</tr>[]
         }
         
-        model Post {
-          id        Int      @id @default(autoincrement())
-          createdAt DateTime @default(now())
-          updatedAt DateTime @updatedAt
-          title     String
-          content   String?
-          published Boolean  @default(false)
-          viewCount Int      @default(0)
-          author    User?    @relation(fields: [authorId], references: [id])
-          authorId  Int?
+        model <tn>Post</tn> {
+          <fn>id</fn>        <tr>Int</tr>      @<attr>id</attr> @<attr>default</attr>(<func>autoincrement</func>())
+          <fn>createdAt</fn> <tr>DateTime</tr> @<attr>default</attr>(<func>now</func>())
+          <fn>updatedAt</fn> <tr>DateTime</tr> @<attr>updatedAt</attr>
+          <fn>title</fn>     <tr>String</tr>
+          <fn>content</fn>   <tr>String</tr>?
+          <fn>published</fn> <tr>Boolean</tr>  @<attr>default</attr>(false)
+          <fn>viewCount</fn> <tr>Int</tr>      @<attr>default</attr>(0)
+          <fn>author</fn>    <tr>User</tr>?    @<attr>relation</attr>(<param>fields</param>: [<fr>authorId</fr>], <param>references</param>: [<fr>id</fr>])
+          <fn>authorId</fn>  <tr>Int</tr>?
         }
         """.trimIndent()
     }

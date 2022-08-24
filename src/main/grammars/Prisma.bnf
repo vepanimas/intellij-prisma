@@ -58,9 +58,15 @@ private Declaration ::=
 
 ModelDeclaration ::= MODEL Identifier FieldDeclarationBlock {
     extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
+    implements=[
+        "com.vepanimas.intellij.prisma.lang.psi.PrismaFieldsContainer"
+    ]
 }
 TypeDeclaration ::= TYPE Identifier FieldDeclarationBlock {
     extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
+    implements=[
+        "com.vepanimas.intellij.prisma.lang.psi.PrismaFieldsContainer"
+    ]
 }
 
 private FieldDeclarationBlock ::= '{' (FieldDeclaration | BlockAttribute)* '}'

@@ -8,7 +8,7 @@ import com.vepanimas.intellij.prisma.lang.lexer.PrismaLexer
 import com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition
 import com.vepanimas.intellij.prisma.lang.psi.*
 
-class PrismaHighlighter : SyntaxHighlighterBase() {
+class PrismaSyntaxHighlighter : SyntaxHighlighterBase() {
     override fun getHighlightingLexer(): Lexer = PrismaLexer()
 
     override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> =
@@ -27,7 +27,9 @@ class PrismaHighlighter : SyntaxHighlighterBase() {
             put(PrismaElementTypes.COLON, PrismaColors.OPERATION_SIGN)
             put(PrismaElementTypes.QUEST, PrismaColors.OPERATION_SIGN)
             put(PrismaElementTypes.EXCL, PrismaColors.OPERATION_SIGN)
-            put(PrismaElementTypes.UNSUPPORTED, PrismaColors.UNSUPPORTED_TYPE)
+            put(PrismaElementTypes.UNSUPPORTED, PrismaColors.TYPE_REFERENCE)
+            put(PrismaElementTypes.AT, PrismaColors.ATTRIBUTE)
+            put(PrismaElementTypes.ATAT, PrismaColors.ATTRIBUTE)
 
             fillMap(this, PRISMA_KEYWORDS, PrismaColors.KEYWORD)
             fillMap(this, PRISMA_BRACKETS, PrismaColors.BRACKETS)
