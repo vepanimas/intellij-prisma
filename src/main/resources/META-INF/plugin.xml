@@ -27,6 +27,10 @@
         <!-- Editor -->
         <lang.commenter language="Prisma"
                         implementationClass="com.vepanimas.intellij.prisma.ide.editor.PrismaCommenter"/>
+        <lang.braceMatcher language="Prisma"
+                           implementationClass="com.vepanimas.intellij.prisma.ide.editor.PrismaBraceMatcher"/>
+        <lang.quoteHandler language="Prisma"
+                           implementationClass="com.vepanimas.intellij.prisma.ide.editor.PrismaQuoteHandler"/>
 
         <!-- Formatter -->
         <langCodeStyleSettingsProvider
