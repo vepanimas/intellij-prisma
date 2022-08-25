@@ -37,7 +37,7 @@ class PrismaLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvide
         if (settingsType == COMMENTER_SETTINGS) {
             consumer.showStandardOptions(
                 CommenterOption.LINE_COMMENT_ADD_SPACE.name,
-                CommenterOption.LINE_COMMENT_ADD_SPACE_ON_REFORMAT.name,
+                // TODO: [enable after sinceBuild=221] CommenterOption.LINE_COMMENT_ADD_SPACE_ON_REFORMAT.name,
                 CommenterOption.LINE_COMMENT_AT_FIRST_COLUMN.name,
             )
         }
@@ -50,7 +50,7 @@ class PrismaLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvide
         commonSettings.apply {
             LINE_COMMENT_AT_FIRST_COLUMN = false
             LINE_COMMENT_ADD_SPACE = true
-            LINE_COMMENT_ADD_SPACE_ON_REFORMAT = true
+            // TODO: [enable after sinceBuild=221] LINE_COMMENT_ADD_SPACE_ON_REFORMAT = true
         }
     }
 }
