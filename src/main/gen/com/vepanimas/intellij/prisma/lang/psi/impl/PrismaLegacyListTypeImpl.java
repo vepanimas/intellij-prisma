@@ -28,8 +28,8 @@ public class PrismaLegacyListTypeImpl extends PrismaElementImpl implements Prism
 
   @Override
   @NotNull
-  public PrismaBaseType getBaseType() {
-    return findNotNullChildByClass(PrismaBaseType.class);
+  public PrismaTypeReference getTypeReference() {
+    return findNotNullChildByClass(PrismaTypeReference.class);
   }
 
 }

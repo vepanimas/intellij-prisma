@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface PrismaUnsupportedOptionalListType extends PrismaElement {
 
   @NotNull
-  PrismaBaseType getBaseType();
+  PrismaTypeReference getTypeReference();
 
 }

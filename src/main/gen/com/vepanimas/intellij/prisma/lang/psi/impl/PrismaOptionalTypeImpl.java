@@ -28,8 +28,8 @@ public class PrismaOptionalTypeImpl extends PrismaElementImpl implements PrismaO
 
   @Override
   @NotNull
-  public PrismaBaseType getBaseType() {
-    return findNotNullChildByClass(PrismaBaseType.class);
+  public PrismaTypeReference getTypeReference() {
+    return findNotNullChildByClass(PrismaTypeReference.class);
   }
 
 }

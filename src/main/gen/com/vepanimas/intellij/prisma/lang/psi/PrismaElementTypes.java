@@ -11,7 +11,6 @@ public interface PrismaElementTypes {
   IElementType ARGUMENT = new PrismaElementType("ARGUMENT");
   IElementType ARGUMENTS_LIST = new PrismaElementType("ARGUMENTS_LIST");
   IElementType ARRAY_EXPRESSION = new PrismaElementType("ARRAY_EXPRESSION");
-  IElementType BASE_TYPE = new PrismaElementType("BASE_TYPE");
   IElementType BLOCK_ATTRIBUTE = new PrismaElementType("BLOCK_ATTRIBUTE");
   IElementType DATASOURCE_DECLARATION = new PrismaElementType("DATASOURCE_DECLARATION");
   IElementType ENUM_DECLARATION = new PrismaElementType("ENUM_DECLARATION");
@@ -32,6 +31,7 @@ public interface PrismaElementTypes {
   IElementType PATH = new PrismaElementType("PATH");
   IElementType TYPE_ALIAS = new PrismaElementType("TYPE_ALIAS");
   IElementType TYPE_DECLARATION = new PrismaElementType("TYPE_DECLARATION");
+  IElementType TYPE_REFERENCE = new PrismaElementType("TYPE_REFERENCE");
   IElementType UNSUPPORTED_OPTIONAL_LIST_TYPE = new PrismaElementType("UNSUPPORTED_OPTIONAL_LIST_TYPE");
   IElementType UNSUPPORTED_TYPE = new PrismaElementType("UNSUPPORTED_TYPE");
 
@@ -70,9 +70,6 @@ public interface PrismaElementTypes {
       }
       else if (type == ARRAY_EXPRESSION) {
         return new PrismaArrayExpressionImpl(node);
-      }
-      else if (type == BASE_TYPE) {
-        return new PrismaBaseTypeImpl(node);
       }
       else if (type == BLOCK_ATTRIBUTE) {
         return new PrismaBlockAttributeImpl(node);
@@ -133,6 +130,9 @@ public interface PrismaElementTypes {
       }
       else if (type == TYPE_DECLARATION) {
         return new PrismaTypeDeclarationImpl(node);
+      }
+      else if (type == TYPE_REFERENCE) {
+        return new PrismaTypeReferenceImpl(node);
       }
       else if (type == UNSUPPORTED_OPTIONAL_LIST_TYPE) {
         return new PrismaUnsupportedOptionalListTypeImpl(node);

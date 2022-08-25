@@ -28,12 +28,6 @@ public class PrismaFieldTypeImpl extends PrismaElementImpl implements PrismaFiel
 
   @Override
   @Nullable
-  public PrismaBaseType getBaseType() {
-    return findChildByClass(PrismaBaseType.class);
-  }
-
-  @Override
-  @Nullable
   public PrismaLegacyListType getLegacyListType() {
     return findChildByClass(PrismaLegacyListType.class);
   }
@@ -54,6 +48,12 @@ public class PrismaFieldTypeImpl extends PrismaElementImpl implements PrismaFiel
   @Nullable
   public PrismaOptionalType getOptionalType() {
     return findChildByClass(PrismaOptionalType.class);
+  }
+
+  @Override
+  @Nullable
+  public PrismaTypeReference getTypeReference() {
+    return findChildByClass(PrismaTypeReference.class);
   }
 
   @Override

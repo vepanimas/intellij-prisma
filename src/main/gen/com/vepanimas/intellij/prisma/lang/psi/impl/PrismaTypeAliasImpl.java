@@ -28,14 +28,14 @@ public class PrismaTypeAliasImpl extends PrismaTypeAliasMixin implements PrismaT
 
   @Override
   @NotNull
-  public PrismaBaseType getBaseType() {
-    return findNotNullChildByClass(PrismaBaseType.class);
+  public List<PrismaFieldAttribute> getFieldAttributeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaFieldAttribute.class);
   }
 
   @Override
   @NotNull
-  public List<PrismaFieldAttribute> getFieldAttributeList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaFieldAttribute.class);
+  public PrismaTypeReference getTypeReference() {
+    return findNotNullChildByClass(PrismaTypeReference.class);
   }
 
   @Override

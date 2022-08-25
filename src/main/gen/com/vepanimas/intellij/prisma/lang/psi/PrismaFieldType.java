@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface PrismaFieldType extends PrismaElement {
 
   @Nullable
-  PrismaBaseType getBaseType();
-
-  @Nullable
   PrismaLegacyListType getLegacyListType();
 
   @Nullable
@@ -21,6 +18,9 @@ public interface PrismaFieldType extends PrismaElement {
 
   @Nullable
   PrismaOptionalType getOptionalType();
+
+  @Nullable
+  PrismaTypeReference getTypeReference();
 
   @Nullable
   PrismaUnsupportedOptionalListType getUnsupportedOptionalListType();

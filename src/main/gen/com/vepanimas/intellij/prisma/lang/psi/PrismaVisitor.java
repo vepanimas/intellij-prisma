@@ -18,10 +18,6 @@ public class PrismaVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
-  public void visitBaseType(@NotNull PrismaBaseType o) {
-    visitElement(o);
-  }
-
   public void visitBlockAttribute(@NotNull PrismaBlockAttribute o) {
     visitElement(o);
   }
@@ -102,6 +98,10 @@ public class PrismaVisitor extends PsiElementVisitor {
   public void visitTypeDeclaration(@NotNull PrismaTypeDeclaration o) {
     visitFieldsContainer(o);
     // visitDeclaration(o);
+  }
+
+  public void visitTypeReference(@NotNull PrismaTypeReference o) {
+    visitElement(o);
   }
 
   public void visitUnsupportedOptionalListType(@NotNull PrismaUnsupportedOptionalListType o) {

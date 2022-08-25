@@ -87,7 +87,7 @@ GeneratorDeclaration ::= GENERATOR Identifier KeyValueBlock {
 private KeyValueBlock ::= '{' KeyValue* '}'
 KeyValue ::= Identifier '=' Expression
 
-TypeAlias ::= TYPE Identifier '=' BaseType FieldAttribute* {
+TypeAlias ::= TYPE Identifier '=' TypeReference FieldAttribute* {
     extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaTypeAliasMixin"
 }
 
@@ -98,15 +98,15 @@ FieldType ::=
     | OptionalType
     | LegacyRequiredType
     | LegacyListType
-    | BaseType
+    | TypeReference
 
 UnsupportedType ::= UNSUPPORTED '(' STRING_LITERAL ')'
-BaseType ::= UnsupportedType | Identifier
-UnsupportedOptionalListType ::= BaseType '[' ']' '?'
-ListType ::= BaseType '[' ']'
-OptionalType ::= BaseType '?'
-LegacyRequiredType ::= BaseType '!'
-LegacyListType ::= '[' BaseType ']'
+TypeReference ::= UnsupportedType | Identifier
+UnsupportedOptionalListType ::= TypeReference '[' ']' '?'
+ListType ::= TypeReference '[' ']'
+OptionalType ::= TypeReference '?'
+LegacyRequiredType ::= TypeReference '!'
+LegacyListType ::= '[' TypeReference ']'
 
 /* Attributes */
 BlockAttribute ::= '@@' Path ArgumentsList?

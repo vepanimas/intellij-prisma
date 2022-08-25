@@ -164,19 +164,6 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // UnsupportedType | Identifier
-  public static boolean BaseType(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "BaseType")) return false;
-    if (!nextTokenIs(b, "<base type>", IDENTIFIER, UNSUPPORTED)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, BASE_TYPE, "<base type>");
-    r = UnsupportedType(b, l + 1);
-    if (!r) r = Identifier(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  /* ********************************************************** */
   // '@@' Path ArgumentsList?
   public static boolean BlockAttribute(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "BlockAttribute")) return false;
@@ -410,7 +397,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   //     | OptionalType
   //     | LegacyRequiredType
   //     | LegacyListType
-  //     | BaseType
+  //     | TypeReference
   public static boolean FieldType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FieldType")) return false;
     boolean r;
@@ -420,7 +407,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     if (!r) r = OptionalType(b, l + 1);
     if (!r) r = LegacyRequiredType(b, l + 1);
     if (!r) r = LegacyListType(b, l + 1);
-    if (!r) r = BaseType(b, l + 1);
+    if (!r) r = TypeReference(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -498,40 +485,40 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '[' BaseType ']'
+  // '[' TypeReference ']'
   public static boolean LegacyListType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LegacyListType")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, LBRACKET);
-    r = r && BaseType(b, l + 1);
+    r = r && TypeReference(b, l + 1);
     r = r && consumeToken(b, RBRACKET);
     exit_section_(b, m, LEGACY_LIST_TYPE, r);
     return r;
   }
 
   /* ********************************************************** */
-  // BaseType '!'
+  // TypeReference '!'
   public static boolean LegacyRequiredType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LegacyRequiredType")) return false;
     if (!nextTokenIs(b, "<legacy required type>", IDENTIFIER, UNSUPPORTED)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, LEGACY_REQUIRED_TYPE, "<legacy required type>");
-    r = BaseType(b, l + 1);
+    r = TypeReference(b, l + 1);
     r = r && consumeToken(b, EXCL);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // BaseType '[' ']'
+  // TypeReference '[' ']'
   public static boolean ListType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ListType")) return false;
     if (!nextTokenIs(b, "<list type>", IDENTIFIER, UNSUPPORTED)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, LIST_TYPE, "<list type>");
-    r = BaseType(b, l + 1);
+    r = TypeReference(b, l + 1);
     r = r && consumeTokens(b, 0, LBRACKET, RBRACKET);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -566,13 +553,13 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // BaseType '?'
+  // TypeReference '?'
   public static boolean OptionalType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "OptionalType")) return false;
     if (!nextTokenIs(b, "<optional type>", IDENTIFIER, UNSUPPORTED)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, OPTIONAL_TYPE, "<optional type>");
-    r = BaseType(b, l + 1);
+    r = TypeReference(b, l + 1);
     r = r && consumeToken(b, QUEST);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -633,7 +620,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // TYPE Identifier '=' BaseType FieldAttribute*
+  // TYPE Identifier '=' TypeReference FieldAttribute*
   public static boolean TypeAlias(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "TypeAlias")) return false;
     if (!nextTokenIs(b, TYPE)) return false;
@@ -642,7 +629,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, TYPE);
     r = r && Identifier(b, l + 1);
     r = r && consumeToken(b, EQ);
-    r = r && BaseType(b, l + 1);
+    r = r && TypeReference(b, l + 1);
     r = r && TypeAlias_4(b, l + 1);
     exit_section_(b, m, TYPE_ALIAS, r);
     return r;
@@ -674,13 +661,26 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // BaseType '[' ']' '?'
+  // UnsupportedType | Identifier
+  public static boolean TypeReference(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "TypeReference")) return false;
+    if (!nextTokenIs(b, "<type reference>", IDENTIFIER, UNSUPPORTED)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, TYPE_REFERENCE, "<type reference>");
+    r = UnsupportedType(b, l + 1);
+    if (!r) r = Identifier(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // TypeReference '[' ']' '?'
   public static boolean UnsupportedOptionalListType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "UnsupportedOptionalListType")) return false;
     if (!nextTokenIs(b, "<unsupported optional list type>", IDENTIFIER, UNSUPPORTED)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, UNSUPPORTED_OPTIONAL_LIST_TYPE, "<unsupported optional list type>");
-    r = BaseType(b, l + 1);
+    r = TypeReference(b, l + 1);
     r = r && consumeTokens(b, 0, LBRACKET, RBRACKET, QUEST);
     exit_section_(b, l, m, r, false, null);
     return r;

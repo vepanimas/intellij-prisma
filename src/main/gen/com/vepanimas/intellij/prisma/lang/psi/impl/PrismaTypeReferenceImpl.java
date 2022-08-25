@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaBaseTypeImpl extends PrismaElementImpl implements PrismaBaseType {
+public class PrismaTypeReferenceImpl extends PrismaElementImpl implements PrismaTypeReference {
 
-  public PrismaBaseTypeImpl(@NotNull ASTNode node) {
+  public PrismaTypeReferenceImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PrismaVisitor visitor) {
-    visitor.visitBaseType(this);
+    visitor.visitTypeReference(this);
   }
 
   @Override

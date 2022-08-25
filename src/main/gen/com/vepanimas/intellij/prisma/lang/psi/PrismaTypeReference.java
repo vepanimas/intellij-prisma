@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaBaseType extends PrismaElement {
+public interface PrismaTypeReference extends PrismaElement {
 
   @Nullable
   PrismaUnsupportedType getUnsupportedType();

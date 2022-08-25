@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface PrismaOptionalType extends PrismaElement {
 
   @NotNull
-  PrismaBaseType getBaseType();
+  PrismaTypeReference getTypeReference();
 
 }
