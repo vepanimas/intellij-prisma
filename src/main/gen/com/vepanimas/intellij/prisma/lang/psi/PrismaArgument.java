@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface PrismaArgument extends PrismaElement {
 
   @Nullable
-  PrismaEmptyArgument getEmptyArgument();
-
-  @Nullable
   PrismaExpression getExpression();
 
   @Nullable

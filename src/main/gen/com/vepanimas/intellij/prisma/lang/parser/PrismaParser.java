@@ -36,13 +36,12 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NamedArgument | EmptyArgument | Expression
+  // NamedArgument | Expression
   public static boolean Argument(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Argument")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ARGUMENT, "<argument>");
     r = NamedArgument(b, l + 1);
-    if (!r) r = EmptyArgument(b, l + 1);
     if (!r) r = Expression(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -228,19 +227,6 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     if (!r) r = DatasourceDeclaration(b, l + 1);
     if (!r) r = GeneratorDeclaration(b, l + 1);
     if (!r) r = TypeAlias(b, l + 1);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // Identifier ':'
-  public static boolean EmptyArgument(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EmptyArgument")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = Identifier(b, l + 1);
-    r = r && consumeToken(b, COLON);
-    exit_section_(b, m, EMPTY_ARGUMENT, r);
     return r;
   }
 

@@ -114,8 +114,7 @@ FieldAttribute ::= '@' Path ArgumentsList?
 
 /* Arguments */
 ArgumentsList ::= '(' [Argument (',' Argument)*] ','? ')'
-Argument ::= NamedArgument | EmptyArgument | Expression
-EmptyArgument ::= Identifier ':'
+Argument ::= NamedArgument | Expression
 NamedArgument ::= Identifier ':' Expression
 
 /* Expressions */

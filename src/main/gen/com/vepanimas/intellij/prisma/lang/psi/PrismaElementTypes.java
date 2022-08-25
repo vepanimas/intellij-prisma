@@ -14,7 +14,6 @@ public interface PrismaElementTypes {
   IElementType BASE_TYPE = new PrismaElementType("BASE_TYPE");
   IElementType BLOCK_ATTRIBUTE = new PrismaElementType("BLOCK_ATTRIBUTE");
   IElementType DATASOURCE_DECLARATION = new PrismaElementType("DATASOURCE_DECLARATION");
-  IElementType EMPTY_ARGUMENT = new PrismaElementType("EMPTY_ARGUMENT");
   IElementType ENUM_DECLARATION = new PrismaElementType("ENUM_DECLARATION");
   IElementType ENUM_VALUE_DECLARATION = new PrismaElementType("ENUM_VALUE_DECLARATION");
   IElementType EXPRESSION = new PrismaElementType("EXPRESSION");
@@ -80,9 +79,6 @@ public interface PrismaElementTypes {
       }
       else if (type == DATASOURCE_DECLARATION) {
         return new PrismaDatasourceDeclarationImpl(node);
-      }
-      else if (type == EMPTY_ARGUMENT) {
-        return new PrismaEmptyArgumentImpl(node);
       }
       else if (type == ENUM_DECLARATION) {
         return new PrismaEnumDeclarationImpl(node);

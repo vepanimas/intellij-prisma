@@ -28,12 +28,6 @@ public class PrismaArgumentImpl extends PrismaElementImpl implements PrismaArgum
 
   @Override
   @Nullable
-  public PrismaEmptyArgument getEmptyArgument() {
-    return findChildByClass(PrismaEmptyArgument.class);
-  }
-
-  @Override
-  @Nullable
   public PrismaExpression getExpression() {
     return findChildByClass(PrismaExpression.class);
   }

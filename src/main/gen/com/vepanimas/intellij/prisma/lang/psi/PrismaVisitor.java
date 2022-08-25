@@ -30,10 +30,6 @@ public class PrismaVisitor extends PsiElementVisitor {
     visitDeclaration(o);
   }
 
-  public void visitEmptyArgument(@NotNull PrismaEmptyArgument o) {
-    visitElement(o);
-  }
-
   public void visitEnumDeclaration(@NotNull PrismaEnumDeclaration o) {
     visitDeclaration(o);
   }
