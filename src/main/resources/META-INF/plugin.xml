@@ -32,6 +32,10 @@
         <lang.quoteHandler language="Prisma"
                            implementationClass="com.vepanimas.intellij.prisma.ide.editor.PrismaQuoteHandler"/>
 
+        <!-- Handlers -->
+        <enterBetweenBracesDelegate language="Prisma"
+                                    implementationClass="com.intellij.codeInsight.editorActions.enter.EnterBetweenBracesAndBracketsDelegate"/>
+
         <!-- Formatter -->
         <langCodeStyleSettingsProvider
                 implementation="com.vepanimas.intellij.prisma.ide.formatter.settings.PrismaLanguageCodeStyleSettingsProvider"/>
