@@ -23,5 +23,13 @@
         <colorSettingsPage implementation="com.vepanimas.intellij.prisma.ide.highlighting.PrismaColorSettingsPage"/>
         <annotator language="Prisma"
                    implementationClass="com.vepanimas.intellij.prisma.ide.highlighting.PrismaHighlightingAnnotator"/>
+
+        <!-- Editor -->
+        <lang.commenter language="Prisma"
+                        implementationClass="com.vepanimas.intellij.prisma.ide.editor.PrismaCommenter"/>
+
+        <!-- Formatter -->
+        <langCodeStyleSettingsProvider
+                implementation="com.vepanimas.intellij.prisma.ide.formatter.settings.PrismaLanguageCodeStyleSettingsProvider"/>
     </extensions>
 </idea-plugin>
