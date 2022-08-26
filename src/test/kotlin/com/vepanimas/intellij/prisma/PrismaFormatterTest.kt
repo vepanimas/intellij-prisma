@@ -24,4 +24,8 @@ class PrismaFormatterTest : FormatterTestCase() {
     fun testEmptyFile() {
         doTest()
     }
+
+    fun testModelSpaces() {
+        doTest()
+    }
 }

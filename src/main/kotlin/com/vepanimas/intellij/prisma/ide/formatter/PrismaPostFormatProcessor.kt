@@ -37,6 +37,7 @@ class PrismaPostFormatProcessor : PostFormatProcessor {
         }
 
         if (oldRange.startOffset != 0 && document.getText(oldRange) != "\n") {
+            manager.doPostponedOperationsAndUnblockDocument(document)
             document.replaceString(oldRange.startOffset, oldRange.endOffset, "\n")
             manager.commitDocument(document)
             return rangeToReformat.grown(-(oldRange.length - 1))
