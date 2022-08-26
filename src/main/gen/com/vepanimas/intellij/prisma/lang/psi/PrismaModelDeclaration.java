@@ -8,10 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface PrismaModelDeclaration extends PrismaFieldsContainer, PrismaDeclaration {
 
   @NotNull
-  List<PrismaBlockAttribute> getBlockAttributeList();
-
-  @NotNull
-  List<PrismaFieldDeclaration> getFieldDeclarationList();
+  PrismaFieldDeclarationBlock getFieldDeclarationBlock();
 
   @NotNull
   PsiElement getIdentifier();

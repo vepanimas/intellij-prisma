@@ -28,14 +28,8 @@ public class PrismaModelDeclarationImpl extends PrismaModelTypeDeclarationMixin 
 
   @Override
   @NotNull
-  public List<PrismaBlockAttribute> getBlockAttributeList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaBlockAttribute.class);
-  }
-
-  @Override
-  @NotNull
-  public List<PrismaFieldDeclaration> getFieldDeclarationList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaFieldDeclaration.class);
+  public PrismaFieldDeclarationBlock getFieldDeclarationBlock() {
+    return findNotNullChildByClass(PrismaFieldDeclarationBlock.class);
   }
 
   @Override

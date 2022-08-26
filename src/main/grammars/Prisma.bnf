@@ -69,12 +69,13 @@ TypeDeclaration ::= TYPE Identifier FieldDeclarationBlock {
     ]
 }
 
-private FieldDeclarationBlock ::= '{' (FieldDeclaration | BlockAttribute)* '}'
+FieldDeclarationBlock ::= '{' (FieldDeclaration | BlockAttribute)* '}'
 FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute*
 
-EnumDeclaration ::= ENUM Identifier '{' (EnumValueDeclaration | BlockAttribute)* '}' {
+EnumDeclaration ::= ENUM Identifier EnumDeclarationBlock {
     extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEnumDeclarationMixin"
 }
+EnumDeclarationBlock ::= '{' (EnumValueDeclaration | BlockAttribute)* '}'
 EnumValueDeclaration ::= Identifier FieldAttribute*
 
 DatasourceDeclaration ::= DATASOURCE Identifier KeyValueBlock {
@@ -84,7 +85,7 @@ GeneratorDeclaration ::= GENERATOR Identifier KeyValueBlock {
     extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaConfigBlockDeclarationMixin"
 }
 
-private KeyValueBlock ::= '{' KeyValue* '}'
+KeyValueBlock ::= '{' KeyValue* '}'
 KeyValue ::= Identifier '=' Expression
 
 TypeAlias ::= TYPE Identifier '=' TypeReference FieldAttribute* {

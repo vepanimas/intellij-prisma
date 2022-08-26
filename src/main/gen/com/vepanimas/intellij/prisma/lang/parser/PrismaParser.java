@@ -218,7 +218,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ENUM Identifier '{' (EnumValueDeclaration | BlockAttribute)* '}'
+  // ENUM Identifier EnumDeclarationBlock
   public static boolean EnumDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "EnumDeclaration")) return false;
     if (!nextTokenIs(b, ENUM)) return false;
@@ -226,27 +226,39 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = consumeToken(b, ENUM);
     r = r && Identifier(b, l + 1);
-    r = r && consumeToken(b, LBRACE);
-    r = r && EnumDeclaration_3(b, l + 1);
-    r = r && consumeToken(b, RBRACE);
+    r = r && EnumDeclarationBlock(b, l + 1);
     exit_section_(b, m, ENUM_DECLARATION, r);
     return r;
   }
 
+  /* ********************************************************** */
+  // '{' (EnumValueDeclaration | BlockAttribute)* '}'
+  public static boolean EnumDeclarationBlock(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumDeclarationBlock")) return false;
+    if (!nextTokenIs(b, LBRACE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, LBRACE);
+    r = r && EnumDeclarationBlock_1(b, l + 1);
+    r = r && consumeToken(b, RBRACE);
+    exit_section_(b, m, ENUM_DECLARATION_BLOCK, r);
+    return r;
+  }
+
   // (EnumValueDeclaration | BlockAttribute)*
-  private static boolean EnumDeclaration_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EnumDeclaration_3")) return false;
+  private static boolean EnumDeclarationBlock_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumDeclarationBlock_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!EnumDeclaration_3_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "EnumDeclaration_3", c)) break;
+      if (!EnumDeclarationBlock_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "EnumDeclarationBlock_1", c)) break;
     }
     return true;
   }
 
   // EnumValueDeclaration | BlockAttribute
-  private static boolean EnumDeclaration_3_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "EnumDeclaration_3_0")) return false;
+  private static boolean EnumDeclarationBlock_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "EnumDeclarationBlock_1_0")) return false;
     boolean r;
     r = EnumValueDeclaration(b, l + 1);
     if (!r) r = BlockAttribute(b, l + 1);
@@ -359,7 +371,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // '{' (FieldDeclaration | BlockAttribute)* '}'
-  static boolean FieldDeclarationBlock(PsiBuilder b, int l) {
+  public static boolean FieldDeclarationBlock(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FieldDeclarationBlock")) return false;
     if (!nextTokenIs(b, LBRACE)) return false;
     boolean r;
@@ -367,7 +379,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, LBRACE);
     r = r && FieldDeclarationBlock_1(b, l + 1);
     r = r && consumeToken(b, RBRACE);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, FIELD_DECLARATION_BLOCK, r);
     return r;
   }
 
@@ -461,7 +473,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // '{' KeyValue* '}'
-  static boolean KeyValueBlock(PsiBuilder b, int l) {
+  public static boolean KeyValueBlock(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "KeyValueBlock")) return false;
     if (!nextTokenIs(b, LBRACE)) return false;
     boolean r;
@@ -469,7 +481,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, LBRACE);
     r = r && KeyValueBlock_1(b, l + 1);
     r = r && consumeToken(b, RBRACE);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, KEY_VALUE_BLOCK, r);
     return r;
   }
 

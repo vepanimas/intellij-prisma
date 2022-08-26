@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface PrismaGeneratorDeclaration extends PrismaDeclaration {
 
   @NotNull
-  List<PrismaKeyValue> getKeyValueList();
+  PrismaKeyValueBlock getKeyValueBlock();
 
   @NotNull
   PsiElement getIdentifier();

@@ -36,8 +36,12 @@
         <enterBetweenBracesDelegate language="Prisma"
                                     implementationClass="com.intellij.codeInsight.editorActions.enter.EnterBetweenBracesAndBracketsDelegate"/>
 
-        <!-- Formatter -->
+        <!-- Code Style -->
         <langCodeStyleSettingsProvider
                 implementation="com.vepanimas.intellij.prisma.ide.formatter.settings.PrismaLanguageCodeStyleSettingsProvider"/>
+
+        <!-- Formatter -->
+        <lang.formatter language="Prisma"
+                        implementationClass="com.vepanimas.intellij.prisma.ide.formatter.PrismaFormattingModelBuilder"/>
     </extensions>
 </idea-plugin>

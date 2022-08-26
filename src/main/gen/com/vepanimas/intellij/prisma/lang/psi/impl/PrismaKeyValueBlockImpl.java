@@ -10,14 +10,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaEnumDeclarationImpl extends PrismaEnumDeclarationMixin implements PrismaEnumDeclaration {
+public class PrismaKeyValueBlockImpl extends PrismaElementImpl implements PrismaKeyValueBlock {
 
-  public PrismaEnumDeclarationImpl(@NotNull ASTNode node) {
+  public PrismaKeyValueBlockImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PrismaVisitor visitor) {
-    visitor.visitEnumDeclaration(this);
+    visitor.visitKeyValueBlock(this);
   }
 
   @Override
@@ -28,14 +28,8 @@ public class PrismaEnumDeclarationImpl extends PrismaEnumDeclarationMixin implem
 
   @Override
   @NotNull
-  public PrismaEnumDeclarationBlock getEnumDeclarationBlock() {
-    return findNotNullChildByClass(PrismaEnumDeclarationBlock.class);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+  public List<PrismaKeyValue> getKeyValueList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaKeyValue.class);
   }
 
 }

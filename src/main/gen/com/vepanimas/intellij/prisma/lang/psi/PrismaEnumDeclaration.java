@@ -8,10 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface PrismaEnumDeclaration extends PrismaDeclaration {
 
   @NotNull
-  List<PrismaBlockAttribute> getBlockAttributeList();
-
-  @NotNull
-  List<PrismaEnumValueDeclaration> getEnumValueDeclarationList();
+  PrismaEnumDeclarationBlock getEnumDeclarationBlock();
 
   @NotNull
   PsiElement getIdentifier();

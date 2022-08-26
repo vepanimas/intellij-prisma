@@ -28,8 +28,8 @@ public class PrismaGeneratorDeclarationImpl extends PrismaConfigBlockDeclaration
 
   @Override
   @NotNull
-  public List<PrismaKeyValue> getKeyValueList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaKeyValue.class);
+  public PrismaKeyValueBlock getKeyValueBlock() {
+    return findNotNullChildByClass(PrismaKeyValueBlock.class);
   }
 
   @Override

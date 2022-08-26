@@ -14,14 +14,17 @@ public interface PrismaElementTypes {
   IElementType BLOCK_ATTRIBUTE = new PrismaElementType("BLOCK_ATTRIBUTE");
   IElementType DATASOURCE_DECLARATION = new PrismaElementType("DATASOURCE_DECLARATION");
   IElementType ENUM_DECLARATION = new PrismaElementType("ENUM_DECLARATION");
+  IElementType ENUM_DECLARATION_BLOCK = new PrismaElementType("ENUM_DECLARATION_BLOCK");
   IElementType ENUM_VALUE_DECLARATION = new PrismaElementType("ENUM_VALUE_DECLARATION");
   IElementType EXPRESSION = new PrismaElementType("EXPRESSION");
   IElementType FIELD_ATTRIBUTE = new PrismaElementType("FIELD_ATTRIBUTE");
   IElementType FIELD_DECLARATION = new PrismaElementType("FIELD_DECLARATION");
+  IElementType FIELD_DECLARATION_BLOCK = new PrismaElementType("FIELD_DECLARATION_BLOCK");
   IElementType FIELD_TYPE = new PrismaElementType("FIELD_TYPE");
   IElementType FUNCTION_CALL = new PrismaElementType("FUNCTION_CALL");
   IElementType GENERATOR_DECLARATION = new PrismaElementType("GENERATOR_DECLARATION");
   IElementType KEY_VALUE = new PrismaElementType("KEY_VALUE");
+  IElementType KEY_VALUE_BLOCK = new PrismaElementType("KEY_VALUE_BLOCK");
   IElementType LEGACY_LIST_TYPE = new PrismaElementType("LEGACY_LIST_TYPE");
   IElementType LEGACY_REQUIRED_TYPE = new PrismaElementType("LEGACY_REQUIRED_TYPE");
   IElementType LIST_TYPE = new PrismaElementType("LIST_TYPE");
@@ -80,6 +83,9 @@ public interface PrismaElementTypes {
       else if (type == ENUM_DECLARATION) {
         return new PrismaEnumDeclarationImpl(node);
       }
+      else if (type == ENUM_DECLARATION_BLOCK) {
+        return new PrismaEnumDeclarationBlockImpl(node);
+      }
       else if (type == ENUM_VALUE_DECLARATION) {
         return new PrismaEnumValueDeclarationImpl(node);
       }
@@ -92,6 +98,9 @@ public interface PrismaElementTypes {
       else if (type == FIELD_DECLARATION) {
         return new PrismaFieldDeclarationImpl(node);
       }
+      else if (type == FIELD_DECLARATION_BLOCK) {
+        return new PrismaFieldDeclarationBlockImpl(node);
+      }
       else if (type == FIELD_TYPE) {
         return new PrismaFieldTypeImpl(node);
       }
@@ -103,6 +112,9 @@ public interface PrismaElementTypes {
       }
       else if (type == KEY_VALUE) {
         return new PrismaKeyValueImpl(node);
+      }
+      else if (type == KEY_VALUE_BLOCK) {
+        return new PrismaKeyValueBlockImpl(node);
       }
       else if (type == LEGACY_LIST_TYPE) {
         return new PrismaLegacyListTypeImpl(node);

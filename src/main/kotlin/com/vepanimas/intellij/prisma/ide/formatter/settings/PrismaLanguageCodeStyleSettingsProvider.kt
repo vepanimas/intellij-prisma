@@ -52,6 +52,16 @@ class PrismaLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvide
             LINE_COMMENT_ADD_SPACE = true
             // TODO: [enable after sinceBuild=221] LINE_COMMENT_ADD_SPACE_ON_REFORMAT = true
         }
+
+        indentOptions.apply {
+            INDENT_SIZE = DEFAULT_INDENT
+            CONTINUATION_INDENT_SIZE = DEFAULT_INDENT
+            TAB_SIZE = DEFAULT_INDENT
+        }
+    }
+
+    companion object {
+        private const val DEFAULT_INDENT = 2
     }
 }
 
