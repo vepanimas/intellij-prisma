@@ -16,4 +16,12 @@ class PrismaFormatterTest : FormatterTestCase() {
     fun testLineSpacing() {
         doTest()
     }
+
+    fun testTrailingNewLine() {
+        doTest()
+    }
+
+    fun testEmptyFile() {
+        doTest()
+    }
 }

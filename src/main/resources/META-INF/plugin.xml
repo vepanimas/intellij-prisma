@@ -43,5 +43,7 @@
         <!-- Formatter -->
         <lang.formatter language="Prisma"
                         implementationClass="com.vepanimas.intellij.prisma.ide.formatter.PrismaFormattingModelBuilder"/>
+        <postFormatProcessor
+                implementation="com.vepanimas.intellij.prisma.ide.formatter.PrismaPostFormatProcessor"/>
     </extensions>
 </idea-plugin>
