@@ -12,4 +12,8 @@ class PrismaFormatterTest : FormatterTestCase() {
     fun testIndents() {
         doTest()
     }
+
+    fun testLineSpacing() {
+        doTest()
+    }
 }

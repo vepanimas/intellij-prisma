@@ -51,6 +51,10 @@ class PrismaLanguageCodeStyleSettingsProvider : LanguageCodeStyleSettingsProvide
             LINE_COMMENT_AT_FIRST_COLUMN = false
             LINE_COMMENT_ADD_SPACE = true
             // TODO: [enable after sinceBuild=221] LINE_COMMENT_ADD_SPACE_ON_REFORMAT = true
+
+            KEEP_LINE_BREAKS = false
+            KEEP_BLANK_LINES_IN_DECLARATIONS = 1
+            KEEP_BLANK_LINES_IN_CODE = 1
         }
 
         indentOptions.apply {

@@ -9,9 +9,9 @@ class PrismaFmtBlock(
     node: ASTNode,
     wrap: Wrap?,
     alignment: Alignment?,
-    private val ctx: PrismaFmtBlockContext
+    private val context: PrismaFmtBlockContext
 ) : AbstractBlock(node, wrap, alignment) {
-    private val spacingProcessor = PrismaSpacingProcessor(node, ctx)
+    private val spacingProcessor = PrismaSpacingProcessor(this, context)
     private val indentProcessor = PrismaIndentProcessor()
     private val currentIndent = indentProcessor.getIndent(node)
 
@@ -24,7 +24,7 @@ class PrismaFmtBlock(
     override fun buildChildren(): List<Block> {
         return node.getChildren(null).asSequence()
             .filterNot { FormatterUtil.isWhitespaceOrEmpty(it) }
-            .map { PrismaFmtBlock(it, null, null, ctx) }
+            .map { PrismaFmtBlock(it, null, null, context) }
             .toList()
     }
 

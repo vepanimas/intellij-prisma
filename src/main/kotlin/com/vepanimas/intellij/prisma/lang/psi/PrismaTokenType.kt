@@ -3,6 +3,7 @@ package com.vepanimas.intellij.prisma.lang.psi
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet.create
+import com.intellij.psi.tree.TokenSet.orSet
 import com.vepanimas.intellij.prisma.lang.PrismaLanguage
 import com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
@@ -18,3 +19,9 @@ val PRISMA_BRACKETS = create(LBRACKET, RBRACKET)
 val PRISMA_PARENTHESES = create(LPAREN, RPAREN)
 
 val PRISMA_BLOCKS = create(FIELD_DECLARATION_BLOCK, KEY_VALUE_BLOCK, ENUM_DECLARATION_BLOCK)
+val PRISMA_DECLARATIONS = create(
+    MODEL_DECLARATION, TYPE_DECLARATION, DATASOURCE_DECLARATION,
+    GENERATOR_DECLARATION, ENUM_DECLARATION, TYPE_ALIAS
+)
+val PRISMA_TOP_ELEMENTS = orSet(PRISMA_DECLARATIONS, PRISMA_COMMENTS)
+val PRISMA_BLOCK_DECLARATIONS = create(FIELD_DECLARATION, BLOCK_ATTRIBUTE, KEY_VALUE, ENUM_VALUE_DECLARATION)

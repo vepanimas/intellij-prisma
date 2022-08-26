@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+
+  url = env("DATABASE_URL")
+}
+
+/// Model
+
+/// Documentation
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+
+  firstName String?
+  lastName  String?
+
+  social  Json?
+  isAdmin Boolean @default(false)
+
+  // Relation fields
+  courses     CourseEnrollment[] // asd
+  testResults TestResult[]       @relation(name: "results")
+  testsGraded TestResult[]       @relation(name: "graded")
+
+  tokens   Token[]
+  feedback CourseFeedback[]
+
+  unsup Unsupported("123")
+}
+
+model Course {
+  id            Int                @id @default(autoincrement())
+  name          String             @db.VarChar(255)
+  courseDetails String?
+  // Relation fields
+  members       CourseEnrollment[]
+  tests         Test[]
+  feedback      CourseFeedback[]
+
+  @@fulltext([name, courseDetails])
+  @@ignore
+}
+
+type TypeDefinition {
+  id String
+
+  studentId Int
+
+  graderId Int
+}
+
+enum UserRole {
+  STUDENT
+
+  TEACHER
+}
+
+type CUID = String @id @default(cuid())
+
+model Empty {
+}
