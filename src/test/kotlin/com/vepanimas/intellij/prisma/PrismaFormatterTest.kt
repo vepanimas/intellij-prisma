@@ -25,7 +25,23 @@ class PrismaFormatterTest : FormatterTestCase() {
         doTest()
     }
 
-    fun testModelSpaces() {
+    fun testModelSpacing() {
+        doTest()
+    }
+
+    fun testEnumSpacing() {
+        doTest()
+    }
+
+    fun testTypeSpacing() {
+        doTest()
+    }
+
+    fun testGeneratorSpacing() {
+        doTest()
+    }
+
+    fun testDatasourceSpacing() {
         doTest()
     }
 }

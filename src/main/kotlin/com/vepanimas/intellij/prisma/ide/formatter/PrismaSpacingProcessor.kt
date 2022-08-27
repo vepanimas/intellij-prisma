@@ -11,11 +11,8 @@ import com.intellij.psi.formatter.common.AbstractBlock
 import com.intellij.psi.tree.IElementType
 import com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition.Companion.DOC_COMMENT
 import com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition.Companion.LINE_COMMENT
-import com.vepanimas.intellij.prisma.lang.psi.PRISMA_BLOCK_DECLARATIONS
-import com.vepanimas.intellij.prisma.lang.psi.PRISMA_COMMENTS
-import com.vepanimas.intellij.prisma.lang.psi.PRISMA_TOP_ELEMENTS
+import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
-import com.vepanimas.intellij.prisma.lang.psi.PrismaFileElementType
 import com.intellij.psi.tree.TokenSet.create as ts
 
 private val ONE_LINE_SPACE_DECLARATIONS = ts(FIELD_DECLARATION, KEY_VALUE, ENUM_VALUE_DECLARATION)
@@ -31,6 +28,7 @@ class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFm
         .after(ts(AT, ATAT)).noSpace()
         .before(COMMA).noSpace()
         .after(COMMA).spaces(1, 1)
+        .around(EQ).spaces(1, 1)
         .between(FIELD_DECLARATION, FIELD_DECLARATION).lines(1, 1)
         .between(FIELD_DECLARATION, BLOCK_ATTRIBUTE).lines(2, 1)
         .between(BLOCK_ATTRIBUTE, BLOCK_ATTRIBUTE).lines(1, 0)
@@ -48,6 +46,8 @@ class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFm
         .between(ONE_LINE_SPACE_DECLARATIONS, PRISMA_COMMENTS).lines(1, 1)
         .between(PRISMA_COMMENTS, BLOCK_ATTRIBUTE).lines(1, 0)
         .between(BLOCK_ATTRIBUTE, PRISMA_COMMENTS).lines(1, 0)
+        .after(PRISMA_KEYWORDS).spaces(1, 1)
+        .between(IDENTIFIER, PRISMA_BLOCKS).spaces(1, 1)
 
     fun createSpacing(child1: Block?, child2: Block): Spacing? {
         val parentType = parent.elementType
