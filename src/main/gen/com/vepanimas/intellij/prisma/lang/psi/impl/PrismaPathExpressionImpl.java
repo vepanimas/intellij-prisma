@@ -10,20 +10,27 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public abstract class PrismaExpressionImpl extends PrismaElementImpl implements PrismaExpression {
+public class PrismaPathExpressionImpl extends PrismaExpressionImpl implements PrismaPathExpression {
 
-  public PrismaExpressionImpl(@NotNull ASTNode node) {
+  public PrismaPathExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull PrismaVisitor visitor) {
-    visitor.visitExpression(this);
+    visitor.visitPathExpression(this);
   }
 
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof PrismaVisitor) accept((PrismaVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public PrismaPath getPath() {
+    return findNotNullChildByClass(PrismaPath.class);
   }
 
 }

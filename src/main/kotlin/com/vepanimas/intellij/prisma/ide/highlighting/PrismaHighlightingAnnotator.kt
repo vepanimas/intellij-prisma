@@ -28,7 +28,7 @@ class PrismaHighlightingAnnotator : Annotator {
             is PrismaKeyValue -> newAnnotation(holder, element, PrismaColors.FIELD_NAME)
             is PrismaEnumValueDeclaration -> newAnnotation(holder, element, PrismaColors.FIELD_NAME)
             is PrismaPath -> when (parent.findPathParent()) {
-                is PrismaExpression -> newAnnotation(holder, element, PrismaColors.FIELD_REFERENCE)
+                is PrismaPathExpression -> newAnnotation(holder, element, PrismaColors.FIELD_REFERENCE)
                 is PrismaFunctionCall -> newAnnotation(holder, element, PrismaColors.FUNCTION)
                 is PrismaBlockAttribute, is PrismaFieldAttribute ->
                     newAnnotation(holder, element, PrismaColors.ATTRIBUTE)

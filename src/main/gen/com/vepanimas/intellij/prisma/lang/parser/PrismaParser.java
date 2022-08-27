@@ -21,7 +21,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
 
   public void parseLight(IElementType t, PsiBuilder b) {
     boolean r;
-    b = adapt_builder_(t, b, this, null);
+    b = adapt_builder_(t, b, this, EXTENDS_SETS_);
     Marker m = enter_section_(b, 0, _COLLAPSE_, null);
     r = parse_root_(t, b);
     exit_section_(b, 0, m, t, r, true, TRUE_CONDITION);
@@ -34,6 +34,11 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
     return Schema(b, l + 1);
   }
+
+  public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
+    create_token_set_(ARRAY_EXPRESSION, EXPRESSION, FUNCTION_CALL, LITERAL_EXPRESSION,
+      PATH_EXPRESSION),
+  };
 
   /* ********************************************************** */
   // NamedArgument | Expression
@@ -292,18 +297,16 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // FunctionCall
   //     | ArrayExpression
-  //     | NUMERIC_LITERAL
-  //     | STRING_LITERAL
-  //     | Path
+  //     | LiteralExpression
+  //     | PathExpression
   public static boolean Expression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Expression")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, EXPRESSION, "<expression>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, EXPRESSION, "<expression>");
     r = FunctionCall(b, l + 1);
     if (!r) r = ArrayExpression(b, l + 1);
-    if (!r) r = consumeToken(b, NUMERIC_LITERAL);
-    if (!r) r = consumeToken(b, STRING_LITERAL);
-    if (!r) r = Path(b, l + 1);
+    if (!r) r = LiteralExpression(b, l + 1);
+    if (!r) r = PathExpression(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -537,6 +540,19 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // NUMERIC_LITERAL | STRING_LITERAL
+  public static boolean LiteralExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "LiteralExpression")) return false;
+    if (!nextTokenIs(b, "<literal expression>", NUMERIC_LITERAL, STRING_LITERAL)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, LITERAL_EXPRESSION, "<literal expression>");
+    r = consumeToken(b, NUMERIC_LITERAL);
+    if (!r) r = consumeToken(b, STRING_LITERAL);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // MODEL Identifier FieldDeclarationBlock
   public static boolean ModelDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ModelDeclaration")) return false;
@@ -617,6 +633,18 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "Path_1_0_1")) return false;
     Path(b, l + 1);
     return true;
+  }
+
+  /* ********************************************************** */
+  // Path
+  public static boolean PathExpression(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PathExpression")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = Path(b, l + 1);
+    exit_section_(b, m, PATH_EXPRESSION, r);
+    return r;
   }
 
   /* ********************************************************** */

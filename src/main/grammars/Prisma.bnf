@@ -43,6 +43,7 @@
     WHITE_SPACE     = 'regexp:\s+'
   ]
 
+  extends('FunctionCall|ArrayExpression|LiteralExpression|PathExpression')=Expression
   implements('(Model|Type|Enum|Datasource|Generator)Declaration|TypeAlias')="com.vepanimas.intellij.prisma.lang.psi.PrismaDeclaration"
 }
 
@@ -122,12 +123,13 @@ NamedArgument ::= Identifier ':' Expression
 Expression ::=
     FunctionCall
     | ArrayExpression
-    | NUMERIC_LITERAL
-    | STRING_LITERAL
-    | Path
+    | LiteralExpression
+    | PathExpression
 
 FunctionCall ::= Path ArgumentsList
 ArrayExpression ::= '[' [Expression (',' Expression)*] ']'
+LiteralExpression ::= NUMERIC_LITERAL | STRING_LITERAL
+PathExpression ::= Path
 
 /* Identifiers */
 private Identifier ::= IDENTIFIER

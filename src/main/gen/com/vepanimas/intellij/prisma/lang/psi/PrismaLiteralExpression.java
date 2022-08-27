@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaArrayExpression extends PrismaExpression {
+public interface PrismaLiteralExpression extends PrismaExpression {
 
-  @NotNull
-  List<PrismaExpression> getExpressionList();
+  @Nullable
+  PsiElement getNumericLiteral();
+
+  @Nullable
+  PsiElement getStringLiteral();
 
 }

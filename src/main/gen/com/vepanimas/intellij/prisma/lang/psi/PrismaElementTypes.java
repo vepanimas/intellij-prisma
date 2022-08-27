@@ -28,10 +28,12 @@ public interface PrismaElementTypes {
   IElementType LEGACY_LIST_TYPE = new PrismaElementType("LEGACY_LIST_TYPE");
   IElementType LEGACY_REQUIRED_TYPE = new PrismaElementType("LEGACY_REQUIRED_TYPE");
   IElementType LIST_TYPE = new PrismaElementType("LIST_TYPE");
+  IElementType LITERAL_EXPRESSION = new PrismaElementType("LITERAL_EXPRESSION");
   IElementType MODEL_DECLARATION = new PrismaElementType("MODEL_DECLARATION");
   IElementType NAMED_ARGUMENT = new PrismaElementType("NAMED_ARGUMENT");
   IElementType OPTIONAL_TYPE = new PrismaElementType("OPTIONAL_TYPE");
   IElementType PATH = new PrismaElementType("PATH");
+  IElementType PATH_EXPRESSION = new PrismaElementType("PATH_EXPRESSION");
   IElementType TYPE_ALIAS = new PrismaElementType("TYPE_ALIAS");
   IElementType TYPE_DECLARATION = new PrismaElementType("TYPE_DECLARATION");
   IElementType TYPE_REFERENCE = new PrismaElementType("TYPE_REFERENCE");
@@ -89,9 +91,6 @@ public interface PrismaElementTypes {
       else if (type == ENUM_VALUE_DECLARATION) {
         return new PrismaEnumValueDeclarationImpl(node);
       }
-      else if (type == EXPRESSION) {
-        return new PrismaExpressionImpl(node);
-      }
       else if (type == FIELD_ATTRIBUTE) {
         return new PrismaFieldAttributeImpl(node);
       }
@@ -125,6 +124,9 @@ public interface PrismaElementTypes {
       else if (type == LIST_TYPE) {
         return new PrismaListTypeImpl(node);
       }
+      else if (type == LITERAL_EXPRESSION) {
+        return new PrismaLiteralExpressionImpl(node);
+      }
       else if (type == MODEL_DECLARATION) {
         return new PrismaModelDeclarationImpl(node);
       }
@@ -136,6 +138,9 @@ public interface PrismaElementTypes {
       }
       else if (type == PATH) {
         return new PrismaPathImpl(node);
+      }
+      else if (type == PATH_EXPRESSION) {
+        return new PrismaPathExpressionImpl(node);
       }
       else if (type == TYPE_ALIAS) {
         return new PrismaTypeAliasImpl(node);
