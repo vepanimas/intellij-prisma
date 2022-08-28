@@ -9,8 +9,8 @@ class PrismaFormattingModelBuilder : FormattingModelBuilder {
     override fun createModel(formattingContext: FormattingContext): FormattingModel {
         val file = formattingContext.containingFile
         val settings = formattingContext.codeStyleSettings
-        val context = PrismaFmtBlockContext(settings)
-        val block = PrismaFmtBlock(formattingContext.node, null, null, context)
+        val context = PrismaFormatBlockContext(settings)
+        val block = PrismaFormatBlock(formattingContext.node, null, null, context)
         return FormattingModelProvider.createFormattingModelForPsiFile(file, block, settings)
     }
 }

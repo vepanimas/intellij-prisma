@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaEnumDeclarationBlockImpl extends PrismaElementImpl implements PrismaEnumDeclarationBlock {
+public class PrismaEnumDeclarationBlockImpl extends PrismaBlockMixin implements PrismaEnumDeclarationBlock {
 
   public PrismaEnumDeclarationBlockImpl(@NotNull ASTNode node) {
     super(node);

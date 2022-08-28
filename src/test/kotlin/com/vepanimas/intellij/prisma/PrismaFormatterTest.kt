@@ -44,4 +44,16 @@ class PrismaFormatterTest : FormatterTestCase() {
     fun testDatasourceSpacing() {
         doTest()
     }
+
+    fun testKeyValueAlignment() {
+        doTest()
+    }
+
+    fun testFieldsAlignment() {
+        doTest()
+    }
+
+    fun testTypeAliasAlignment() {
+        doTest()
+    }
 }

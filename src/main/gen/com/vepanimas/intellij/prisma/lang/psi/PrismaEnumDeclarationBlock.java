@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaEnumDeclarationBlock extends PrismaElement {
+public interface PrismaEnumDeclarationBlock extends PrismaBlock {
 
   @NotNull
   List<PrismaBlockAttribute> getBlockAttributeList();

@@ -5,6 +5,7 @@ import com.intellij.formatting.Block
 import com.intellij.formatting.Spacing
 import com.intellij.formatting.SpacingBuilder
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.formatter.FormatterUtil
 import com.intellij.psi.formatter.common.AbstractBlock
@@ -17,7 +18,7 @@ import com.intellij.psi.tree.TokenSet.create as ts
 
 private val ONE_LINE_SPACE_DECLARATIONS = ts(FIELD_DECLARATION, KEY_VALUE, ENUM_VALUE_DECLARATION)
 
-class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFmtBlockContext) {
+class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFormatBlockContext) {
     private val parent = block.node
 
     private val spacingBuilder = SpacingBuilder(context.commonSettings)
@@ -38,6 +39,7 @@ class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFm
         .between(FIELD_TYPE, FIELD_ATTRIBUTE).spaces(1, Int.MAX_VALUE)
         .between(FIELD_ATTRIBUTE, FIELD_ATTRIBUTE).spaces(1, 1)
         .between(TYPE_REFERENCE, ts(QUEST, LBRACKET)).noSpace()
+        .between(TYPE_REFERENCE, FIELD_ATTRIBUTE).spaces(1, 1)
         .between(PATH, ARGUMENTS_LIST).noSpace()
         .between(UNSUPPORTED, LPAREN).noSpace()
         .beforeInside(COLON, NAMED_ARGUMENT).noSpace()
@@ -52,7 +54,14 @@ class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFm
     fun createSpacing(child1: Block?, child2: Block): Spacing? {
         val parentType = parent.elementType
         if (parentType == PrismaFileElementType && child1 == null) {
-            return Spacing.createSpacing(0, 0, 0, false, 0)
+            return none()
+        }
+
+        if (child1 is PrismaAnchorBlock) {
+            return none()
+        }
+        if (child2 is PrismaAnchorBlock) {
+            return one()
         }
 
         if (child1 is ASTBlock && child2 is ASTBlock) {
@@ -65,7 +74,12 @@ class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFm
 
                 // spaces between a declaration and a trailing comment
                 if (type1 in PRISMA_BLOCK_DECLARATIONS && type2 in PRISMA_COMMENTS && isTrailingComment(node2)) {
-                    return Spacing.createSpacing(1, 1, 0, false, 0)
+                    return if (child1.subBlocks.lastOrNull() is PrismaAnchorBlock) {
+                        none()
+                    } else {
+                        one()
+                    }
+
                 }
 
                 if (type1 in PRISMA_COMMENTS && isTrailingComment(node1)) {
@@ -79,6 +93,10 @@ class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFm
 
         return spacingBuilder.getSpacing(block, child1, child2)
     }
+
+    private fun one(): Spacing? = Spacing.createSpacing(1, 1, 0, false, 0)
+
+    private fun none(): Spacing? = Spacing.createSpacing(0, 0, 0, false, 0)
 
     private fun createSpacingAfterTrailingComment(
         node1: ASTNode?,
@@ -109,11 +127,7 @@ class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFm
 
     private fun isTrailingComment(node: ASTNode): Boolean = node
         .takeIf { node.elementType in PRISMA_COMMENTS }
-        ?.treePrev
-        ?.let { isSpacesOnly(it) }
-        ?: false
-
-    private fun isSpacesOnly(it: ASTNode) = it.elementType == WHITE_SPACE && !it.textContains('\n')
+        .let { it?.psi.skipWhitespacesBackwardWithoutNewLines() !is PsiWhiteSpace }
 
     private fun SpacingBuilder.RuleBuilder.lines(
         minLF: Int,
