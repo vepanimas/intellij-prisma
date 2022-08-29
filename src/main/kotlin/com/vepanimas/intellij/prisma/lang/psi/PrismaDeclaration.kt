@@ -1,3 +1,3 @@
 package com.vepanimas.intellij.prisma.lang.psi
 
-interface PrismaDeclaration : PrismaNameIdentifierOwner
+interface PrismaDeclaration : PrismaNameIdentifierOwner, PrismaDocumentationOwner

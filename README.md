@@ -8,9 +8,10 @@
 Adds support for [Prisma](https://www.prisma.io/) ORM and Prisma Schema Language (PSL). 
 The following features are available:
 
-* Complete Prisma Schema Language grammar support
+* Complete Prisma Schema Language grammar implementation
 * Semantic syntax highlighting
-* Indentation-based commenter
+* Line commenter 
+* Documentation comments and reader mode
 * Braces and quotes automatic insertion
 <!-- Plugin description end -->
 

@@ -48,6 +48,8 @@
 
   implements('.*Block')='com.vepanimas.intellij.prisma.lang.psi.PrismaBlock'
   mixin('.*Block')='com.vepanimas.intellij.prisma.lang.psi.impl.PrismaBlockMixin'
+
+  implements('FieldDeclaration|EnumValueDeclaration|KeyValue')='com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration'
 }
 
 Schema ::= Declaration*
@@ -61,39 +63,41 @@ private Declaration ::=
     | TypeAlias
 
 ModelDeclaration ::= MODEL Identifier FieldDeclarationBlock {
-    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
-    implements=[
-        "com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration"
-    ]
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
+    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration"
 }
 TypeDeclaration ::= TYPE Identifier FieldDeclarationBlock {
-    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
-    implements=[
-        "com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration"
-    ]
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
+    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration"
 }
 
 FieldDeclarationBlock ::= '{' (FieldDeclaration | BlockAttribute)* '}'
-FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute*
+FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute* {
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaFieldDeclarationMixin"
+}
 
 EnumDeclaration ::= ENUM Identifier EnumDeclarationBlock {
-    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEnumDeclarationMixin"
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEnumDeclarationMixin"
 }
 EnumDeclarationBlock ::= '{' (EnumValueDeclaration | BlockAttribute)* '}'
-EnumValueDeclaration ::= Identifier FieldAttribute*
+EnumValueDeclaration ::= Identifier FieldAttribute* {
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEnumValueDeclarationMixin"
+}
 
 DatasourceDeclaration ::= DATASOURCE Identifier KeyValueBlock {
-    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaConfigBlockDeclarationMixin"
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaConfigBlockDeclarationMixin"
 }
 GeneratorDeclaration ::= GENERATOR Identifier KeyValueBlock {
-    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaConfigBlockDeclarationMixin"
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaConfigBlockDeclarationMixin"
 }
 
 KeyValueBlock ::= '{' KeyValue* '}'
-KeyValue ::= Identifier '=' Expression
+KeyValue ::= Identifier '=' Expression {
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaKeyValueMixin"
+}
 
 TypeAlias ::= TYPE Identifier '=' TypeReference FieldAttribute* {
-    extends="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaTypeAliasMixin"
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaTypeAliasMixin"
 }
 
 /* Types */

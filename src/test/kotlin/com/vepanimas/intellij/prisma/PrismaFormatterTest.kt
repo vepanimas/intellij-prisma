@@ -56,4 +56,8 @@ class PrismaFormatterTest : FormatterTestCase() {
     fun testTypeAliasAlignment() {
         doTest()
     }
+
+    fun testAlignmentWithDocComments() {
+        doTest()
+    }
 }

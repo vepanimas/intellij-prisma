@@ -35,7 +35,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitEnumValueDeclaration(@NotNull PrismaEnumValueDeclaration o) {
-    visitElement(o);
+    visitMemberDeclaration(o);
   }
 
   public void visitExpression(@NotNull PrismaExpression o) {
@@ -47,7 +47,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitFieldDeclaration(@NotNull PrismaFieldDeclaration o) {
-    visitElement(o);
+    visitMemberDeclaration(o);
   }
 
   public void visitFieldDeclarationBlock(@NotNull PrismaFieldDeclarationBlock o) {
@@ -67,7 +67,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitKeyValue(@NotNull PrismaKeyValue o) {
-    visitElement(o);
+    visitMemberDeclaration(o);
   }
 
   public void visitKeyValueBlock(@NotNull PrismaKeyValueBlock o) {
@@ -137,6 +137,10 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitDeclaration(@NotNull PrismaDeclaration o) {
+    visitElement(o);
+  }
+
+  public void visitMemberDeclaration(@NotNull PrismaMemberDeclaration o) {
     visitElement(o);
   }
 

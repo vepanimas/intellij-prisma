@@ -4,5 +4,4 @@ import com.intellij.psi.codeStyle.CodeStyleSettings
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings
 
 class PrismaCodeStyleSettings(container: CodeStyleSettings) :
-    CustomCodeStyleSettings(PrismaCodeStyleSettings::class.java.simpleName, container) {
-}
+    CustomCodeStyleSettings(PrismaCodeStyleSettings::class.java.simpleName, container)

@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaKeyValueImpl extends PrismaElementImpl implements PrismaKeyValue {
+public class PrismaKeyValueImpl extends PrismaKeyValueMixin implements PrismaKeyValue {
 
   public PrismaKeyValueImpl(@NotNull ASTNode node) {
     super(node);

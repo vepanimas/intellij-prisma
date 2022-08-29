@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaKeyValue extends PrismaElement {
+public interface PrismaKeyValue extends PrismaMemberDeclaration {
 
   @NotNull
   PrismaExpression getExpression();
