@@ -28,7 +28,7 @@ class PrismaDocumentationProvider : AbstractDocumentationProvider() {
         val element = file.findElementAt(range.startOffset)
         val comments = generateSequence(element) { el -> el.nextSibling }
             .takeWhile { it.startOffset < range.endOffset }
-            .filter { it.isDocComment }
+            .filter { it.isDocComment && !it.isTrailingComment }
             .mapNotNull { it as? PsiComment }
             .toList()
 
@@ -38,7 +38,7 @@ class PrismaDocumentationProvider : AbstractDocumentationProvider() {
     override fun collectDocComments(file: PsiFile, sink: Consumer<in PsiDocCommentBase>) {
         val comments = PsiTreeUtil
             .findChildrenOfType(file, PsiComment::class.java)
-            .filter { it.isDocComment }
+            .filter { it.isDocComment && !it.isTrailingComment }
 
         groupComments(comments).forEach {
             sink.accept(it)
@@ -54,8 +54,7 @@ class PrismaDocumentationProvider : AbstractDocumentationProvider() {
         var i = comments.lastIndex
         while (i >= 0) {
             val comment = comments[i]
-            val block =
-                if (comment.isTrailingComment) listOf(comment) else comment.collectPrecedingDocComments(false)
+            val block = comment.collectPrecedingDocComments(false)
 
             if (block.isNotEmpty()) {
                 docComments.add(PrismaVirtualDocumentationComment(block))
