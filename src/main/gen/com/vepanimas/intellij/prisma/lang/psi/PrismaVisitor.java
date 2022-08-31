@@ -91,7 +91,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitModelDeclaration(@NotNull PrismaModelDeclaration o) {
-    visitModelTypeDeclaration(o);
+    visitEntityDeclaration(o);
     // visitDeclaration(o);
   }
 
@@ -116,7 +116,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitTypeDeclaration(@NotNull PrismaTypeDeclaration o) {
-    visitModelTypeDeclaration(o);
+    visitEntityDeclaration(o);
     // visitDeclaration(o);
   }
 
@@ -140,11 +140,11 @@ public class PrismaVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
-  public void visitMemberDeclaration(@NotNull PrismaMemberDeclaration o) {
+  public void visitEntityDeclaration(@NotNull PrismaEntityDeclaration o) {
     visitElement(o);
   }
 
-  public void visitModelTypeDeclaration(@NotNull PrismaModelTypeDeclaration o) {
+  public void visitMemberDeclaration(@NotNull PrismaMemberDeclaration o) {
     visitElement(o);
   }
 

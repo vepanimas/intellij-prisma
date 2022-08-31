@@ -4,7 +4,7 @@ import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.PrismaBundle
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
-import com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration
+import com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
 
 class PrismaDocumentationBuilder(private val element: PsiElement) {
@@ -22,11 +22,11 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
     private fun StringBuilder.additionalSections() {
         when (element) {
             is PrismaFieldDeclaration -> fieldAttributesSection(element)
-            is PrismaModelTypeDeclaration -> modelTypeMembersSection(element)
+            is PrismaEntityDeclaration -> entityMembersSection(element)
         }
     }
 
-    private fun StringBuilder.modelTypeMembersSection(element: PrismaModelTypeDeclaration) {
+    private fun StringBuilder.entityMembersSection(element: PrismaEntityDeclaration) {
         sections {
             val psiRenderer = PrismaPsiRenderer()
 
