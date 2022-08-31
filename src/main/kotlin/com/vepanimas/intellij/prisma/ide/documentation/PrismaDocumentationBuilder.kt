@@ -21,7 +21,7 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
 
     private fun StringBuilder.additionalSections() {
         when (element) {
-            is PrismaFieldDeclaration -> attributesSection(element)
+            is PrismaFieldDeclaration -> fieldAttributesSection(element)
             is PrismaModelTypeDeclaration -> modelTypeMembersSection(element)
         }
     }
@@ -57,7 +57,7 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
         }
     }
 
-    private fun StringBuilder.attributesSection(element: PrismaFieldDeclaration) {
+    private fun StringBuilder.fieldAttributesSection(element: PrismaFieldDeclaration) {
         val attributeList = element.fieldAttributeList
         if (attributeList.isEmpty()) {
             return

@@ -17,6 +17,6 @@ object PrismaElementFactory {
         PsiTreeUtil.findChildOfType(createFile(project, text), T::class.java, true)
 
     fun createIdentifier(project: Project, name: String): PsiElement =
-        createElement<PrismaModelDeclaration>(project, "model $name {}")?.identifier
+        createElement<PrismaModelDeclaration>(project, "model $name {}")?.nameIdentifier
             ?: error("Invalid identifier: $name")
 }
