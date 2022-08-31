@@ -27,15 +27,15 @@ public class PrismaEnumDeclarationImpl extends PrismaEnumDeclarationMixin implem
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PrismaEnumDeclarationBlock getEnumDeclarationBlock() {
-    return findNotNullChildByClass(PrismaEnumDeclarationBlock.class);
+    return findChildByClass(PrismaEnumDeclarationBlock.class);
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+    return findChildByType(IDENTIFIER);
   }
 
 }

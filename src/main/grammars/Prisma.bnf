@@ -52,52 +52,73 @@
   implements('FieldDeclaration|EnumValueDeclaration|KeyValue')='com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration'
 }
 
-Schema ::= Declaration*
+Schema ::= (Declaration | ConsumeIllegalIdentifier)*
 
 private Declaration ::=
     ModelDeclaration
-    | TypeDeclaration
     | EnumDeclaration
     | DatasourceDeclaration
     | GeneratorDeclaration
     | TypeAlias
+    | TypeDeclaration
+    {
+        pin=1
+        recoverWhile=Declaration_recover
+    }
+private Declaration_recover ::= !TopLevelKeywords
+private TopLevelKeywords ::= MODEL | TYPE | ENUM | GENERATOR | DATASOURCE
 
 ModelDeclaration ::= MODEL Identifier FieldDeclarationBlock {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEntityDeclarationMixin"
     implements="com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration"
+    pin=1
 }
 TypeDeclaration ::= TYPE Identifier FieldDeclarationBlock {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEntityDeclarationMixin"
     implements="com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration"
+    pin=1
 }
 
-FieldDeclarationBlock ::= '{' (FieldDeclaration | BlockAttribute)* '}'
+FieldDeclarationBlock ::= '{' (FieldDeclaration | BlockAttribute)* '}' {
+    pin=1
+}
 FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute* {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaFieldDeclarationMixin"
+    pin=1
 }
 
 EnumDeclaration ::= ENUM Identifier EnumDeclarationBlock {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEnumDeclarationMixin"
+    pin=1
 }
-EnumDeclarationBlock ::= '{' (EnumValueDeclaration | BlockAttribute)* '}'
+EnumDeclarationBlock ::= '{' (EnumValueDeclaration | BlockAttribute)* '}' {
+    pin=1
+}
 EnumValueDeclaration ::= Identifier FieldAttribute* {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEnumValueDeclarationMixin"
+    pin=1
 }
 
 DatasourceDeclaration ::= DATASOURCE Identifier KeyValueBlock {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaConfigBlockDeclarationMixin"
+    pin=1
 }
 GeneratorDeclaration ::= GENERATOR Identifier KeyValueBlock {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaConfigBlockDeclarationMixin"
+    pin=1
 }
 
-KeyValueBlock ::= '{' KeyValue* '}'
+KeyValueBlock ::= '{' KeyValue* '}' {
+    pin=1
+}
 KeyValue ::= Identifier '=' Expression {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaKeyValueMixin"
+    pin=1
 }
 
 TypeAlias ::= TYPE Identifier '=' TypeReference FieldAttribute* {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaTypeAliasMixin"
+    pin=3
 }
 
 /* Types */
@@ -140,4 +161,5 @@ PathExpression ::= Path
 
 /* Identifiers */
 private Identifier ::= IDENTIFIER
+private ConsumeIllegalIdentifier ::= IDENTIFIER
 Path ::= Identifier ('.' Path?)*

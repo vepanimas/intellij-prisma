@@ -19,12 +19,20 @@ class PrismaDocumentationDefinitionBuilder(private val element: PsiElement) {
             is PrismaKeyValue -> buildKeyValue(element, sb)
         }
 
+        buildKeyword(sb)
+
         val text = sb.toString()
         if (text.isEmpty()) {
             return null
         }
 
         return toHtml(element.project, text)
+    }
+
+    private fun buildKeyword(sb: StringBuilder) {
+        if (element.isKeyword) {
+            sb.append(element.text)
+        }
     }
 
     private fun buildFieldDeclaration(element: PrismaFieldDeclaration, sb: StringBuilder) {

@@ -27,9 +27,9 @@ public class PrismaKeyValueImpl extends PrismaKeyValueMixin implements PrismaKey
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PrismaExpression getExpression() {
-    return findNotNullChildByClass(PrismaExpression.class);
+    return findChildByClass(PrismaExpression.class);
   }
 
   @Override

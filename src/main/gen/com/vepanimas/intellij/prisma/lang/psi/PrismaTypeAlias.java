@@ -10,7 +10,7 @@ public interface PrismaTypeAlias extends PrismaDeclaration {
   @NotNull
   List<PrismaFieldAttribute> getFieldAttributeList();
 
-  @NotNull
+  @Nullable
   PrismaTypeReference getTypeReference();
 
   @NotNull

@@ -7,10 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface PrismaTypeDeclaration extends PrismaEntityDeclaration, PrismaDeclaration {
 
-  @NotNull
+  @Nullable
   PrismaFieldDeclarationBlock getFieldDeclarationBlock();
 
-  @NotNull
+  @Nullable
   PsiElement getIdentifier();
 
 }

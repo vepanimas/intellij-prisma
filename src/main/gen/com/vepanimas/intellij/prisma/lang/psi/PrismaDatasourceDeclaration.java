@@ -7,10 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface PrismaDatasourceDeclaration extends PrismaDeclaration {
 
-  @NotNull
+  @Nullable
   PrismaKeyValueBlock getKeyValueBlock();
 
-  @NotNull
+  @Nullable
   PsiElement getIdentifier();
 
 }

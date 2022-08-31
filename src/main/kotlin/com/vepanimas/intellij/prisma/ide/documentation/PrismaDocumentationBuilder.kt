@@ -3,8 +3,11 @@ package com.vepanimas.intellij.prisma.ide.documentation
 import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.PrismaBundle
-import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
+import com.vepanimas.intellij.prisma.ide.schema.PRISMA_KEYWORDS_SCHEMA
+import com.vepanimas.intellij.prisma.ide.schema.schemaKind
+import com.vepanimas.intellij.prisma.ide.schema.schemaLabel
 import com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration
+import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
 
 class PrismaDocumentationBuilder(private val element: PsiElement) {
@@ -16,6 +19,7 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
             definition { append(def) }
             additionalSections()
             doc(element)
+            externalSchemaDocumentation(element)
         }
     }
 
@@ -29,10 +33,9 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
     private fun StringBuilder.entityMembersSection(element: PrismaEntityDeclaration) {
         sections {
             val psiRenderer = PrismaPsiRenderer()
+            val block = element.getFieldDeclarationBlock() ?: return@sections
 
-            val block = element.getFieldDeclarationBlock()
             val fields = block.fieldDeclarationList
-
             if (fields.isNotEmpty()) {
                 section(PrismaBundle.message("prisma.doc.section.fields")) {
                     fields.joinTo(this, separator = "<p>") {
@@ -67,6 +70,16 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
             section(PrismaBundle.message("prisma.doc.section.attributes")) {
                 attributeList.joinTo(this, separator = "<p>") { PrismaPsiRenderer().build(it) }
             }
+        }
+    }
+
+    private fun StringBuilder.externalSchemaDocumentation(element: PsiElement) {
+        val schemaKind = element.schemaKind ?: return
+        val label = element.schemaLabel ?: return
+        val documentation = PRISMA_KEYWORDS_SCHEMA[schemaKind, label]?.documentation ?: return
+
+        content {
+            append(documentation)
         }
     }
 }

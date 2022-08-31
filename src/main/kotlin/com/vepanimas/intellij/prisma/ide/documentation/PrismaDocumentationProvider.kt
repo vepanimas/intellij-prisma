@@ -1,17 +1,16 @@
 package com.vepanimas.intellij.prisma.ide.documentation
 
 import com.intellij.lang.documentation.AbstractDocumentationProvider
+import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.elementType
 import com.intellij.refactoring.suggested.startOffset
-import com.vepanimas.intellij.prisma.lang.psi.PrismaVirtualDocumentationComment
-import com.vepanimas.intellij.prisma.lang.psi.collectPrecedingDocComments
-import com.vepanimas.intellij.prisma.lang.psi.isDocComment
-import com.vepanimas.intellij.prisma.lang.psi.isTrailingComment
+import com.vepanimas.intellij.prisma.lang.psi.*
 import java.util.function.Consumer
 
 class PrismaDocumentationProvider : AbstractDocumentationProvider() {
@@ -22,6 +21,19 @@ class PrismaDocumentationProvider : AbstractDocumentationProvider() {
     override fun generateRenderedDoc(comment: PsiDocCommentBase): String? {
         val docComment = comment as? PrismaVirtualDocumentationComment ?: return null
         return PrismaDocumentationRenderer(docComment).render()
+    }
+
+    override fun getCustomDocumentationElement(
+        editor: Editor,
+        file: PsiFile,
+        contextElement: PsiElement?,
+        targetOffset: Int
+    ): PsiElement? {
+        if (contextElement?.isKeyword == true) {
+            return contextElement
+        }
+
+        return super.getCustomDocumentationElement(editor, file, contextElement, targetOffset)
     }
 
     override fun findDocComment(file: PsiFile, range: TextRange): PsiDocCommentBase? {

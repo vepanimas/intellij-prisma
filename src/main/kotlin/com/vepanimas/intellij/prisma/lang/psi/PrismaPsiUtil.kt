@@ -7,11 +7,15 @@ import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.util.castSafelyTo
+import com.vepanimas.intellij.prisma.ide.completion.PrismaKeywordFakeElement
 import com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition
 
 fun PrismaPath.findTopmostPathParent(): PsiElement? {
     return PsiTreeUtil.skipParentsOfType(this, PrismaPath::class.java)
 }
+
+val PsiElement.isKeyword
+    get() = elementType in PRISMA_KEYWORDS || this is PrismaKeywordFakeElement
 
 val PsiElement?.hasTrailingComment: Boolean
     get() = skipWhitespacesForwardWithoutNewLines() is PsiComment

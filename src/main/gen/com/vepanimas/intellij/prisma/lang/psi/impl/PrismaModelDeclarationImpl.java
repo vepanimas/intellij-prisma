@@ -27,15 +27,15 @@ public class PrismaModelDeclarationImpl extends PrismaEntityDeclarationMixin imp
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PrismaFieldDeclarationBlock getFieldDeclarationBlock() {
-    return findNotNullChildByClass(PrismaFieldDeclarationBlock.class);
+    return findChildByClass(PrismaFieldDeclarationBlock.class);
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+    return findChildByType(IDENTIFIER);
   }
 
 }

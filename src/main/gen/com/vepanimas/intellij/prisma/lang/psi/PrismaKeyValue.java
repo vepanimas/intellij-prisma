@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface PrismaKeyValue extends PrismaMemberDeclaration {
 
-  @NotNull
+  @Nullable
   PrismaExpression getExpression();
 
   @NotNull

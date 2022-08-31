@@ -49,5 +49,9 @@
         <!-- Documentation -->
         <lang.documentationProvider language="Prisma"
                                     implementationClass="com.vepanimas.intellij.prisma.ide.documentation.PrismaDocumentationProvider"/>
+
+        <!-- Completion -->
+        <completion.contributor language="Prisma"
+                                implementationClass="com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionContributor"/>
     </extensions>
 </idea-plugin>

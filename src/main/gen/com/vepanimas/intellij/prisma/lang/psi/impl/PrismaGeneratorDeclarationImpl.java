@@ -27,15 +27,15 @@ public class PrismaGeneratorDeclarationImpl extends PrismaConfigBlockDeclaration
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PrismaKeyValueBlock getKeyValueBlock() {
-    return findNotNullChildByClass(PrismaKeyValueBlock.class);
+    return findChildByClass(PrismaKeyValueBlock.class);
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+    return findChildByType(IDENTIFIER);
   }
 
 }

@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
 
 @NonNls
-private const val BUNDLE = "messages.PrismaBundle"
+const val BUNDLE = "messages.PrismaBundle"
 
 object PrismaBundle : DynamicBundle(BUNDLE) {
 
