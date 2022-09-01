@@ -1,3 +1,5 @@
+/// Model
+/// Doc
 model Use<caret>r {
   id          Int                @id @default(autoincrement())
   email       String             @unique

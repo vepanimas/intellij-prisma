@@ -3,9 +3,7 @@ package com.vepanimas.intellij.prisma.ide.documentation
 import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.PrismaBundle
-import com.vepanimas.intellij.prisma.ide.schema.PRISMA_KEYWORDS_SCHEMA
-import com.vepanimas.intellij.prisma.ide.schema.schemaKind
-import com.vepanimas.intellij.prisma.ide.schema.schemaLabel
+import com.vepanimas.intellij.prisma.ide.schema.PRISMA_SCHEMA
 import com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
@@ -19,7 +17,7 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
             definition { append(def) }
             additionalSections()
             doc(element)
-            externalSchemaDocumentation(element)
+            schemaDocumentation(element)
         }
     }
 
@@ -73,11 +71,8 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
         }
     }
 
-    private fun StringBuilder.externalSchemaDocumentation(element: PsiElement) {
-        val schemaKind = element.schemaKind ?: return
-        val label = element.schemaLabel ?: return
-        val documentation = PRISMA_KEYWORDS_SCHEMA[schemaKind, label]?.documentation ?: return
-
+    private fun StringBuilder.schemaDocumentation(element: PsiElement) {
+        val documentation = PRISMA_SCHEMA.match(element)?.documentation ?: return
         content {
             append(documentation)
         }

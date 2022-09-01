@@ -2,6 +2,9 @@ package com.vepanimas.intellij.prisma.ide.schema
 
 import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.patterns.ElementPattern
+import com.intellij.psi.PsiElement
+import com.intellij.psi.tree.IElementType
 
 @DslMarker
 annotation class SchemaDslBuilderMarker
@@ -45,8 +48,11 @@ open class PrismaSchemaElementBuilder(private val kind: PrismaSchemaElementKind)
     SchemaDslBuilder<PrismaSchemaElement> {
 
     var label: String? = null
+    var elementType: IElementType? = null
     var documentation: String? = null
     var signature: String? = null
+    var insertHandler: InsertHandler<LookupElement>? = null
+    var pattern: ElementPattern<out PsiElement>? = null
 
     private var params: MutableMap<String, PrismaSchemaElementParameter> = mutableMapOf()
 
@@ -60,20 +66,21 @@ open class PrismaSchemaElementBuilder(private val kind: PrismaSchemaElementKind)
     override fun build(): PrismaSchemaElement {
         return label
             ?.takeIf { it.isNotBlank() }
-            ?.let { PrismaSchemaElement(kind, it, documentation, signature, params) }
+            ?.let { PrismaSchemaElement(kind, it, elementType, documentation, signature, insertHandler, params, pattern) }
             ?: error("label is not specified")
     }
 }
 
 class PrismaSchemaParameterBuilder : SchemaDslBuilder<PrismaSchemaElementParameter> {
     var label: String? = null
+    var elementType: IElementType? = null
     var documentation: String? = null
-    var insertHandler: InsertHandler<out LookupElement>? = null
+    var insertHandler: InsertHandler<LookupElement>? = null
 
     override fun build(): PrismaSchemaElementParameter {
         return label
             ?.takeIf { it.isNotBlank() }
-            ?.let { PrismaSchemaElementParameter(it, documentation, insertHandler) }
+            ?.let { PrismaSchemaElementParameter(it, elementType, documentation, insertHandler) }
             ?: error("label is not specified")
     }
 }

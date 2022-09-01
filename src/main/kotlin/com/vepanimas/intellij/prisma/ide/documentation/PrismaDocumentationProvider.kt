@@ -8,7 +8,6 @@ import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.elementType
 import com.intellij.refactoring.suggested.startOffset
 import com.vepanimas.intellij.prisma.lang.psi.*
 import java.util.function.Consumer

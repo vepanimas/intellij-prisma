@@ -3,7 +3,7 @@ package com.vepanimas.intellij.prisma
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 
 abstract class PrismaTestCase : BasePlatformTestCase() {
-    final override fun getTestDataPath(): String = "$relativeTestDataPath$basePath"
+    override fun getTestDataPath(): String = "$relativeTestDataPath$basePath"
 
     protected fun getTestName(ext: String = "prisma"): String = "${getTestName(true)}.$ext"
 

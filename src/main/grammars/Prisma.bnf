@@ -161,5 +161,7 @@ PathExpression ::= Path
 
 /* Identifiers */
 private Identifier ::= IDENTIFIER
-private ConsumeIllegalIdentifier ::= IDENTIFIER
+private ConsumeIllegalIdentifier ::= IDENTIFIER {
+    consumeTokenMethod="consumeTokenFast"
+}
 Path ::= Identifier ('.' Path?)*

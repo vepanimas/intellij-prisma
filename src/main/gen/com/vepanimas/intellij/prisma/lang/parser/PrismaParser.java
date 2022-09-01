@@ -192,7 +192,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   /* ********************************************************** */
   // IDENTIFIER
   static boolean ConsumeIllegalIdentifier(PsiBuilder b, int l) {
-    return consumeToken(b, IDENTIFIER);
+    return consumeTokenFast(b, IDENTIFIER);
   }
 
   /* ********************************************************** */
