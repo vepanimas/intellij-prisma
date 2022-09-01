@@ -1,9 +1,22 @@
 package com.vepanimas.intellij.prisma
 
 import com.intellij.codeInsight.documentation.DocumentationManager
+import com.intellij.openapi.editor.colors.EditorColorsManager
+import com.intellij.openapi.util.Disposer
 
 class PrismaDocumentationTest : PrismaTestCase() {
     override fun getBasePath(): String = "/documentation"
+
+    override fun setUp() {
+        super.setUp()
+
+        val colorsManager = EditorColorsManager.getInstance()
+        val schemeBefore = colorsManager.globalScheme
+        colorsManager.globalScheme = colorsManager.getScheme("Darcula")
+        Disposer.register(testRootDisposable) {
+            colorsManager.globalScheme = schemeBefore
+        }
+    }
 
     fun testModel() {
         doTest()
@@ -18,6 +31,38 @@ class PrismaDocumentationTest : PrismaTestCase() {
     }
 
     fun testKeywordTypeInAlias() {
+        doTest()
+    }
+
+    fun testType() {
+        doTest()
+    }
+
+    fun testEnum() {
+        doTest()
+    }
+
+    fun testEnumValue() {
+        doTest()
+    }
+
+    fun testGenerator() {
+        doTest()
+    }
+
+    fun testDatasource() {
+        doTest()
+    }
+
+    fun testField() {
+        doTest()
+    }
+
+    fun testFieldTrailingDoc() {
+        doTest()
+    }
+
+    fun testKeyValue() {
         doTest()
     }
 
