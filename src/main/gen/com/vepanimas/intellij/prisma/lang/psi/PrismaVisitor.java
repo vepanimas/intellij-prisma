@@ -121,7 +121,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitTypeReference(@NotNull PrismaTypeReference o) {
-    visitElement(o);
+    visitReferencingElement(o);
   }
 
   public void visitUnsupportedOptionalListType(@NotNull PrismaUnsupportedOptionalListType o) {
@@ -145,6 +145,10 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitMemberDeclaration(@NotNull PrismaMemberDeclaration o) {
+    visitElement(o);
+  }
+
+  public void visitReferencingElement(@NotNull PrismaReferencingElement o) {
     visitElement(o);
   }
 

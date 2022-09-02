@@ -10,7 +10,7 @@ public interface PrismaBlockAttribute extends PrismaElement {
   @Nullable
   PrismaArgumentsList getArgumentsList();
 
-  @NotNull
+  @Nullable
   PrismaPath getPath();
 
 }

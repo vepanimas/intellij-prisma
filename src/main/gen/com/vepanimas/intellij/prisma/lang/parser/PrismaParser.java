@@ -173,13 +173,14 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   public static boolean BlockAttribute(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "BlockAttribute")) return false;
     if (!nextTokenIs(b, ATAT)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, BLOCK_ATTRIBUTE, null);
     r = consumeToken(b, ATAT);
-    r = r && Path(b, l + 1);
-    r = r && BlockAttribute_2(b, l + 1);
-    exit_section_(b, m, BLOCK_ATTRIBUTE, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, Path(b, l + 1));
+    r = p && BlockAttribute_2(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // ArgumentsList?
@@ -339,13 +340,14 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   public static boolean FieldAttribute(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FieldAttribute")) return false;
     if (!nextTokenIs(b, AT)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, FIELD_ATTRIBUTE, null);
     r = consumeToken(b, AT);
-    r = r && Path(b, l + 1);
-    r = r && FieldAttribute_2(b, l + 1);
-    exit_section_(b, m, FIELD_ATTRIBUTE, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, Path(b, l + 1));
+    r = p && FieldAttribute_2(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   // ArgumentsList?
@@ -785,11 +787,34 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   // UNSUPPORTED '(' STRING_LITERAL ')'
   public static boolean UnsupportedType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "UnsupportedType")) return false;
-    if (!nextTokenIs(b, UNSUPPORTED)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, UNSUPPORTED_TYPE, "<unsupported type>");
+    r = consumeTokens(b, 1, UNSUPPORTED, LPAREN, STRING_LITERAL, RPAREN);
+    p = r; // pin = 1
+    exit_section_(b, l, m, r, p, PrismaParser::UnsupportedType_recover);
+    return r || p;
+  }
+
+  /* ********************************************************** */
+  // !(')' | '}' | '@' | '@@' | IDENTIFIER)
+  static boolean UnsupportedType_recover(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "UnsupportedType_recover")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, UNSUPPORTED, LPAREN, STRING_LITERAL, RPAREN);
-    exit_section_(b, m, UNSUPPORTED_TYPE, r);
+    Marker m = enter_section_(b, l, _NOT_);
+    r = !UnsupportedType_recover_0(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // ')' | '}' | '@' | '@@' | IDENTIFIER
+  private static boolean UnsupportedType_recover_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "UnsupportedType_recover_0")) return false;
+    boolean r;
+    r = consumeToken(b, RPAREN);
+    if (!r) r = consumeToken(b, RBRACE);
+    if (!r) r = consumeToken(b, AT);
+    if (!r) r = consumeToken(b, ATAT);
+    if (!r) r = consumeToken(b, IDENTIFIER);
     return r;
   }
 

@@ -6,6 +6,7 @@ import com.vepanimas.intellij.prisma.lang.psi.PrismaExpression
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldAttribute
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldType
+import com.vepanimas.intellij.prisma.lang.psi.PrismaPath
 
 class PrismaPsiRenderer {
     fun build(element: PsiElement?): String {
@@ -16,6 +17,7 @@ class PrismaPsiRenderer {
             is PrismaFieldAttribute -> element.text
             is PrismaBlockAttribute -> element.text
             is PrismaExpression -> element.text
+            is PrismaPath -> element.text
             else -> element?.text ?: ""
         }
     }

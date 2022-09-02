@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface PrismaUnsupportedType extends PrismaElement {
 
-  @NotNull
+  @Nullable
   PsiElement getStringLiteral();
 
 }

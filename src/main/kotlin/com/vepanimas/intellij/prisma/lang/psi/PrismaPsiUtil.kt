@@ -4,11 +4,9 @@ import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
-import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.util.castSafelyTo
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaFakeElement
 import com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition
 
 fun PrismaPath.findTopmostPathParent(): PsiElement? {
@@ -16,13 +14,7 @@ fun PrismaPath.findTopmostPathParent(): PsiElement? {
 }
 
 val PsiElement.isKeyword: Boolean
-    get() = prismaElementType in PRISMA_KEYWORDS
-
-val PsiElement?.prismaElementType: IElementType?
-    get() = when (this) {
-        is PrismaSchemaFakeElement -> this.elementType
-        else -> this.elementType
-    }
+    get() = elementType in PRISMA_KEYWORDS
 
 val PsiElement?.hasTrailingComment: Boolean
     get() = skipWhitespacesForwardWithoutNewLines() is PsiComment

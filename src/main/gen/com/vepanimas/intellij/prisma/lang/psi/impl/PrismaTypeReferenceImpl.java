@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaTypeReferenceImpl extends PrismaElementImpl implements PrismaTypeReference {
+public class PrismaTypeReferenceImpl extends PrismaTypeReferenceMixin implements PrismaTypeReference {
 
   public PrismaTypeReferenceImpl(@NotNull ASTNode node) {
     super(node);

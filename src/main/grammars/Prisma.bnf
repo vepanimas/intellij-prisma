@@ -130,8 +130,16 @@ FieldType ::=
     | LegacyListType
     | TypeReference
 
-UnsupportedType ::= UNSUPPORTED '(' STRING_LITERAL ')'
-TypeReference ::= UnsupportedType | Identifier
+UnsupportedType ::= UNSUPPORTED '(' STRING_LITERAL ')' {
+    pin=1
+    recoverWhile=UnsupportedType_recover
+}
+private UnsupportedType_recover ::= !(')' | '}' | '@' | '@@' | IDENTIFIER)
+
+TypeReference ::= UnsupportedType | Identifier {
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaTypeReferenceMixin"
+    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaReferencingElement"
+}
 UnsupportedOptionalListType ::= TypeReference '[' ']' '?'
 ListType ::= TypeReference '[' ']'
 OptionalType ::= TypeReference '?'
@@ -139,8 +147,12 @@ LegacyRequiredType ::= TypeReference '!'
 LegacyListType ::= '[' TypeReference ']'
 
 /* Attributes */
-BlockAttribute ::= '@@' Path ArgumentsList?
-FieldAttribute ::= '@' Path ArgumentsList?
+BlockAttribute ::= '@@' Path ArgumentsList? {
+    pin=1
+}
+FieldAttribute ::= '@' Path ArgumentsList? {
+    pin=1
+}
 
 /* Arguments */
 ArgumentsList ::= '(' [Argument (',' Argument)*] ','? ')'

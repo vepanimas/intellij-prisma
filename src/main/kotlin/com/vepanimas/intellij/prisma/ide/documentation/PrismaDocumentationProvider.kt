@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.suggested.startOffset
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaContext
 import com.vepanimas.intellij.prisma.lang.psi.*
 import java.util.function.Consumer
 
@@ -28,8 +29,9 @@ class PrismaDocumentationProvider : AbstractDocumentationProvider() {
         contextElement: PsiElement?,
         targetOffset: Int
     ): PsiElement? {
-        if (contextElement?.isKeyword == true) {
-            return contextElement
+        val context = PrismaSchemaContext.forElement(contextElement)
+        if (context != null) {
+            return context.element
         }
 
         return super.getCustomDocumentationElement(editor, file, contextElement, targetOffset)

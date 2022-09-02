@@ -12,4 +12,6 @@ class PrismaParserTest : ParsingTestCase(
     override fun getTestDataPath(): String = PrismaTestCase.relativeTestDataPath
 
     fun testPrismaFile() = doTest(true, true)
+
+    fun testUnsupportedType() = doTest(true, false)
 }

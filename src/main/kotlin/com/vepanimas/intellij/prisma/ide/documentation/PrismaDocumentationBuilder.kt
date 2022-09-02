@@ -4,7 +4,8 @@ import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.PrismaBundle
-import com.vepanimas.intellij.prisma.ide.schema.PRISMA_SCHEMA
+import com.vepanimas.intellij.prisma.ide.schema.PRISMA_SCHEMA_DEFINITION
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaContext
 import com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
@@ -13,14 +14,33 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
     private val psiRenderer = PrismaPsiRenderer()
 
     fun buildDocumentation(): String? {
+        val schemaDoc = buildDocumentationForSchemaElement(element)
+        if (schemaDoc != null) {
+            return schemaDoc
+        }
+
         val definitionBuilder = PrismaDocumentationDefinitionBuilder(element)
         val def = definitionBuilder.buildDefinition() ?: return null
 
         return buildString {
             definition { append(def) }
             doc(element)
-            schemaDocumentation(element)
             additionalSections()
+        }
+    }
+
+    private fun buildDocumentationForSchemaElement(element: PsiElement): String? {
+        val context = PrismaSchemaContext.forElement(element) ?: return null
+        val schemaElement = PRISMA_SCHEMA_DEFINITION.match(context) ?: return null
+        val definition = toHtml(element.project, schemaElement.signature ?: schemaElement.label)
+
+        return buildString {
+            definition { append(definition) }
+            schemaElement.documentation?.let {
+                content {
+                    append(it)
+                }
+            }
         }
     }
 
@@ -70,13 +90,6 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
             section(PrismaBundle.message("prisma.doc.section.attributes")) {
                 attributeList.joinTo(this, separator = "<p>") { psiRenderer.pre(it) }
             }
-        }
-    }
-
-    private fun StringBuilder.schemaDocumentation(element: PsiElement) {
-        val documentation = PRISMA_SCHEMA.match(element)?.documentation ?: return
-        content {
-            append(documentation)
         }
     }
 

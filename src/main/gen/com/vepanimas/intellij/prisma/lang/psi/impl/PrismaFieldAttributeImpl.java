@@ -33,9 +33,9 @@ public class PrismaFieldAttributeImpl extends PrismaElementImpl implements Prism
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PrismaPath getPath() {
-    return findNotNullChildByClass(PrismaPath.class);
+    return findChildByClass(PrismaPath.class);
   }
 
 }
