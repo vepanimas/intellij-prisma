@@ -11,11 +11,24 @@ import com.vepanimas.intellij.prisma.lang.PrismaFileType
 import junit.framework.TestCase
 
 abstract class PrismaCompletionTestBase : PrismaTestCase() {
-    override fun getTestDataPath(): String {
-        return super.getTestDataPath() + "/completion"
+
+    protected fun completeSelected(
+        source: String,
+        expected: String,
+        selected: String,
+    ): Array<LookupElement> {
+        return completeAndGetLookupElements(source, expected, selected)
     }
 
-    protected fun completeItems(source: String, expected: String, selected: String? = null): Array<out LookupElement> {
+    protected fun getLookupElements(source: String): Array<LookupElement> {
+        return completeAndGetLookupElements(source, source)
+    }
+
+    private fun completeAndGetLookupElements(
+        source: String,
+        expected: String,
+        selected: String? = null
+    ): Array<LookupElement> {
         return withoutAutoCompletion {
             myFixture.configureByText(PrismaFileType, source)
             val lookupElements = myFixture.completeBasic()
@@ -31,21 +44,21 @@ abstract class PrismaCompletionTestBase : PrismaTestCase() {
         }
     }
 
-    protected fun completeItem(source: String): Array<out LookupElement> {
-        return completeItems(source, source)
-    }
-
-    protected fun complete(source: String, expected: String) {
+    protected fun completeBasic(source: String, expected: String) {
         myFixture.configureByText(PrismaFileType, source)
         myFixture.completeBasic()
         myFixture.checkResult(expected)
     }
 
-    protected fun completeEmpty(source: String) {
-        UsefulTestCase.assertSize(0, completeItems(source, source))
+    protected fun noCompletion(source: String) {
+        UsefulTestCase.assertSize(0, completeAndGetLookupElements(source, source))
     }
 
-    protected fun completionDoc(lookupElement: LookupElement?) {
+    protected fun checkLookupDocumentation(lookupElements: Array<LookupElement>, lookupString: String) {
+        checkLookupDocumentation(lookupElements.find { it.lookupString == lookupString })
+    }
+
+    protected fun checkLookupDocumentation(lookupElement: LookupElement?) {
         val element = lookupElement?.psiElement
         assertNotNull(element)
         val doc = PrismaDocumentationProvider().generateDoc(element!!, null)
@@ -63,10 +76,10 @@ abstract class PrismaCompletionTestBase : PrismaTestCase() {
         }
     }
 
-    protected val Array<out LookupElement>?.strings: List<String>
+    protected val Array<LookupElement>?.strings: List<String>
         get() = this?.map { it.lookupString } ?: emptyList()
 
-    protected fun Array<out LookupElement>?.find(lookupString: String): LookupElement? =
+    protected fun Array<LookupElement>?.find(lookupString: String): LookupElement? =
         this?.find { it.lookupString == lookupString }
 
     protected val LookupElement?.presentation: LookupElementPresentation?

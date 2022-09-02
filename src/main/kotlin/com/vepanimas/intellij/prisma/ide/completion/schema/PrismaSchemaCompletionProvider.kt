@@ -1,9 +1,11 @@
-package com.vepanimas.intellij.prisma.ide.completion
+package com.vepanimas.intellij.prisma.ide.completion.schema
 
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
+import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
+import com.vepanimas.intellij.prisma.ide.completion.withPrismaInsertHandler
 import com.vepanimas.intellij.prisma.ide.schema.PRISMA_SCHEMA_DEFINITION
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind

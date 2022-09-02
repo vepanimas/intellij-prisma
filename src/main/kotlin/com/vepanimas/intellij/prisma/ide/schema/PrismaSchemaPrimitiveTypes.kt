@@ -57,7 +57,7 @@ val PRISMA_SCHEMA_PRIMITIVE_TYPES = schema {
             label = Types.UNSUPPORTED
             documentation =
                 "An arbitrary database column type, for which Prisma has no syntax. Fields of type `Unsupported` work with Prisma Migrate and introspection, but are not exposed in Prisma Client."
-            signature = "Unsupported(_ name: String)"
+            signature = "Unsupported(name: String)"
             elementType = UNSUPPORTED_TYPE
             insertHandler = InsertHandler { context, item ->
                 ParenthesesInsertHandler.getInstance(true).handleInsert(context, item)

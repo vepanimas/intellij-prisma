@@ -7,7 +7,6 @@ import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.util.ProcessingContext
-import com.vepanimas.intellij.prisma.ide.completion.PrismaSchemaCompletionProvider
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes

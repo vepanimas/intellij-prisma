@@ -1,8 +1,10 @@
 package com.vepanimas.intellij.prisma.completion
 
 class PrismaKeywordCompletionTest : PrismaCompletionTestBase() {
+    override fun getBasePath(): String = "/completion/keywords"
+
     fun testRootKeywords() {
-        val lookupElements = completeItems(
+        val lookupElements = completeSelected(
             """
                 model M {}
                 <caret>
@@ -15,11 +17,11 @@ class PrismaKeywordCompletionTest : PrismaCompletionTestBase() {
             """.trimIndent(),
             "model"
         )
-        assertContainsElements(lookupElements.strings, "model", "datasource", "generator", "type")
+        assertSameElements(lookupElements.strings, "model", "datasource", "generator", "type", "enum")
     }
 
     fun testFinishRootKeyword() {
-        complete(
+        completeBasic(
             """
                 model M {}
                 ty<caret>
@@ -34,15 +36,14 @@ class PrismaKeywordCompletionTest : PrismaCompletionTestBase() {
     }
 
     fun testNoKeywordsInDeclaration() {
-        completeEmpty("model <caret>")
+        noCompletion("model <caret>")
     }
 
     fun testNoKeywordsInBlock() {
-        completeEmpty("model M { <caret> }")
+        noCompletion("model M { <caret> }")
     }
 
     fun testTypeKeywordDoc() {
-        val lookupElement = completeItem("<caret>").find("type")
-        completionDoc(lookupElement)
+        checkLookupDocumentation(getLookupElements("<caret>").find("type"))
     }
 }
