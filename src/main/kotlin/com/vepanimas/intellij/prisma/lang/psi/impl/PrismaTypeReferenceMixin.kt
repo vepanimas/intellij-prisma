@@ -1,7 +1,7 @@
 package com.vepanimas.intellij.prisma.lang.psi.impl
 
 import com.intellij.lang.ASTNode
-import com.vepanimas.intellij.prisma.lang.psi.PrismaConstants
+import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.psi.PrismaReferencingElement
 import com.vepanimas.intellij.prisma.lang.psi.PrismaTypeReference
 

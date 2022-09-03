@@ -1,11 +1,6 @@
-package com.vepanimas.intellij.prisma.lang.psi
+package com.vepanimas.intellij.prisma.lang
 
 object PrismaConstants {
-    val PRIMITIVE_TYPES = setOf(
-        Types.STRING, Types.BOOLEAN, Types.INT, Types.FLOAT, Types.DATETIME,
-        Types.JSON, Types.BYTES, Types.DECIMAL, Types.BIGINT, Types.UNSUPPORTED,
-    )
-
     object Types {
         const val STRING = "String"
         const val BOOLEAN = "Boolean"
@@ -17,5 +12,10 @@ object PrismaConstants {
         const val DECIMAL = "Decimal"
         const val BIGINT = "BigInt"
         const val UNSUPPORTED = "Unsupported"
+
+        val PRIMITIVE = setOf(
+            Types.STRING, Types.BOOLEAN, Types.INT, Types.FLOAT, Types.DATETIME,
+            Types.JSON, Types.BYTES, Types.DECIMAL, Types.BIGINT, Types.UNSUPPORTED,
+        )
     }
 }

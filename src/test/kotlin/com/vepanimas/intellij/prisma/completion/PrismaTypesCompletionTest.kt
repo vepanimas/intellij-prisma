@@ -1,6 +1,6 @@
 package com.vepanimas.intellij.prisma.completion
 
-import com.vepanimas.intellij.prisma.lang.psi.PrismaConstants
+import com.vepanimas.intellij.prisma.lang.PrismaConstants
 
 class PrismaTypesCompletionTest : PrismaCompletionTestBase() {
     override fun getBasePath(): String = "/completion/types"
@@ -19,7 +19,7 @@ class PrismaTypesCompletionTest : PrismaCompletionTestBase() {
             """.trimIndent(),
             "DateTime"
         )
-        assertSameElements(lookupElements.strings, PrismaConstants.PRIMITIVE_TYPES)
+        assertSameElements(lookupElements.strings, PrismaConstants.Types.PRIMITIVE)
         checkLookupDocumentation(lookupElements, "DateTime")
     }
 

@@ -6,6 +6,7 @@ import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
+import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
@@ -47,7 +48,7 @@ private fun PsiElement.getSchemaKind(): PrismaSchemaElementKind? {
         UNSUPPORTED_TYPE -> PrismaSchemaElementKind.PRIMITIVE_TYPE
 
         TYPE_REFERENCE ->
-            if (PrismaConstants.PRIMITIVE_TYPES.contains((this as? PrismaReferencingElement)?.referenceText)) {
+            if (PrismaConstants.Types.PRIMITIVE.contains((this as? PrismaReferencingElement)?.referenceText)) {
                 PrismaSchemaElementKind.PRIMITIVE_TYPE
             } else {
                 null
