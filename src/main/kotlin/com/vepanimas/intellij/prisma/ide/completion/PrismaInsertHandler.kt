@@ -4,7 +4,6 @@ import com.intellij.codeInsight.completion.AddSpaceInsertHandler
 import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler
 import com.intellij.codeInsight.lookup.LookupElement
-import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.editor.EditorModificationUtil
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaContext
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
@@ -16,7 +15,7 @@ object PrismaInsertHandler {
                 AddSpaceInsertHandler.INSTANCE.handleInsert(context, item)
             }
 
-            PrismaSchemaElementKind.DATASOURCE_FIELD -> {
+            PrismaSchemaElementKind.DATASOURCE_FIELD, PrismaSchemaElementKind.GENERATOR_FIELD -> {
                 KEY_VALUE_FIELD_INSERT_HANDLER.handleInsert(context, item)
             }
 
@@ -31,13 +30,5 @@ object PrismaInsertHandler {
 
     val KEY_VALUE_FIELD_INSERT_HANDLER = InsertHandler<LookupElement> { context, _ ->
         EditorModificationUtil.insertStringAtCaret(context.editor, " = ", false, true)
-    }
-}
-
-fun LookupElementBuilder.withPrismaInsertHandler(customInsertHandler: InsertHandler<LookupElement>? = null): LookupElementBuilder {
-    return if (customInsertHandler != null) {
-        withInsertHandler(customInsertHandler)
-    } else {
-        withInsertHandler(PrismaInsertHandler.DEFAULT_INSERT_HANDLER)
     }
 }

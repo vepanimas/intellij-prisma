@@ -4,4 +4,5 @@ enum class PrismaSchemaElementKind {
     KEYWORD,
     PRIMITIVE_TYPE,
     DATASOURCE_FIELD,
+    GENERATOR_FIELD,
 }

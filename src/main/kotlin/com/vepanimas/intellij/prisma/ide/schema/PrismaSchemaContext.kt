@@ -58,6 +58,7 @@ private fun PsiElement.getSchemaKind(): PrismaSchemaElementKind? {
             val declaration = memberDeclaration.containingDeclaration
             when (declaration?.elementType) {
                 DATASOURCE_DECLARATION -> PrismaSchemaElementKind.DATASOURCE_FIELD
+                GENERATOR_DECLARATION -> PrismaSchemaElementKind.GENERATOR_FIELD
                 else -> null
             }
         }

@@ -18,4 +18,20 @@ class PrismaFieldsCompletionTest : PrismaCompletionTestBase() {
         )
         checkLookupDocumentation(lookupElements, "url")
     }
+
+    fun testGeneratorField() {
+        val lookupElements = completeSelected(
+            """
+            generator client {
+              <caret>
+            }
+        """.trimIndent(), """
+            generator client {
+              provider = <caret>
+            }
+        """.trimIndent(),
+            "provider"
+        )
+        checkLookupDocumentation(lookupElements, "provider")
+    }
 }

@@ -18,4 +18,9 @@ object PrismaPsiPatterns {
         psiElement()
             .withParent(PrismaKeyValue::class.java)
             .withSuperParent(3, PrismaDatasourceDeclaration::class.java)
+
+    val generatorField: PsiElementPattern.Capture<PsiElement> =
+        psiElement()
+            .withParent(PrismaKeyValue::class.java)
+            .withSuperParent(3, PrismaGeneratorDeclaration::class.java)
 }

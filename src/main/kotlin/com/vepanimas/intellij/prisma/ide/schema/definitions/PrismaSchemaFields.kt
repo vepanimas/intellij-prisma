@@ -21,4 +21,30 @@ val PRISMA_SCHEMA_FIELDS = schema {
                 "Connection URL including authentication info to use for Migrate's [shadow database](https://pris.ly/d/migrate-shadow). Each datasource provider documents the URL syntax. Most providers use the syntax provided by the database."
         }
     }
+
+    group(PrismaSchemaElementKind.GENERATOR_FIELD) {
+        element {
+            label = "provider"
+            documentation =
+                "Describes which generator to use. This can point to a file that implements a generator or specify a built-in generator directly."
+        }
+        element {
+            label = "output"
+            documentation =
+                "Determines the location for the generated client [learn more](https://pris.ly/d/prisma-schema)"
+        }
+        element {
+            label = "binaryTargets"
+            documentation =
+                "Specifies the OS on which the Prisma Client will run to ensure binary compatibility of the query engine."
+        }
+        element {
+            label = "previewFeatures"
+            documentation = "Enables preview feature flags."
+        }
+        element {
+            label = "engineType"
+            documentation = "Defines the query engine type for Prisma Client."
+        }
+    }
 }
