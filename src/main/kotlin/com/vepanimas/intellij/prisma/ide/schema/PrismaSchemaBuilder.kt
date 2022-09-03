@@ -4,7 +4,6 @@ import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.patterns.ElementPattern
 import com.intellij.psi.PsiElement
-import com.intellij.psi.tree.IElementType
 
 class PrismaSchema(private val elements: Map<PrismaSchemaElementKind, PrismaSchemaElementGroup>) {
     fun getElementsByKind(kind: PrismaSchemaElementKind): Collection<PrismaSchemaElement> {
@@ -72,11 +71,9 @@ class PrismaSchemaElementGroup(val group: Map<String, PrismaSchemaElement>) :
 
 }
 
-
 open class PrismaSchemaElement(
     val kind: PrismaSchemaElementKind,
     val label: String,
-    val elementType: IElementType? = null,
     val documentation: String? = null,
     val signature: String? = null,
     val insertHandler: InsertHandler<LookupElement>? = null,
@@ -87,7 +84,6 @@ open class PrismaSchemaElement(
         SchemaDslBuilder<PrismaSchemaElement> {
 
         var label: String? = null
-        var elementType: IElementType? = null
         var documentation: String? = null
         var signature: String? = null
         var insertHandler: InsertHandler<LookupElement>? = null
@@ -109,7 +105,6 @@ open class PrismaSchemaElement(
                     PrismaSchemaElement(
                         kind,
                         it,
-                        elementType,
                         documentation,
                         signature,
                         insertHandler,
@@ -124,14 +119,12 @@ open class PrismaSchemaElement(
 
 class PrismaSchemaElementParameter(
     val label: String,
-    val elementType: IElementType? = null,
     val documentation: String?,
     val insertHandler: InsertHandler<LookupElement>? = null,
     val type: String? = null,
 ) {
     class Builder : SchemaDslBuilder<PrismaSchemaElementParameter> {
         var label: String? = null
-        var elementType: IElementType? = null
         var documentation: String? = null
         var type: String? = null
         var insertHandler: InsertHandler<LookupElement>? = null
@@ -139,7 +132,7 @@ class PrismaSchemaElementParameter(
         override fun build(): PrismaSchemaElementParameter {
             return label
                 ?.takeIf { it.isNotBlank() }
-                ?.let { PrismaSchemaElementParameter(it, elementType, documentation, insertHandler, type) }
+                ?.let { PrismaSchemaElementParameter(it, documentation, insertHandler, type) }
                 ?: error("label is not specified")
         }
     }
