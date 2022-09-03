@@ -26,58 +26,58 @@ class PrismaSchemaContext(
                 return PrismaSchemaContext(element.kind, element.label, element)
             }
 
-            val schemaElement = element.adjustSchemaElement() ?: return null
-            val kind = schemaElement.getSchemaKind() ?: return null
-            val label = schemaElement.getSchemaLabel() ?: return null
+            val schemaElement = adjustSchemaElement(element) ?: return null
+            val kind = getSchemaKind(schemaElement) ?: return null
+            val label = getSchemaLabel(schemaElement) ?: return null
 
             return PrismaSchemaContext(kind, label, schemaElement)
         }
-    }
-}
 
-private fun PsiElement.adjustSchemaElement() = when (elementType) {
-    UNSUPPORTED -> parent
-    IDENTIFIER -> PsiTreeUtil.skipParentsOfType(this, PsiWhiteSpace::class.java, PsiErrorElement::class.java)
-    else -> this
-}
+        private fun adjustSchemaElement(element: PsiElement) = when (element.elementType) {
+            UNSUPPORTED -> element.parent
+            IDENTIFIER -> PsiTreeUtil.skipParentsOfType(element, PsiWhiteSpace::class.java, PsiErrorElement::class.java)
+            else -> element
+        }
 
-private fun PsiElement.getSchemaKind(): PrismaSchemaElementKind? {
-    return when (elementType) {
-        in PRISMA_KEYWORDS -> PrismaSchemaElementKind.KEYWORD
+        private fun getSchemaKind(element: PsiElement): PrismaSchemaElementKind? {
+            return when (element.elementType) {
+                in PRISMA_KEYWORDS -> PrismaSchemaElementKind.KEYWORD
 
-        UNSUPPORTED_TYPE -> PrismaSchemaElementKind.PRIMITIVE_TYPE
+                UNSUPPORTED_TYPE -> PrismaSchemaElementKind.PRIMITIVE_TYPE
 
-        TYPE_REFERENCE ->
-            if (PrismaConstants.Types.PRIMITIVE.contains((this as? PrismaReferencingElement)?.referenceText)) {
-                PrismaSchemaElementKind.PRIMITIVE_TYPE
-            } else {
-                null
-            }
+                TYPE_REFERENCE ->
+                    if (PrismaConstants.Types.PRIMITIVE.contains((element as? PrismaReferencingElement)?.referenceText)) {
+                        PrismaSchemaElementKind.PRIMITIVE_TYPE
+                    } else {
+                        null
+                    }
 
-        KEY_VALUE -> {
-            val memberDeclaration = this as PrismaMemberDeclaration
-            val declaration = memberDeclaration.containingDeclaration
-            when (declaration?.elementType) {
-                DATASOURCE_DECLARATION -> PrismaSchemaElementKind.DATASOURCE_FIELD
-                GENERATOR_DECLARATION -> PrismaSchemaElementKind.GENERATOR_FIELD
+                KEY_VALUE -> {
+                    val memberDeclaration = element as PrismaMemberDeclaration
+                    val declaration = memberDeclaration.containingDeclaration
+                    when (declaration?.elementType) {
+                        DATASOURCE_DECLARATION -> PrismaSchemaElementKind.DATASOURCE_FIELD
+                        GENERATOR_DECLARATION -> PrismaSchemaElementKind.GENERATOR_FIELD
+                        else -> null
+                    }
+                }
+
                 else -> null
             }
         }
 
-        else -> null
-    }
-}
-
-private fun PsiElement.getSchemaLabel(): String? {
-    val psiRenderer = PrismaPsiRenderer()
-    return when {
-        isKeyword -> text
-        this is PrismaTypeReference -> psiRenderer.build(this)
-        this is PrismaBlockAttribute -> "@@${psiRenderer.build(this.path)}"
-        this is PrismaFieldAttribute -> "@${psiRenderer.build(this.path)}"
-        this is PrismaUnsupportedType -> PrismaConstants.Types.UNSUPPORTED
-        this is PrismaKeyValue -> psiRenderer.build(this.identifier)
-        this is PsiNamedElement -> this.name
-        else -> null
+        private fun getSchemaLabel(element: PsiElement): String? {
+            val psiRenderer = PrismaPsiRenderer()
+            return when {
+                element.isKeyword -> element.text
+                element is PrismaTypeReference -> psiRenderer.build(element)
+                element is PrismaBlockAttribute -> "@@${psiRenderer.build(element.path)}"
+                element is PrismaFieldAttribute -> "@${psiRenderer.build(element.path)}"
+                element is PrismaUnsupportedType -> PrismaConstants.Types.UNSUPPORTED
+                element is PrismaKeyValue -> psiRenderer.build(element.identifier)
+                element is PsiNamedElement -> element.name
+                else -> null
+            }
+        }
     }
 }
