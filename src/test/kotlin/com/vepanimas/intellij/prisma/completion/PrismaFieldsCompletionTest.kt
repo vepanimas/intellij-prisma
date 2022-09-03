@@ -16,6 +16,7 @@ class PrismaFieldsCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "url"
         )
+        assertSameElements(lookupElements.strings, "provider", "url", "shadowDatabaseUrl")
         checkLookupDocumentation(lookupElements, "url")
     }
 
@@ -32,6 +33,7 @@ class PrismaFieldsCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "provider"
         )
+        assertSameElements(lookupElements.strings, "provider", "output", "binaryTargets", "previewFeatures", "engineType")
         checkLookupDocumentation(lookupElements, "provider")
     }
 }
