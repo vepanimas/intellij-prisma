@@ -9,7 +9,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
-import com.vepanimas.intellij.prisma.ide.documentation.stripDocCommentBlockPrefixes
+import com.vepanimas.intellij.prisma.ide.documentation.stripDocCommentLinePrefix
 import com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition
 
 class PrismaVirtualDocumentationComment(val comments: List<PsiComment>) : FakePsiElement(), PsiDocCommentBase {
@@ -25,8 +25,8 @@ class PrismaVirtualDocumentationComment(val comments: List<PsiComment>) : FakePs
 
     override fun getTextRange(): TextRange = TextRange.create(comments.first().startOffset, comments.last().endOffset)
 
-    override fun getText(): String = comments.joinToString("\n") { it.text }
+    override fun getText(): String = comments.joinToString(" ") { stripDocCommentLinePrefix(it.text) }
 
     val content: String
-        get() = stripDocCommentBlockPrefixes(text)
+        get() = text
 }

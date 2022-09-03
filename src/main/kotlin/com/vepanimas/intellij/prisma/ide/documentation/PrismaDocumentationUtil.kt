@@ -10,6 +10,15 @@ import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.lang.psi.PrismaDocumentationOwner
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementFactory
+import org.intellij.markdown.IElementType
+import org.intellij.markdown.MarkdownElementTypes
+import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
+import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
+import org.intellij.markdown.html.GeneratingProvider
+import org.intellij.markdown.html.HtmlGenerator
+import org.intellij.markdown.parser.LinkMap
+import org.intellij.markdown.parser.MarkdownParser
+import java.net.URI
 
 internal fun stripDocCommentBlockPrefixes(text: String): String {
     return text.trimMargin("///").trimIndent()
@@ -84,9 +93,27 @@ internal fun toHtml(project: Project, text: String, scheme: EditorColorsScheme):
         .getHtmlContent(file, code, null, scheme, 0, code.length)?.toString() ?: text
 }
 
-internal fun StringBuilder.ifNotEmpty(value: String?, ws: Boolean = false) {
-    if (!value.isNullOrEmpty()) {
-        append(value)
-        append(" ")
+fun documentationMarkdownToHtml(markdown: String?): String? {
+    if (markdown.isNullOrBlank()) {
+        return null
+    }
+
+    val flavour = PrismaMarkdownFlavourDescriptor()
+    val root = MarkdownParser(flavour).buildMarkdownTreeFromString(markdown)
+    return HtmlGenerator(markdown, root, flavour).generateHtml()
+}
+
+private class PrismaMarkdownFlavourDescriptor(
+    private val base: MarkdownFlavourDescriptor = GFMFlavourDescriptor(
+        useSafeLinks = false,
+        absolutizeAnchorLinks = true
+    )
+) : MarkdownFlavourDescriptor by base {
+
+    override fun createHtmlGeneratingProviders(linkMap: LinkMap, baseURI: URI?): Map<IElementType, GeneratingProvider> {
+        val generatingProviders = HashMap(base.createHtmlGeneratingProviders(linkMap, null))
+        // Filter out MARKDOWN_FILE to avoid producing unnecessary <body> tags
+        generatingProviders.remove(MarkdownElementTypes.MARKDOWN_FILE)
+        return generatingProviders
     }
 }

@@ -5,7 +5,6 @@ import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.PrismaBundle
 import com.vepanimas.intellij.prisma.ide.schema.PRISMA_SCHEMA_DEFINITION
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaContext
 import com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
@@ -30,13 +29,12 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
     }
 
     private fun buildDocumentationForSchemaElement(element: PsiElement): String? {
-        val context = PrismaSchemaContext.forElement(element) ?: return null
-        val schemaElement = PRISMA_SCHEMA_DEFINITION.match(context) ?: return null
+        val schemaElement = PRISMA_SCHEMA_DEFINITION.match(element) ?: return null
         val definition = toHtml(element.project, schemaElement.signature ?: schemaElement.label)
 
         return buildString {
             definition { append(definition) }
-            schemaElement.documentation?.let {
+            documentationMarkdownToHtml(schemaElement.documentation)?.let {
                 content {
                     append(it)
                 }

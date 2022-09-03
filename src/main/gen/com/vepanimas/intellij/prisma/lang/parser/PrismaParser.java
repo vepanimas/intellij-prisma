@@ -796,7 +796,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // !(')' | '}' | '@' | '@@' | IDENTIFIER)
+  // !(')' | '}' | '@' | '@@' | IDENTIFIER | TopLevelKeywords)
   static boolean UnsupportedType_recover(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "UnsupportedType_recover")) return false;
     boolean r;
@@ -806,7 +806,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ')' | '}' | '@' | '@@' | IDENTIFIER
+  // ')' | '}' | '@' | '@@' | IDENTIFIER | TopLevelKeywords
   private static boolean UnsupportedType_recover_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "UnsupportedType_recover_0")) return false;
     boolean r;
@@ -815,6 +815,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, AT);
     if (!r) r = consumeToken(b, ATAT);
     if (!r) r = consumeToken(b, IDENTIFIER);
+    if (!r) r = TopLevelKeywords(b, l + 1);
     return r;
   }
 

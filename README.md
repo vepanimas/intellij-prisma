@@ -11,7 +11,8 @@ The following features are available:
 * Complete Prisma Schema Language grammar implementation
 * Semantic syntax highlighting
 * Line commenter 
-* Documentation comments and reader mode
+* Documentation comments with Markdown support
+* Reader mode
 * Braces and quotes automatic insertion
 <!-- Plugin description end -->
 

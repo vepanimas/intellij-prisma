@@ -134,7 +134,7 @@ UnsupportedType ::= UNSUPPORTED '(' STRING_LITERAL ')' {
     pin=1
     recoverWhile=UnsupportedType_recover
 }
-private UnsupportedType_recover ::= !(')' | '}' | '@' | '@@' | IDENTIFIER)
+private UnsupportedType_recover ::= !(')' | '}' | '@' | '@@' | IDENTIFIER | TopLevelKeywords)
 
 TypeReference ::= UnsupportedType | Identifier {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaTypeReferenceMixin"

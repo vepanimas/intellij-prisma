@@ -1,8 +1,8 @@
-package com.vepanimas.intellij.prisma.ide.schema
+package com.vepanimas.intellij.prisma.ide.schema.definitions
 
-import com.intellij.codeInsight.completion.InsertHandler
-import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler
-import com.intellij.openapi.editor.EditorModificationUtil
+import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
+import com.vepanimas.intellij.prisma.ide.schema.schema
 import com.vepanimas.intellij.prisma.lang.psi.PrismaConstants.Types
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.TYPE_REFERENCE
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.UNSUPPORTED_TYPE
@@ -59,10 +59,7 @@ val PRISMA_SCHEMA_PRIMITIVE_TYPES = schema {
                 "An arbitrary database column type, for which Prisma has no syntax. Fields of type `Unsupported` work with Prisma Migrate and introspection, but are not exposed in Prisma Client."
             signature = "Unsupported(name: String)"
             elementType = UNSUPPORTED_TYPE
-            insertHandler = InsertHandler { context, item ->
-                ParenthesesInsertHandler.getInstance(true).handleInsert(context, item)
-                EditorModificationUtil.insertStringAtCaret(context.editor, "\"\"", false, true, 1)
-            }
+            insertHandler = PrismaInsertHandler.UNSUPPORTED_TYPE
 
             param {
                 label = "name"

@@ -6,11 +6,6 @@ import com.intellij.patterns.ElementPattern
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.IElementType
 
-enum class PrismaSchemaElementKind {
-    KEYWORD,
-    PRIMITIVE_TYPE,
-}
-
 class PrismaSchema(private val elements: Map<PrismaSchemaElementKind, PrismaSchemaElementGroup>) {
     fun getElementsByKind(kind: PrismaSchemaElementKind): Collection<PrismaSchemaElement> {
         return elements[kind]?.values ?: emptyList()
@@ -27,9 +22,6 @@ class PrismaSchema(private val elements: Map<PrismaSchemaElementKind, PrismaSche
 
     fun match(context: PrismaSchemaContext): PrismaSchemaElement? {
         val schemaElement = getElement(context.kind, context.label) ?: return null
-        if (schemaElement.elementType != context.elementType) {
-            return null
-        }
         if (context.element !is PrismaSchemaFakeElement &&
             schemaElement.pattern != null &&
             !schemaElement.pattern.accepts(context.element)

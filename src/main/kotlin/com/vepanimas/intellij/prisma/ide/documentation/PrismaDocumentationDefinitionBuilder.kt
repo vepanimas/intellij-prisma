@@ -45,7 +45,7 @@ class PrismaDocumentationDefinitionBuilder(private val element: PsiElement) {
     }
 
     private fun buildKeyValue(element: PrismaKeyValue, sb: StringBuilder) {
-        element.expression.let {
+        element.expression?.let {
             with(sb) {
                 append(" = ")
                 source(it)

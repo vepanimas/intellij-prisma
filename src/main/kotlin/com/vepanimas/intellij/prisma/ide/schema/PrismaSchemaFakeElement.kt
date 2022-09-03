@@ -7,14 +7,13 @@ import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.impl.FakePsiElement
-import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 import com.vepanimas.intellij.prisma.lang.psi.PrismaNamedElement
 
 class PrismaSchemaFakeElement(
-    private val label: String,
-    val elementType: IElementType?,
-    private val parent: PsiElement
+    val label: String,
+    private val parent: PsiElement,
+    val kind: PrismaSchemaElementKind,
 ) : FakePsiElement(), PrismaNamedElement {
     override fun getParent(): PsiElement = parent
 
@@ -30,10 +29,10 @@ class PrismaSchemaFakeElement(
         fun createForCompletion(
             parameters: CompletionParameters,
             text: String,
-            elementType: IElementType?
+            kind: PrismaSchemaElementKind,
         ): PrismaSchemaFakeElement {
             val parent = findSuitableParent(parameters)
-            return PrismaSchemaFakeElement(text, elementType, parent)
+            return PrismaSchemaFakeElement(text, parent, kind)
         }
 
         private fun findSuitableParent(parameters: CompletionParameters): PsiElement {

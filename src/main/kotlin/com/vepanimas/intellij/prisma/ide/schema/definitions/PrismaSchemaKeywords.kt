@@ -1,6 +1,8 @@
-package com.vepanimas.intellij.prisma.ide.schema
+package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.intellij.patterns.PlatformPatterns
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
+import com.vepanimas.intellij.prisma.ide.schema.schema
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes
 import com.vepanimas.intellij.prisma.lang.psi.PrismaTypeDeclaration
 

@@ -21,7 +21,7 @@ abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
     ) {
         PRISMA_SCHEMA_DEFINITION.getElementsByKind(kind).forEach {
             val lookupElementBuilder = LookupElementBuilder.create(it.label).bold()
-                .withPsiElement(PrismaSchemaFakeElement.createForCompletion(parameters, it.label, it.elementType))
+                .withPsiElement(PrismaSchemaFakeElement.createForCompletion(parameters, it.label, kind))
                 .withPrismaInsertHandler(it.insertHandler)
 
             processLookupElement(lookupElementBuilder, it, parameters, context)?.let { builder ->
