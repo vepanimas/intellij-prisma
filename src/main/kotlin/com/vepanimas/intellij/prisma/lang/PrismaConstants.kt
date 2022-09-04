@@ -14,8 +14,34 @@ object PrismaConstants {
         const val UNSUPPORTED = "Unsupported"
 
         val PRIMITIVE = setOf(
-            Types.STRING, Types.BOOLEAN, Types.INT, Types.FLOAT, Types.DATETIME,
-            Types.JSON, Types.BYTES, Types.DECIMAL, Types.BIGINT, Types.UNSUPPORTED,
+            STRING, BOOLEAN, INT, FLOAT, DATETIME,
+            JSON, BYTES, DECIMAL, BIGINT, UNSUPPORTED,
         )
+    }
+
+    object Datasource {
+        const val MYSQL = "mysql"
+        const val POSTGRESQL = "postgresql"
+        const val SQLITE = "sqlite"
+        const val SQLSERVER = "sqlserver"
+        const val MONGODB = "mongodb"
+        const val COCKROACHDB = "cockroachdb"
+
+        val ALL = setOf(MYSQL, POSTGRESQL, SQLITE, SQLSERVER, MONGODB, COCKROACHDB)
+    }
+
+    object BlockAttributes {
+        const val ID = "@@id"
+        const val MAP = "@@map"
+        const val UNIQUE = "@@unique"
+        const val INDEX = "@@index"
+        const val FULLTEXT = "@@fulltext"
+        const val IGNORE = "@@ignore"
+
+        val ALL = setOf(ID, MAP, UNIQUE, INDEX, FULLTEXT, IGNORE)
+    }
+
+    object PreviewFeatures {
+        const val FULL_TEXT_INDEX = "fulltextindex"
     }
 }

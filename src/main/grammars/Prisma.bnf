@@ -1,5 +1,6 @@
 {
   parserClass='com.vepanimas.intellij.prisma.lang.parser.PrismaParser'
+  parserUtilClass='com.vepanimas.intellij.prisma.lang.parser.PrismaParserUtil'
 
   implements='com.vepanimas.intellij.prisma.lang.psi.PrismaElement'
   extends='com.vepanimas.intellij.prisma.lang.psi.impl.PrismaElementImpl'
@@ -52,7 +53,7 @@
   implements('FieldDeclaration|EnumValueDeclaration|KeyValue')='com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration'
 }
 
-Schema ::= (Declaration | ConsumeIllegalIdentifier)*
+Schema ::= Declaration*
 
 private Declaration ::=
     ModelDeclaration
@@ -79,9 +80,18 @@ TypeDeclaration ::= TYPE Identifier FieldDeclarationBlock {
     pin=1
 }
 
-FieldDeclarationBlock ::= '{' (FieldDeclaration | BlockAttribute)* '}' {
+FieldDeclarationBlock ::= '{' FieldDeclarationBlockItem* '}' {
     pin=1
 }
+
+private FieldDeclarationBlockItem ::=
+    FieldDeclaration
+    | BlockAttribute
+    | <<consumeWithError '@' "parser.unexpected.field.attr">>
+    {
+        consumeTokenMethod="consumeTokenFast"
+    }
+
 FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute* {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaFieldDeclarationMixin"
     pin=1
@@ -173,7 +183,4 @@ PathExpression ::= Path
 
 /* Identifiers */
 private Identifier ::= IDENTIFIER
-private ConsumeIllegalIdentifier ::= IDENTIFIER {
-    consumeTokenMethod="consumeTokenFast"
-}
 Path ::= Identifier ('.' Path?)*

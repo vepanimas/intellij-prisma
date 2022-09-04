@@ -4,7 +4,7 @@ package com.vepanimas.intellij.prisma.lang.parser;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
+import static com.vepanimas.intellij.prisma.lang.parser.PrismaParserUtil.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;
@@ -188,12 +188,6 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "BlockAttribute_2")) return false;
     ArgumentsList(b, l + 1);
     return true;
-  }
-
-  /* ********************************************************** */
-  // IDENTIFIER
-  static boolean ConsumeIllegalIdentifier(PsiBuilder b, int l) {
-    return consumeTokenFast(b, IDENTIFIER);
   }
 
   /* ********************************************************** */
@@ -399,7 +393,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '{' (FieldDeclaration | BlockAttribute)* '}'
+  // '{' FieldDeclarationBlockItem* '}'
   public static boolean FieldDeclarationBlock(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FieldDeclarationBlock")) return false;
     if (!nextTokenIs(b, LBRACE)) return false;
@@ -413,23 +407,29 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // (FieldDeclaration | BlockAttribute)*
+  // FieldDeclarationBlockItem*
   private static boolean FieldDeclarationBlock_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FieldDeclarationBlock_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!FieldDeclarationBlock_1_0(b, l + 1)) break;
+      if (!FieldDeclarationBlockItem(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "FieldDeclarationBlock_1", c)) break;
     }
     return true;
   }
 
-  // FieldDeclaration | BlockAttribute
-  private static boolean FieldDeclarationBlock_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "FieldDeclarationBlock_1_0")) return false;
+  /* ********************************************************** */
+  // FieldDeclaration
+  //     | BlockAttribute
+  //     | <<consumeWithError '@' "parser.unexpected.field.attr">>
+  static boolean FieldDeclarationBlockItem(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FieldDeclarationBlockItem")) return false;
     boolean r;
+    Marker m = enter_section_(b);
     r = FieldDeclaration(b, l + 1);
     if (!r) r = BlockAttribute(b, l + 1);
+    if (!r) r = consumeWithError(b, l + 1, AT_parser_, "parser.unexpected.field.attr");
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -679,26 +679,15 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (Declaration | ConsumeIllegalIdentifier)*
+  // Declaration*
   static boolean Schema(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Schema")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!Schema_0(b, l + 1)) break;
+      if (!Declaration(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "Schema", c)) break;
     }
     return true;
-  }
-
-  // Declaration | ConsumeIllegalIdentifier
-  private static boolean Schema_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Schema_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = Declaration(b, l + 1);
-    if (!r) r = ConsumeIllegalIdentifier(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
   }
 
   /* ********************************************************** */
@@ -819,4 +808,5 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     return r;
   }
 
+  static final Parser AT_parser_ = (b, l) -> consumeTokenFast(b, AT);
 }

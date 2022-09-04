@@ -77,8 +77,9 @@ open class PrismaSchemaElement(
     val documentation: String? = null,
     val signature: String? = null,
     val insertHandler: InsertHandler<LookupElement>? = null,
-    val params: Map<String, PrismaSchemaElementParameter> = emptyMap(),
+    val params: List<PrismaSchemaElementParameter> = emptyList(),
     val pattern: ElementPattern<out PsiElement>? = null,
+    var datasources: Set<PrismaDatasourceType>? = null
 ) {
     open class Builder(private val kind: PrismaSchemaElementKind) :
         SchemaDslBuilder<PrismaSchemaElement> {
@@ -88,14 +89,15 @@ open class PrismaSchemaElement(
         var signature: String? = null
         var insertHandler: InsertHandler<LookupElement>? = null
         var pattern: ElementPattern<out PsiElement>? = null
+        var datasources: Set<PrismaDatasourceType>? = null
 
-        private var params: MutableMap<String, PrismaSchemaElementParameter> = mutableMapOf()
+        private var params: MutableList<PrismaSchemaElementParameter> = mutableListOf()
 
         fun param(block: PrismaSchemaElementParameter.Builder.() -> Unit) {
             val builder = PrismaSchemaElementParameter.Builder()
             builder.block()
             val parameter = builder.build()
-            params[parameter.label] = parameter
+            params.add(parameter)
         }
 
         override fun build(): PrismaSchemaElement {
@@ -103,13 +105,8 @@ open class PrismaSchemaElement(
                 ?.takeIf { it.isNotBlank() }
                 ?.let {
                     PrismaSchemaElement(
-                        kind,
-                        it,
-                        documentation,
-                        signature,
-                        insertHandler,
-                        params,
-                        pattern
+                        kind, it, documentation, signature,
+                        insertHandler, params, pattern, datasources
                     )
                 }
                 ?: error("label is not specified")

@@ -17,8 +17,6 @@ object PrismaKeywordProvider : PrismaSchemaCompletionProvider() {
         schemaElement: PrismaSchemaElement,
         parameters: CompletionParameters,
         context: ProcessingContext
-    ): LookupElementBuilder {
-        return builder.bold()
-    }
+    ): LookupElementBuilder = builder.bold()
 }
 

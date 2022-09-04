@@ -16,19 +16,32 @@ object PrismaInsertHandler {
             }
 
             PrismaSchemaElementKind.DATASOURCE_FIELD, PrismaSchemaElementKind.GENERATOR_FIELD -> {
-                KEY_VALUE_FIELD_INSERT_HANDLER.handleInsert(context, item)
+                EQUALS_INSERT_HANDLER.handleInsert(context, item)
             }
 
             else -> {}
         }
     }
 
-    val UNSUPPORTED_TYPE = InsertHandler<LookupElement> { context, item ->
+    val PARENS_QUOTED_ARGUMENT = InsertHandler<LookupElement> { context, item ->
         ParenthesesInsertHandler.getInstance(true).handleInsert(context, item)
         EditorModificationUtil.insertStringAtCaret(context.editor, "\"\"", false, true, 1)
     }
 
-    val KEY_VALUE_FIELD_INSERT_HANDLER = InsertHandler<LookupElement> { context, _ ->
+    val PARENS_LIST_ARGUMENT = InsertHandler<LookupElement> { context, item ->
+        ParenthesesInsertHandler.getInstance(true).handleInsert(context, item)
+        EditorModificationUtil.insertStringAtCaret(context.editor, "[]", false, true, 1)
+    }
+
+    val COLON_QUOTED_ARGUMENT = InsertHandler<LookupElement> { context, item ->
+        EditorModificationUtil.insertStringAtCaret(context.editor, ": \"\"", false, true, 3)
+    }
+
+    val COLON_LIST_ARGUMENT = InsertHandler<LookupElement> { context, item ->
+        EditorModificationUtil.insertStringAtCaret(context.editor, ": []", false, true, 3)
+    }
+
+    val EQUALS_INSERT_HANDLER = InsertHandler<LookupElement> { context, _ ->
         EditorModificationUtil.insertStringAtCaret(context.editor, " = ", false, true)
     }
 }

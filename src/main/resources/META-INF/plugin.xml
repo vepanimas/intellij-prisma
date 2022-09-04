@@ -53,5 +53,6 @@
         <!-- Completion -->
         <completion.contributor language="Prisma"
                                 implementationClass="com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionContributor"/>
+        <lookup.charFilter implementation="com.vepanimas.intellij.prisma.ide.completion.PrismaCharFilter"/>
     </extensions>
 </idea-plugin>
