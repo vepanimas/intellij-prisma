@@ -31,6 +31,8 @@
                            implementationClass="com.vepanimas.intellij.prisma.ide.editor.PrismaBraceMatcher"/>
         <lang.quoteHandler language="Prisma"
                            implementationClass="com.vepanimas.intellij.prisma.ide.editor.PrismaQuoteHandler"/>
+        <typedHandler implementation="com.vepanimas.intellij.prisma.ide.editor.PrismaTypedHandler"
+                      order="first, before completionAutoPopup"/>
 
         <!-- Handlers -->
         <enterBetweenBracesDelegate language="Prisma"
