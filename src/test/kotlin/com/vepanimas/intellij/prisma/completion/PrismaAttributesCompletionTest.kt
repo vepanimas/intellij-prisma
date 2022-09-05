@@ -1,8 +1,6 @@
 package com.vepanimas.intellij.prisma.completion
 
-import com.vepanimas.intellij.prisma.lang.PrismaConstants
-
-private val COMMON_BLOCK_ATTRS = PrismaConstants.BlockAttributes.ALL - PrismaConstants.BlockAttributes.FULLTEXT
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
 
 class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
     override fun getBasePath(): String = "/completion/attributes"
@@ -20,7 +18,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@id"
         )
-        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
+        assertSameElements(lookupElements.strings, BlockAttributes.ALL)
         checkLookupDocumentation(lookupElements, "@@id")
     }
 
@@ -37,7 +35,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@map"
         )
-        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
+        assertSameElements(lookupElements.strings, BlockAttributes.ALL)
     }
 
     fun testBlockAttributesPrefixAtAfterField() {
@@ -57,7 +55,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@index"
         )
-        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
+        assertSameElements(lookupElements.strings, BlockAttributes.ALL)
     }
 
     fun testBlockAttributesPrefixAtAt() {
@@ -73,7 +71,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@unique"
         )
-        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
+        assertSameElements(lookupElements.strings, BlockAttributes.ALL)
     }
 
     fun testBlockAttributesPrefixAtAtAfterField() {
@@ -93,7 +91,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@unique"
         )
-        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
+        assertSameElements(lookupElements.strings, BlockAttributes.ALL)
     }
 
     fun testBlockAttributesPrefixName() {
@@ -132,6 +130,21 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         )
     }
 
+    fun testBlockAttributesNoFulltext() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            
+            model M {
+              @@<caret>
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, BlockAttributes.FULLTEXT)
+    }
+
     fun testNoBlockAttributesInType() {
         val lookupElements = getLookupElements(
             """
@@ -140,7 +153,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
             }
         """.trimIndent()
         )
-        assertDoesntContain(lookupElements.strings, PrismaConstants.BlockAttributes.ALL)
+        assertDoesntContain(lookupElements.strings, BlockAttributes.ALL)
     }
 
     fun testNoBlockAttributesForField() {
@@ -151,7 +164,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
             }
         """.trimIndent()
         )
-        assertDoesntContain(lookupElements.strings, PrismaConstants.BlockAttributes.ALL)
+        assertDoesntContain(lookupElements.strings, BlockAttributes.ALL)
     }
 
     fun testNoBlockAttributesForFieldAfterAt() {
@@ -162,6 +175,6 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
             }
         """.trimIndent()
         )
-        assertDoesntContain(lookupElements.strings, PrismaConstants.BlockAttributes.ALL)
+        assertDoesntContain(lookupElements.strings, BlockAttributes.ALL)
     }
 }

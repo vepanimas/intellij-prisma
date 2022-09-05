@@ -23,6 +23,20 @@ class PrismaTypesCompletionTest : PrismaCompletionTestBase() {
         checkLookupDocumentation(lookupElements, "DateTime")
     }
 
+    fun testNoDecimalInMongo() {
+        val lookupElements = getLookupElements(
+            """
+                datasource db { 
+                  provider = "mongodb" 
+                }
+                model M {
+                  id <caret>
+                }
+            """.trimIndent(),
+        )
+        assertDoesntContain(lookupElements.strings, PrismaConstants.Types.DECIMAL)
+    }
+
     fun testUnsupportedType() {
         val lookupElements = completeSelected(
             """

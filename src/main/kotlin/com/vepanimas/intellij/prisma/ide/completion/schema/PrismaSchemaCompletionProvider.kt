@@ -61,7 +61,8 @@ abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
             .getElementsByKind(kind)
             .asSequence()
             .filter {
-                it.datasources == null || it.datasources.contains(type)
+                // filter only when datasource provider is specified
+                it.datasources == null || type == null || it.datasources.contains(type)
             }.toList()
     }
 
