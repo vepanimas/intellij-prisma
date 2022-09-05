@@ -178,7 +178,10 @@ Expression ::=
 
 FunctionCall ::= Path ArgumentsList
 ArrayExpression ::= '[' [Expression (',' Expression)*] ']'
-LiteralExpression ::= NUMERIC_LITERAL | STRING_LITERAL
+LiteralExpression ::= NUMERIC_LITERAL | STRING_LITERAL {
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaLiteralExpressionMixin"
+    methods=[getValue]
+}
 PathExpression ::= Path
 
 /* Identifiers */

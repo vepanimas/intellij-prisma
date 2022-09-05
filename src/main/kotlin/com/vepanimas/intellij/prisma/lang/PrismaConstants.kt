@@ -19,7 +19,7 @@ object PrismaConstants {
         )
     }
 
-    object Datasource {
+    object DatasourceTypes {
         const val MYSQL = "mysql"
         const val POSTGRESQL = "postgresql"
         const val SQLITE = "sqlite"
@@ -43,5 +43,10 @@ object PrismaConstants {
 
     object PreviewFeatures {
         const val FULL_TEXT_INDEX = "fulltextindex"
+    }
+
+    object DatasourceFields {
+        const val PROVIDER = "provider"
+        const val URL = "url"
     }
 }

@@ -79,7 +79,7 @@ open class PrismaSchemaElement(
     val insertHandler: InsertHandler<LookupElement>? = null,
     val params: List<PrismaSchemaElementParameter> = emptyList(),
     val pattern: ElementPattern<out PsiElement>? = null,
-    var datasources: Set<PrismaDatasourceType>? = null
+    val datasources: Set<PrismaDatasourceType>? = null
 ) {
     open class Builder(private val kind: PrismaSchemaElementKind) :
         SchemaDslBuilder<PrismaSchemaElement> {

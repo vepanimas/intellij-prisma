@@ -2,6 +2,8 @@ package com.vepanimas.intellij.prisma.completion
 
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
 
+private val COMMON_BLOCK_ATTRS = PrismaConstants.BlockAttributes.ALL - PrismaConstants.BlockAttributes.FULLTEXT
+
 class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
     override fun getBasePath(): String = "/completion/attributes"
 
@@ -18,7 +20,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@id"
         )
-        assertSameElements(lookupElements.strings, PrismaConstants.BlockAttributes.ALL)
+        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
         checkLookupDocumentation(lookupElements, "@@id")
     }
 
@@ -35,7 +37,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@map"
         )
-        assertSameElements(lookupElements.strings, PrismaConstants.BlockAttributes.ALL)
+        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
     }
 
     fun testBlockAttributesPrefixAtAfterField() {
@@ -55,7 +57,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@index"
         )
-        assertSameElements(lookupElements.strings, PrismaConstants.BlockAttributes.ALL)
+        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
     }
 
     fun testBlockAttributesPrefixAtAt() {
@@ -71,7 +73,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@unique"
         )
-        assertSameElements(lookupElements.strings, PrismaConstants.BlockAttributes.ALL)
+        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
     }
 
     fun testBlockAttributesPrefixAtAtAfterField() {
@@ -91,7 +93,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             "@@unique"
         )
-        assertSameElements(lookupElements.strings, PrismaConstants.BlockAttributes.ALL)
+        assertSameElements(lookupElements.strings, COMMON_BLOCK_ATTRS)
     }
 
     fun testBlockAttributesPrefixName() {

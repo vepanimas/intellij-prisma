@@ -15,6 +15,7 @@ import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaFakeElement
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes
+import com.vepanimas.intellij.prisma.lang.psi.PrismaFile
 
 abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
     abstract val kind: PrismaSchemaElementKind
@@ -27,7 +28,7 @@ abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
         val prefix = computePrefix(result, parameters)
         val resultSet = result.withPrefixMatcher(result.prefixMatcher.cloneWithPrefix(prefix))
 
-        collectSchemaElements().forEach { schemaElement ->
+        collectSchemaElements(parameters, context).forEach { schemaElement ->
             val lookupElementBuilder = createLookupElement(schemaElement, parameters, context)
             lookupElementBuilder?.let { builder ->
                 resultSet.addElement(builder)
@@ -49,9 +50,22 @@ abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
         return attrPrefix + prefix
     }
 
-    protected open fun collectSchemaElements() = PRISMA_SCHEMA_DEFINITION.getElementsByKind(kind)
+    protected open fun collectSchemaElements(
+        parameters: CompletionParameters,
+        context: ProcessingContext
+    ): Collection<PrismaSchemaElement> {
+        val file = parameters.originalFile as? PrismaFile ?: return emptyList()
 
-    protected fun createLookupElement(
+        val type = file.datasourceType
+        return PRISMA_SCHEMA_DEFINITION
+            .getElementsByKind(kind)
+            .asSequence()
+            .filter {
+                it.datasources == null || it.datasources.contains(type)
+            }.toList()
+    }
+
+    private fun createLookupElement(
         schemaElement: PrismaSchemaElement,
         parameters: CompletionParameters,
         context: ProcessingContext,
