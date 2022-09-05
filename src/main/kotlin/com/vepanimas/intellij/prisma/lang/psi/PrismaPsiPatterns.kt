@@ -13,7 +13,7 @@ import com.intellij.util.ProcessingContext
 object PrismaPsiPatterns {
     val topKeyword: PsiElementPattern.Capture<PsiElement> =
         psiElement(PrismaElementTypes.IDENTIFIER).withParent(
-            psiElement(PsiErrorElement::class.java).withParent(PrismaFile::class.java)
+            psiElement(PsiErrorElement::class.java).withParent(PrismaFile::class.java).afterNewLine()
         )
 
     val typeReference: PsiElementPattern.Capture<PsiElement> =
@@ -32,7 +32,7 @@ object PrismaPsiPatterns {
 
 fun <T : PsiElement, Self : ObjectPattern<T, Self>> ObjectPattern<T, Self>.afterNewLine(): Self =
     with("afterNewLine") { element ->
-        val prev = element.skipWhitespacesBackwardWithoutNewLines() ?: return@with false
+        val prev = element.skipWhitespacesBackwardWithoutNewLines() ?: return@with true
         prev.elementType == TokenType.WHITE_SPACE && prev.textContains('\n')
     }
 

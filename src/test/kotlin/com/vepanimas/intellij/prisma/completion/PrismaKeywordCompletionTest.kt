@@ -35,6 +35,10 @@ class PrismaKeywordCompletionTest : PrismaCompletionTestBase() {
         )
     }
 
+    fun testKeywordInEmptyFile() {
+        completeBasic("mo<caret>", "model <caret>")
+    }
+
     fun testNoKeywordsInDeclaration() {
         noCompletion("model <caret>")
     }
@@ -58,5 +62,15 @@ class PrismaKeywordCompletionTest : PrismaCompletionTestBase() {
         )
         assertDoesntContain(lookupElements.strings, "enum")
         assertContainsElements(lookupElements.strings, "model")
+    }
+
+    fun testNoKeywordsBetweenBrackets() {
+        noCompletion(
+            """
+            model M {
+              names String[<caret>]
+            }
+        """.trimIndent()
+        )
     }
 }
