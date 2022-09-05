@@ -68,7 +68,7 @@ internal fun StringBuilder.content(block: StringBuilder.() -> Unit) {
     append("\n")
 }
 
-internal fun StringBuilder.doc(element: PsiElement?) {
+internal fun StringBuilder.documentationComment(element: PsiElement?) {
     val comment = (element as? PrismaDocumentationOwner)?.docComment ?: return
     val rendered = PrismaDocumentationRenderer(comment).render() ?: return
     content {

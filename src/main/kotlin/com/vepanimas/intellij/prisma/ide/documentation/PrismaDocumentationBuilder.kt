@@ -4,7 +4,8 @@ import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.PrismaBundle
-import com.vepanimas.intellij.prisma.ide.schema.PRISMA_SCHEMA_DEFINITION
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
@@ -23,20 +24,43 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
 
         return buildString {
             definition { append(def) }
-            doc(element)
+            documentationComment(element)
             additionalSections()
         }
     }
 
     private fun buildDocumentationForSchemaElement(element: PsiElement): String? {
-        val schemaElement = PRISMA_SCHEMA_DEFINITION.match(element) ?: return null
+        val schemaElement = PrismaSchemaProvider.getSchema().match(element) ?: return null
         val definition = toHtml(element.project, schemaElement.signature ?: schemaElement.label)
 
         return buildString {
             definition { append(definition) }
+
             documentationMarkdownToHtml(schemaElement.documentation)?.let {
                 content {
                     append(it)
+                }
+            }
+
+            paramsSection(schemaElement)
+        }
+    }
+
+    private fun StringBuilder.paramsSection(schemaElement: PrismaSchemaElement) {
+        if (schemaElement.params.isEmpty()) return
+
+        sections {
+            for ((i, param) in schemaElement.params.withIndex()) {
+                val header = if (i == 0) {
+                    PrismaBundle.message("prisma.doc.section.params")
+                } else {
+                    ""
+                }
+
+                section(header) {
+                    pre(param.label)
+                    cellWithLeftPadding()
+                    append(documentationMarkdownToHtml(param.documentation) ?: "")
                 }
             }
         }
@@ -59,7 +83,7 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
                     fields.joinTo(this, separator = "<p>") {
                         psiRenderer.pre(it.identifier)
                     }
-                    append(DocumentationMarkup.SECTION_CONTENT_CELL.style("padding-left: 15px"))
+                    cellWithLeftPadding()
                     fields.joinTo(this, separator = "<p>") {
                         psiRenderer.pre(it.fieldType)
                     }
@@ -91,6 +115,13 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
         }
     }
 
+    private fun StringBuilder.cellWithLeftPadding() {
+        append(DocumentationMarkup.SECTION_CONTENT_CELL.style("padding-left: 15px"))
+    }
+
     private fun PrismaPsiRenderer.pre(element: PsiElement?) =
         HtmlChunk.text(build(element)).code().toString()
+
+    private fun StringBuilder.pre(source: String) =
+        append(HtmlChunk.text(source).code().toString())
 }

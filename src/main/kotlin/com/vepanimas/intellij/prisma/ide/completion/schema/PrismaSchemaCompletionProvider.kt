@@ -10,10 +10,10 @@ import com.intellij.psi.util.prevLeaf
 import com.intellij.util.ProcessingContext
 import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
 import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
-import com.vepanimas.intellij.prisma.ide.schema.PRISMA_SCHEMA_DEFINITION
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaFakeElement
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFile
 
@@ -57,7 +57,7 @@ abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
         val file = parameters.originalFile as? PrismaFile ?: return emptyList()
 
         val type = file.datasourceType
-        return PRISMA_SCHEMA_DEFINITION
+        return PrismaSchemaProvider.getSchema()
             .getElementsByKind(kind)
             .asSequence()
             .filter {
