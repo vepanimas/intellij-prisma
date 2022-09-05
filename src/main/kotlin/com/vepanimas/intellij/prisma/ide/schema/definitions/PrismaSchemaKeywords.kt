@@ -1,6 +1,7 @@
 package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.intellij.patterns.PlatformPatterns
+import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
 import com.vepanimas.intellij.prisma.lang.psi.PrismaTypeDeclaration
@@ -25,6 +26,7 @@ val PRISMA_SCHEMA_KEYWORDS = schema {
             label = "enum"
             documentation =
                 "Enums are defined via the enum block. You can define enums in your data model if they're supported by the datasource you use (e.g SQLite: not supported)."
+            datasources = PrismaDatasourceType.except(PrismaDatasourceType.SQLITE)
         }
         element {
             label = "type"

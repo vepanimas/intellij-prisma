@@ -46,4 +46,17 @@ class PrismaKeywordCompletionTest : PrismaCompletionTestBase() {
     fun testTypeKeywordDoc() {
         checkLookupDocumentation(getLookupElements("<caret>").find("type"))
     }
+
+    fun testNoEnumInSqlite() {
+        val lookupElements = getLookupElements(
+            """
+                datasource db {
+                  provider = "sqlite"
+                }
+                <caret>
+            """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, "enum")
+        assertContainsElements(lookupElements.strings, "model")
+    }
 }
