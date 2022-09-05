@@ -33,10 +33,26 @@ class PrismaSchemaContext(
             return PrismaSchemaContext(kind, label, schemaElement)
         }
 
-        private fun adjustSchemaElement(element: PsiElement) = when (element.elementType) {
-            UNSUPPORTED -> element.parent
-            IDENTIFIER -> PsiTreeUtil.skipParentsOfType(element, PsiWhiteSpace::class.java, PsiErrorElement::class.java)
-            else -> element
+        private fun adjustSchemaElement(element: PsiElement): PsiElement? {
+            return when (element.elementType) {
+                UNSUPPORTED -> element.parent
+                IDENTIFIER -> findIdentifierParent(element)
+                else -> element
+            }
+        }
+
+        private fun findIdentifierParent(element: PsiElement): PsiElement? {
+            val parent =
+                PsiTreeUtil.skipParentsOfType(element, PsiWhiteSpace::class.java, PsiErrorElement::class.java)
+
+            if (parent is PrismaPath) {
+                val pathParent = parent.findTopmostPathParent()
+                if (pathParent != null) {
+                    return pathParent
+                }
+            }
+
+            return parent
         }
 
         private fun getSchemaKind(element: PsiElement): PrismaSchemaElementKind? {
@@ -61,6 +77,9 @@ class PrismaSchemaContext(
                         else -> null
                     }
                 }
+
+                BLOCK_ATTRIBUTE -> PrismaSchemaElementKind.BLOCK_ATTRIBUTE
+                FIELD_ATTRIBUTE -> PrismaSchemaElementKind.FIELD_ATTRIBUTE
 
                 else -> null
             }

@@ -28,8 +28,6 @@ class PrismaSyntaxHighlighter : SyntaxHighlighterBase() {
             put(PrismaElementTypes.QUEST, PrismaColors.OPERATION_SIGN)
             put(PrismaElementTypes.EXCL, PrismaColors.OPERATION_SIGN)
             put(PrismaElementTypes.UNSUPPORTED, PrismaColors.TYPE_REFERENCE)
-            put(PrismaElementTypes.AT, PrismaColors.ATTRIBUTE)
-            put(PrismaElementTypes.ATAT, PrismaColors.ATTRIBUTE)
 
             fillMap(this, PRISMA_KEYWORDS, PrismaColors.KEYWORD)
             fillMap(this, PRISMA_BRACKETS, PrismaColors.BRACKETS)

@@ -117,22 +117,24 @@ class PrismaColorSettingsPage : ColorSettingsPage {
         }
         
         model <tn>User</tn> {
-          <fn>id</fn>    <tr>Int</tr>     @<attr>id</attr> @<attr>default</attr>(<func>autoincrement</func>())
-          <fn>email</fn> <tr>String</tr>  @<attr>unique</attr>
+          <fn>id</fn>    <tr>Int</tr>     <attr>@id</attr> <attr>@default</attr>(<func>autoincrement</func>())
+          <fn>email</fn> <tr>String</tr>  <attr>@unique</attr>
           <fn>name</fn>  <tr>String</tr>?
           <fn>posts</fn> <tr>Post</tr>[]
         }
         
         model <tn>Post</tn> {
-          <fn>id</fn>        <tr>Int</tr>      @<attr>id</attr> @<attr>default</attr>(<func>autoincrement</func>())
-          <fn>createdAt</fn> <tr>DateTime</tr> @<attr>default</attr>(<func>now</func>())
-          <fn>updatedAt</fn> <tr>DateTime</tr> @<attr>updatedAt</attr>
+          <fn>id</fn>        <tr>Int</tr>      <attr>@id</attr> <attr>@default</attr>(<func>autoincrement</func>())
+          <fn>createdAt</fn> <tr>DateTime</tr> <attr>@default</attr>(<func>now</func>())
+          <fn>updatedAt</fn> <tr>DateTime</tr> <attr>@updatedAt</attr>
           <fn>title</fn>     <tr>String</tr>
           <fn>content</fn>   <tr>String</tr>?
-          <fn>published</fn> <tr>Boolean</tr>  @<attr>default</attr>(<fr>false</fr>)
-          <fn>viewCount</fn> <tr>Int</tr>      @<attr>default</attr>(0)
-          <fn>author</fn>    <tr>User</tr>?    @<attr>relation</attr>(<param>fields</param>: [<fr>authorId</fr>], <param>references</param>: [<fr>id</fr>])
+          <fn>published</fn> <tr>Boolean</tr>  <attr>@default</attr>(<fr>false</fr>)
+          <fn>viewCount</fn> <tr>Int</tr>      <attr>@default</attr>(0)
+          <fn>author</fn>    <tr>User</tr>?    <attr>@relation</attr>(<param>fields</param>: [<fr>authorId</fr>], <param>references</param>: [<fr>id</fr>])
           <fn>authorId</fn>  <tr>Int</tr>?
+          
+          <attr>@@id</attr>([<fr>id</fr>])
         }
         """.trimIndent()
     }

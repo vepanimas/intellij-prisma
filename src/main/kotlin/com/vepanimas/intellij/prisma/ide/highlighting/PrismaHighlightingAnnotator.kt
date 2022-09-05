@@ -8,12 +8,13 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.elementType
 import com.vepanimas.intellij.prisma.lang.psi.*
-import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.IDENTIFIER
+import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
 
 class PrismaHighlightingAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         when (element.elementType) {
             IDENTIFIER -> highlightIdentifier(holder, element)
+            AT, ATAT -> newAnnotation(holder, element, PrismaColors.ATTRIBUTE)
         }
     }
 

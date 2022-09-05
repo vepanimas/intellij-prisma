@@ -6,4 +6,5 @@ enum class PrismaSchemaElementKind {
     DATASOURCE_FIELD,
     GENERATOR_FIELD,
     BLOCK_ATTRIBUTE,
+    FIELD_ATTRIBUTE,
 }
