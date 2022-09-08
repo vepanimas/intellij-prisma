@@ -97,6 +97,7 @@ public class PrismaVisitor extends PsiElementVisitor {
 
   public void visitNamedArgument(@NotNull PrismaNamedArgument o) {
     visitArgument(o);
+    // visitReferencingElement(o);
   }
 
   public void visitOptionalType(@NotNull PrismaOptionalType o) {

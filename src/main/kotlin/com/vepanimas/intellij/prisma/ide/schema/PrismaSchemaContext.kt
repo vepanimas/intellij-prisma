@@ -30,7 +30,8 @@ sealed class PrismaSchemaContext(
             if (contextElement is PrismaNamedArgument) {
                 val parentElement = contextElement.parentOfType<PrismaArgumentsOwner>() ?: return null
                 val parentContext = forElement(parentElement) as? PrismaSchemaDeclarationContext ?: return null
-                return PrismaSchemaParameterContext(contextElement.identifier.text, contextElement, parentContext)
+                val label = contextElement.referenceText ?: return null
+                return PrismaSchemaParameterContext(label, contextElement, parentContext)
             } else {
                 val kind = getSchemaKind(contextElement) ?: return null
                 val label = getSchemaLabel(contextElement) ?: return null
@@ -117,7 +118,7 @@ sealed class PrismaSchemaContext(
                 element is PrismaFieldAttribute -> "@${psiRenderer.build(element.path)}"
                 element is PrismaUnsupportedType -> PrismaConstants.Types.UNSUPPORTED
                 element is PrismaKeyValue -> psiRenderer.build(element.identifier)
-                element is PrismaNamedArgument -> psiRenderer.build(element.identifier)
+                element is PrismaReferencingElement -> element.referenceText
                 element is PsiNamedElement -> element.name
                 else -> null
             }
