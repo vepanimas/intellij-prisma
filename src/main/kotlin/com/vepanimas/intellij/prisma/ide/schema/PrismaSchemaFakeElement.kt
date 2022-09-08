@@ -9,11 +9,12 @@ import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.impl.FakePsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.vepanimas.intellij.prisma.lang.psi.PrismaNamedElement
+import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
+import javax.swing.Icon
 
 class PrismaSchemaFakeElement(
-    val label: String,
     private val parent: PsiElement,
-    val kind: PrismaSchemaElementKind,
+    val schemaElement: PrismaSchemaElement,
 ) : FakePsiElement(), PrismaNamedElement {
     override fun getParent(): PsiElement = parent
 
@@ -21,18 +22,26 @@ class PrismaSchemaFakeElement(
 
     override fun getContainingFile(): PsiFile = parent.containingFile
 
-    override fun getName(): String = label
+    override fun getName(): String = schemaElement.label
 
     override fun getText(): String = name
+
+    override fun getIcon(open: Boolean): Icon? = this.schemaElement.icon
 
     companion object {
         fun createForCompletion(
             parameters: CompletionParameters,
-            text: String,
-            kind: PrismaSchemaElementKind,
+            schemaElement: PrismaSchemaElement,
         ): PrismaSchemaFakeElement {
             val parent = findSuitableParent(parameters)
-            return PrismaSchemaFakeElement(text, parent, kind)
+            return createForCompletion(parent, schemaElement)
+        }
+
+        fun createForCompletion(
+            parent: PsiElement,
+            schemaElement: PrismaSchemaElement,
+        ): PrismaSchemaFakeElement {
+            return PrismaSchemaFakeElement(parent, schemaElement)
         }
 
         private fun findSuitableParent(parameters: CompletionParameters): PsiElement {

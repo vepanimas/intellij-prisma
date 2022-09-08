@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaNamedArgument extends PrismaArgument {
+public interface PrismaValueArgument extends PrismaArgument {
 
   @NotNull
   PrismaExpression getExpression();
-
-  @NotNull
-  PsiElement getIdentifier();
 
 }

@@ -36,18 +36,19 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   public static final TokenSet[] EXTENDS_SETS_ = new TokenSet[] {
+    create_token_set_(ARGUMENT, NAMED_ARGUMENT, VALUE_ARGUMENT),
     create_token_set_(ARRAY_EXPRESSION, EXPRESSION, FUNCTION_CALL, LITERAL_EXPRESSION,
       PATH_EXPRESSION),
   };
 
   /* ********************************************************** */
-  // NamedArgument | Expression
+  // NamedArgument | ValueArgument
   public static boolean Argument(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Argument")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, ARGUMENT, "<argument>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, ARGUMENT, "<argument>");
     r = NamedArgument(b, l + 1);
-    if (!r) r = Expression(b, l + 1);
+    if (!r) r = ValueArgument(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -805,6 +806,17 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, ATAT);
     if (!r) r = consumeToken(b, IDENTIFIER);
     if (!r) r = TopLevelKeywords(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // Expression
+  public static boolean ValueArgument(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ValueArgument")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, VALUE_ARGUMENT, "<value argument>");
+    r = Expression(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 

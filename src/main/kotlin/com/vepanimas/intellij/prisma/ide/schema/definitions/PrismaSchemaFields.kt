@@ -1,10 +1,10 @@
 package com.vepanimas.intellij.prisma.ide.schema.definitions
 
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
 
 val PRISMA_SCHEMA_FIELDS = schema {
-    group(PrismaSchemaElementKind.DATASOURCE_FIELD) {
+    group(PrismaSchemaKind.DATASOURCE_FIELD) {
         element {
             label = "provider"
             documentation =
@@ -22,7 +22,7 @@ val PRISMA_SCHEMA_FIELDS = schema {
         }
     }
 
-    group(PrismaSchemaElementKind.GENERATOR_FIELD) {
+    group(PrismaSchemaKind.GENERATOR_FIELD) {
         element {
             label = "provider"
             documentation =

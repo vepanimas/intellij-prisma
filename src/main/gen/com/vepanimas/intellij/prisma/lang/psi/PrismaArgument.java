@@ -7,10 +7,4 @@ import com.intellij.psi.PsiElement;
 
 public interface PrismaArgument extends PrismaElement {
 
-  @Nullable
-  PrismaExpression getExpression();
-
-  @Nullable
-  PrismaNamedArgument getNamedArgument();
-
 }

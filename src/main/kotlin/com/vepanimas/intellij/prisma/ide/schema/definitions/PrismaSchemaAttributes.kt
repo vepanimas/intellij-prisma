@@ -2,13 +2,14 @@ package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
 import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldNames
 import java.util.*
 
 val PRISMA_SCHEMA_ATTRIBUTES = schema {
-    group(PrismaSchemaElementKind.BLOCK_ATTRIBUTE) {
+    group(PrismaSchemaKind.BLOCK_ATTRIBUTE) {
         element {
             label = BlockAttributes.MAP
             insertHandler = PrismaInsertHandler.PARENS_QUOTED_ARGUMENT
@@ -16,9 +17,10 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
             signature = "@@map(name: String)"
 
             param {
-                label = "name"
+                label = FieldNames.NAME
                 insertHandler = PrismaInsertHandler.COLON_QUOTED_ARGUMENT
                 documentation = "The name of the target database table."
+                type = "String"
             }
         }
         element {
@@ -28,19 +30,22 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
             signature = "@@id(fields: FieldReference[], name: String?, map: String?)"
 
             param {
-                label = "fields"
+                label = FieldNames.FIELDS
                 insertHandler = PrismaInsertHandler.COLON_LIST_ARGUMENT
                 documentation = "A list of references."
+                type = "FieldReference[]"
             }
             param {
-                label = "name"
+                label = FieldNames.NAME
                 insertHandler = PrismaInsertHandler.COLON_QUOTED_ARGUMENT
                 documentation = "Defines the name in your Prisma Client API."
+                type = "String?"
             }
             param {
-                label = "map"
+                label = FieldNames.MAP
                 insertHandler = PrismaInsertHandler.COLON_QUOTED_ARGUMENT
                 documentation = "Defines a custom name for the primary key in the database."
+                type = "String?"
             }
         }
         element {
@@ -50,19 +55,22 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
             signature = "@@unique(fields: FieldReference[], name: String?, map: String?)"
 
             param {
-                label = "fields"
+                label = FieldNames.FIELDS
                 insertHandler = PrismaInsertHandler.COLON_LIST_ARGUMENT
                 documentation = "A list of references."
+                type = "FieldReference[]"
             }
             param {
-                label = "name"
+                label = FieldNames.NAME
                 insertHandler = PrismaInsertHandler.COLON_QUOTED_ARGUMENT
                 documentation = "Defines the name in your Prisma Client API."
+                type = "String?"
             }
             param {
-                label = "map"
+                label = FieldNames.MAP
                 insertHandler = PrismaInsertHandler.COLON_QUOTED_ARGUMENT
                 documentation = "Defines a custom constraint name in the database."
+                type = "String?"
             }
         }
         element {
@@ -72,14 +80,16 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
             signature = "@@index(fields: FieldReference[], map: String?)"
 
             param {
-                label = "fields"
+                label = FieldNames.FIELDS
                 insertHandler = PrismaInsertHandler.COLON_LIST_ARGUMENT
                 documentation = "A list of references."
+                type = "FieldReference[]"
             }
             param {
-                label = "map"
+                label = FieldNames.MAP
                 insertHandler = PrismaInsertHandler.COLON_QUOTED_ARGUMENT
                 documentation = "Defines a custom index name in the database."
+                type = "String?"
             }
         }
         element {
@@ -90,14 +100,16 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
             datasources = EnumSet.of(PrismaDatasourceType.MYSQL, PrismaDatasourceType.MONGODB)
 
             param {
-                label = "fields"
+                label = FieldNames.FIELDS
                 insertHandler = PrismaInsertHandler.COLON_LIST_ARGUMENT
                 documentation = "A list of references."
+                type = "FieldReference[]"
             }
             param {
-                label = "map"
+                label = FieldNames.MAP
                 insertHandler = PrismaInsertHandler.COLON_QUOTED_ARGUMENT
                 documentation = "Defines a custom index name in the database."
+                type = "String?"
             }
         }
         element {

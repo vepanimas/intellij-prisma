@@ -2,12 +2,12 @@ package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.intellij.patterns.PlatformPatterns
 import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
 import com.vepanimas.intellij.prisma.lang.psi.PrismaTypeDeclaration
 
 val PRISMA_SCHEMA_KEYWORDS = schema {
-    group(PrismaSchemaElementKind.KEYWORD) {
+    group(PrismaSchemaKind.KEYWORD) {
         element {
             label = "datasource"
             documentation = "The datasource block tells the schema where the models are backed."

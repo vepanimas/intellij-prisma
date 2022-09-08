@@ -49,4 +49,10 @@ object PrismaConstants {
         const val PROVIDER = "provider"
         const val URL = "url"
     }
+
+    object FieldNames {
+        const val FIELDS = "fields"
+        const val NAME = "name"
+        const val MAP = "map"
+    }
 }

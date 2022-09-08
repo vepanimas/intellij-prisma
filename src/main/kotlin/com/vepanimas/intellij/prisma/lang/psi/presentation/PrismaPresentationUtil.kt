@@ -1,6 +1,11 @@
 package com.vepanimas.intellij.prisma.lang.psi.presentation
 
 import com.intellij.navigation.ItemPresentation
+import com.vepanimas.intellij.prisma.PrismaIcons
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElement
 import com.vepanimas.intellij.prisma.lang.psi.PrismaNamedElement
 import javax.swing.Icon
@@ -15,3 +20,15 @@ fun getPresentation(element: PrismaElement): ItemPresentation = object : ItemPre
 
     override fun getIcon(unused: Boolean): Icon? = element.getIcon(0)
 }
+
+val PrismaSchemaElement.icon: Icon?
+    get() = when (this) {
+        is PrismaSchemaParameter -> PrismaIcons.PARAMETER
+        is PrismaSchemaDeclaration -> when (kind) {
+            PrismaSchemaKind.PRIMITIVE_TYPE -> PrismaIcons.TYPE
+            PrismaSchemaKind.GENERATOR_FIELD, PrismaSchemaKind.DATASOURCE_FIELD -> PrismaIcons.KEY_VALUE
+            PrismaSchemaKind.BLOCK_ATTRIBUTE, PrismaSchemaKind.FIELD_ATTRIBUTE -> PrismaIcons.ATTRIBUTE
+            else -> null
+        }
+    }
+

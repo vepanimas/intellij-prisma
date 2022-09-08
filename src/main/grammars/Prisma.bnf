@@ -51,6 +51,9 @@
   mixin('.*Block')='com.vepanimas.intellij.prisma.lang.psi.impl.PrismaBlockMixin'
 
   implements('FieldDeclaration|EnumValueDeclaration|KeyValue')='com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration'
+  implements('(Field|Block)Attribute')='com.vepanimas.intellij.prisma.lang.psi.PrismaArgumentsOwner'
+
+  extends('NamedArgument|ValueArgument')=Argument
 }
 
 Schema ::= Declaration*
@@ -166,8 +169,9 @@ FieldAttribute ::= '@' Path ArgumentsList? {
 
 /* Arguments */
 ArgumentsList ::= '(' [Argument (',' Argument)*] ','? ')'
-Argument ::= NamedArgument | Expression
+Argument ::= NamedArgument | ValueArgument
 NamedArgument ::= Identifier ':' Expression
+ValueArgument ::= Expression
 
 /* Expressions */
 Expression ::=

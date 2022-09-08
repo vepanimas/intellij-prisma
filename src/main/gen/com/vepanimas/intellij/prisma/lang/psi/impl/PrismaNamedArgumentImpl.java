@@ -10,12 +10,13 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaNamedArgumentImpl extends PrismaElementImpl implements PrismaNamedArgument {
+public class PrismaNamedArgumentImpl extends PrismaArgumentImpl implements PrismaNamedArgument {
 
   public PrismaNamedArgumentImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull PrismaVisitor visitor) {
     visitor.visitNamedArgument(this);
   }

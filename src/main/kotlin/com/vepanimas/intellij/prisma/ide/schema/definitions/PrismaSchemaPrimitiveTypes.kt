@@ -2,12 +2,12 @@ package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
 import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.Types
 
 val PRISMA_SCHEMA_PRIMITIVE_TYPES = schema {
-    group(PrismaSchemaElementKind.PRIMITIVE_TYPE) {
+    group(PrismaSchemaKind.PRIMITIVE_TYPE) {
         element {
             label = Types.STRING
             documentation = "Variable length text"

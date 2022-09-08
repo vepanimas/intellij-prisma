@@ -3,8 +3,9 @@ package com.vepanimas.intellij.prisma.ide.documentation
 import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.PsiElement
+import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.PrismaBundle
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
@@ -31,10 +32,10 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
 
     private fun buildDocumentationForSchemaElement(element: PsiElement): String? {
         val schemaElement = PrismaSchemaProvider.getSchema().match(element) ?: return null
-        val definition = toHtml(element.project, schemaElement.signature ?: schemaElement.label)
+        val definition = schemaElement.castSafelyTo<PrismaSchemaDeclaration>()?.signature ?: schemaElement.label
 
         return buildString {
-            definition { append(definition) }
+            definition { append(toHtml(element.project, definition)) }
 
             documentationMarkdownToHtml(schemaElement.documentation)?.let {
                 content {
@@ -42,15 +43,15 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
                 }
             }
 
-            paramsSection(schemaElement)
+            paramsSection(schemaElement as? PrismaSchemaDeclaration)
         }
     }
 
-    private fun StringBuilder.paramsSection(schemaElement: PrismaSchemaElement) {
-        if (schemaElement.params.isEmpty()) return
+    private fun StringBuilder.paramsSection(declaration: PrismaSchemaDeclaration?) {
+        if (declaration == null || declaration.params.isEmpty()) return
 
         sections {
-            for ((i, param) in schemaElement.params.withIndex()) {
+            for ((i, param) in declaration.params.withIndex()) {
                 val header = if (i == 0) {
                     PrismaBundle.message("prisma.doc.section.params")
                 } else {

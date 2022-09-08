@@ -39,6 +39,7 @@ public interface PrismaElementTypes {
   IElementType TYPE_REFERENCE = new PrismaElementType("TYPE_REFERENCE");
   IElementType UNSUPPORTED_OPTIONAL_LIST_TYPE = new PrismaElementType("UNSUPPORTED_OPTIONAL_LIST_TYPE");
   IElementType UNSUPPORTED_TYPE = new PrismaElementType("UNSUPPORTED_TYPE");
+  IElementType VALUE_ARGUMENT = new PrismaElementType("VALUE_ARGUMENT");
 
   IElementType AT = new PrismaTokenType("@");
   IElementType ATAT = new PrismaTokenType("@@");
@@ -67,10 +68,7 @@ public interface PrismaElementTypes {
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == ARGUMENT) {
-        return new PrismaArgumentImpl(node);
-      }
-      else if (type == ARGUMENTS_LIST) {
+      if (type == ARGUMENTS_LIST) {
         return new PrismaArgumentsListImpl(node);
       }
       else if (type == ARRAY_EXPRESSION) {
@@ -156,6 +154,9 @@ public interface PrismaElementTypes {
       }
       else if (type == UNSUPPORTED_TYPE) {
         return new PrismaUnsupportedTypeImpl(node);
+      }
+      else if (type == VALUE_ARGUMENT) {
+        return new PrismaValueArgumentImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

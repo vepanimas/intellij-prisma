@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaFieldAttribute extends PrismaElement {
+public interface PrismaFieldAttribute extends PrismaArgumentsOwner {
 
   @Nullable
   PrismaArgumentsList getArgumentsList();

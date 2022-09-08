@@ -4,18 +4,26 @@ import com.intellij.codeInsight.completion.AddSpaceInsertHandler
 import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler
 import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.editor.EditorModificationUtil
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaContext
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElementKind
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclarationContext
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameterContext
 
 object PrismaInsertHandler {
     val DEFAULT_INSERT_HANDLER = InsertHandler<LookupElement> { context, item ->
-        when (PrismaSchemaContext.forElement(item.psiElement)?.kind) {
-            PrismaSchemaElementKind.KEYWORD -> {
+        val schemaContext = PrismaSchemaContext.forElement(item.psiElement)
+        if (schemaContext is PrismaSchemaParameterContext) {
+            return@InsertHandler
+        }
+
+        when ((schemaContext as? PrismaSchemaDeclarationContext)?.kind) {
+            PrismaSchemaKind.KEYWORD -> {
                 AddSpaceInsertHandler.INSTANCE.handleInsert(context, item)
             }
 
-            PrismaSchemaElementKind.DATASOURCE_FIELD, PrismaSchemaElementKind.GENERATOR_FIELD -> {
+            PrismaSchemaKind.DATASOURCE_FIELD, PrismaSchemaKind.GENERATOR_FIELD -> {
                 EQUALS_INSERT_HANDLER.handleInsert(context, item)
             }
 
@@ -44,4 +52,12 @@ object PrismaInsertHandler {
     val EQUALS_INSERT_HANDLER = InsertHandler<LookupElement> { context, _ ->
         EditorModificationUtil.insertStringAtCaret(context.editor, " = ", false, true)
     }
+}
+
+fun LookupElementBuilder.withPrismaInsertHandler(
+    customInsertHandler: InsertHandler<LookupElement>? = null
+): LookupElementBuilder = if (customInsertHandler != null) {
+    withInsertHandler(customInsertHandler)
+} else {
+    withInsertHandler(PrismaInsertHandler.DEFAULT_INSERT_HANDLER)
 }
