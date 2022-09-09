@@ -10,13 +10,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaPathExpressionImpl extends PrismaExpressionImpl implements PrismaPathExpression {
+public class PrismaPathExpressionImpl extends PrismaPathExpressionMixin implements PrismaPathExpression {
 
   public PrismaPathExpressionImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull PrismaVisitor visitor) {
     visitor.visitPathExpression(this);
   }

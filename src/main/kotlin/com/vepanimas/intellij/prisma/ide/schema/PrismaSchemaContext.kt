@@ -86,7 +86,7 @@ sealed class PrismaSchemaContext(
                 UNSUPPORTED_TYPE -> PrismaSchemaKind.PRIMITIVE_TYPE
 
                 TYPE_REFERENCE ->
-                    if (PrismaConstants.Types.PRIMITIVE.contains((element as? PrismaReferencingElement)?.referenceText)) {
+                    if (PrismaConstants.Types.PRIMITIVE.contains((element as? PrismaTypeReference)?.referenceText)) {
                         PrismaSchemaKind.PRIMITIVE_TYPE
                     } else {
                         null
@@ -118,7 +118,7 @@ sealed class PrismaSchemaContext(
                 element is PrismaFieldAttribute -> "@${psiRenderer.build(element.pathExpression)}"
                 element is PrismaUnsupportedType -> PrismaConstants.Types.UNSUPPORTED
                 element is PrismaKeyValue -> psiRenderer.build(element.identifier)
-                element is PrismaReferencingElement -> element.referenceText
+                element is PrismaReferenceElement -> element.referenceText
                 element is PsiNamedElement -> element.name
                 else -> null
             }

@@ -151,7 +151,7 @@ private UnsupportedType_recover ::= !(')' | '}' | '@' | '@@' | IDENTIFIER | TopL
 
 TypeReference ::= UnsupportedType | Identifier {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaTypeReferenceMixin"
-    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaReferencingElement"
+    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaReferenceElement"
 }
 UnsupportedOptionalListType ::= TypeReference '[' ']' '?'
 ListType ::= TypeReference '[' ']'
@@ -173,7 +173,7 @@ Argument ::= NamedArgument | ValueArgument
 NamedArgument ::= Identifier ':' Expression {
     pin=2
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaNamedArgumentMixin"
-    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaReferencingElement"
+    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaReferenceElement"
 }
 ValueArgument ::= Expression
 
@@ -190,7 +190,10 @@ LiteralExpression ::= NUMERIC_LITERAL | STRING_LITERAL {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaLiteralExpressionMixin"
     methods=[getValue]
 }
-PathExpression ::= Path PathMemberAccess*
+PathExpression ::= Path PathMemberAccess* {
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaPathExpressionMixin"
+    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaQualifiedReferenceElement"
+}
 
 /* Path */
 Path ::= Identifier { elementType=PathExpression }

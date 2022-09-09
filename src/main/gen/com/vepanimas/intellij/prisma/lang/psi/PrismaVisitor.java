@@ -97,7 +97,7 @@ public class PrismaVisitor extends PsiElementVisitor {
 
   public void visitNamedArgument(@NotNull PrismaNamedArgument o) {
     visitArgument(o);
-    // visitReferencingElement(o);
+    // visitReferenceElement(o);
   }
 
   public void visitOptionalType(@NotNull PrismaOptionalType o) {
@@ -106,6 +106,7 @@ public class PrismaVisitor extends PsiElementVisitor {
 
   public void visitPathExpression(@NotNull PrismaPathExpression o) {
     visitExpression(o);
+    // visitQualifiedReferenceElement(o);
   }
 
   public void visitTypeAlias(@NotNull PrismaTypeAlias o) {
@@ -118,7 +119,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitTypeReference(@NotNull PrismaTypeReference o) {
-    visitReferencingElement(o);
+    visitReferenceElement(o);
   }
 
   public void visitUnsupportedOptionalListType(@NotNull PrismaUnsupportedOptionalListType o) {
@@ -153,7 +154,7 @@ public class PrismaVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
-  public void visitReferencingElement(@NotNull PrismaReferencingElement o) {
+  public void visitReferenceElement(@NotNull PrismaReferenceElement o) {
     visitElement(o);
   }
 
