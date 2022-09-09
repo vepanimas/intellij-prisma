@@ -3,7 +3,8 @@ package com.vepanimas.intellij.prisma.completion
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
-import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldNames
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldAttributes
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.ParameterNames
 import junit.framework.TestCase
 
 class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
@@ -20,13 +21,13 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
               @@id(fields: [<caret>])
             }
         """.trimIndent(),
-            FieldNames.FIELDS
+            ParameterNames.FIELDS
         )
         val expectedParams = getBlockAttributeParams(BlockAttributes.ID)
         assertSameElements(lookupElements.strings, expectedParams)
-        checkLookupDocumentation(lookupElements, FieldNames.FIELDS)
+        checkLookupDocumentation(lookupElements, ParameterNames.FIELDS)
 
-        val presentation = lookupElements.find(FieldNames.FIELDS).presentation!!
+        val presentation = lookupElements.find(ParameterNames.FIELDS).presentation!!
         TestCase.assertEquals("FieldReference[]", presentation.typeText)
     }
 
@@ -41,11 +42,11 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
               @@id(fields: [], map: "<caret>")
             }
         """.trimIndent(),
-            FieldNames.MAP
+            ParameterNames.MAP
         )
         val expectedParams = getBlockAttributeParams(BlockAttributes.ID)
-        assertSameElements(lookupElements.strings, expectedParams - FieldNames.FIELDS)
-        checkLookupDocumentation(lookupElements, FieldNames.MAP)
+        assertSameElements(lookupElements.strings, expectedParams - ParameterNames.FIELDS)
+        checkLookupDocumentation(lookupElements, ParameterNames.MAP)
     }
 
     fun testBlockAttributeParamComplete() {
@@ -75,6 +76,44 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         assertDoesntContain(lookupElements.strings, expectedParams)
     }
 
-    private fun getBlockAttributeParams(label: String) = PrismaSchemaProvider.getSchema()
-        .getElement(PrismaSchemaKind.BLOCK_ATTRIBUTE, label)!!.params.map { it.label }
+    fun testFieldAttributeParam() {
+        val lookupElements = completeSelected(
+            """
+            model M {
+              user User @relation(<caret>)
+            }
+        """.trimIndent(), """
+            model M {
+              user User @relation(fields: [<caret>])
+            }
+        """.trimIndent(),
+            ParameterNames.FIELDS
+        )
+        val expectedParams = getFieldAttributeParams(FieldAttributes.RELATION)
+        assertSameElements(lookupElements.strings, expectedParams)
+        checkLookupDocumentation(lookupElements, ParameterNames.FIELDS)
+    }
+
+    fun testFieldAttributeParamOnUpdate() {
+        val lookupElements = completeSelected(
+            """
+            model M {
+              user User @relation(on<caret>)
+            }
+        """.trimIndent(), """
+            model M {
+              user User @relation(onUpdate: <caret>)
+            }
+        """.trimIndent(),
+            ParameterNames.ON_UPDATE
+        )
+        checkLookupDocumentation(lookupElements, ParameterNames.ON_UPDATE)
+    }
+
+    private fun getBlockAttributeParams(label: String) = getAttributeParams(PrismaSchemaKind.BLOCK_ATTRIBUTE, label)
+
+    private fun getFieldAttributeParams(label: String) = getAttributeParams(PrismaSchemaKind.FIELD_ATTRIBUTE, label)
+
+    private fun getAttributeParams(kind: PrismaSchemaKind, label: String) =
+        PrismaSchemaProvider.getSchema().getElement(kind, label)!!.params.map { it.label }
 }

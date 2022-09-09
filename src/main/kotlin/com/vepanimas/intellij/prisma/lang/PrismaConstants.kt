@@ -41,6 +41,18 @@ object PrismaConstants {
         val ALL = setOf(ID, MAP, UNIQUE, INDEX, FULLTEXT, IGNORE)
     }
 
+    object FieldAttributes {
+        const val ID = "@id"
+        const val MAP = "@map"
+        const val UNIQUE = "@unique"
+        const val DEFAULT = "@default"
+        const val RELATION = "@relation"
+        const val UPDATED_AT = "@updatedAt"
+        const val IGNORE = "@ignore"
+
+        val ALL = setOf(ID, MAP, UNIQUE, DEFAULT, RELATION, UPDATED_AT, IGNORE)
+    }
+
     object PreviewFeatures {
         const val FULL_TEXT_INDEX = "fulltextindex"
     }
@@ -50,9 +62,16 @@ object PrismaConstants {
         const val URL = "url"
     }
 
-    object FieldNames {
+    object ParameterNames {
         const val FIELDS = "fields"
         const val NAME = "name"
         const val MAP = "map"
+        const val REFERENCES = "references"
+        const val EXPRESSION = "expression"
+        const val SORT = "sort"
+        const val CLUSTERED = "clustered"
+        const val LENGTH = "length"
+        const val ON_DELETE = "onDelete"
+        const val ON_UPDATE = "onUpdate"
     }
 }

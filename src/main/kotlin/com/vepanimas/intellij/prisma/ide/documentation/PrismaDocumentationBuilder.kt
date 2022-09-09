@@ -6,10 +6,16 @@ import com.intellij.psi.PsiElement
 import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.PrismaBundle
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
+
+private const val PARAM_INDENT = "\n\t\t"
+private const val PARAM_SEP = ","
+private const val PARAMS_WRAP_LIMIT = 3
 
 class PrismaDocumentationBuilder(private val element: PsiElement) {
     private val psiRenderer = PrismaPsiRenderer()
@@ -32,7 +38,8 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
 
     private fun buildDocumentationForSchemaElement(element: PsiElement): String? {
         val schemaElement = PrismaSchemaProvider.getSchema().match(element) ?: return null
-        val definition = schemaElement.castSafelyTo<PrismaSchemaDeclaration>()?.signature ?: schemaElement.label
+        val declaration = schemaElement.castSafelyTo<PrismaSchemaDeclaration>()
+        val definition = declaration?.signature ?: buildDefinitionFromSchema(schemaElement)
 
         return buildString {
             definition { append(toHtml(element.project, definition)) }
@@ -44,6 +51,36 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
             }
 
             paramsSection(schemaElement as? PrismaSchemaDeclaration)
+        }
+    }
+
+    private fun buildDefinitionFromSchema(schemaElement: PrismaSchemaElement): String {
+        return buildString {
+            append(schemaElement.label)
+
+            if (schemaElement is PrismaSchemaDeclaration && schemaElement.params.isNotEmpty()) {
+                val params = schemaElement.params
+                val indent = if (params.size > PARAMS_WRAP_LIMIT) {
+                    PARAM_INDENT
+                } else {
+                    ""
+                }
+                val separator = PARAM_SEP + indent.ifEmpty { " " }
+
+                params.joinTo(this, separator = separator, prefix = "($indent", postfix = ")") {
+                    val type = if (it.type != null) {
+                        ": ${it.type}"
+                    } else {
+                        ""
+                    }
+
+                    "${it.label}${type}"
+                }
+            } else if (schemaElement is PrismaSchemaParameter) {
+                schemaElement.type?.let {
+                    append(": $it")
+                }
+            }
         }
     }
 

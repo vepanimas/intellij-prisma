@@ -7,9 +7,17 @@ import com.intellij.openapi.editor.richcopy.HtmlSyntaxInfoUtil
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.text.HtmlChunk
+import com.intellij.openapi.util.text.StringUtil
+import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.util.elementType
+import com.intellij.util.castSafelyTo
+import com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition
 import com.vepanimas.intellij.prisma.lang.psi.PrismaDocumentationOwner
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementFactory
+import com.vepanimas.intellij.prisma.lang.psi.skipWhitespacesBackwardWithoutNewLines
+import com.vepanimas.intellij.prisma.lang.psi.skipWhitespacesForwardWithoutNewLines
 import org.intellij.markdown.IElementType
 import org.intellij.markdown.MarkdownElementTypes
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
@@ -117,3 +125,39 @@ private class PrismaMarkdownFlavourDescriptor(
         return generatingProviders
     }
 }
+
+val PsiElement?.hasTrailingComment: Boolean
+    get() = skipWhitespacesForwardWithoutNewLines() is PsiComment
+
+val PsiElement?.isTrailingComment: Boolean
+    get() {
+        if (this !is PsiComment) {
+            return false
+        }
+        val prev = skipWhitespacesBackwardWithoutNewLines()
+        return prev != null && prev !is PsiWhiteSpace
+    }
+
+val PsiElement?.trailingDocComment: PsiComment?
+    get() = skipWhitespacesForwardWithoutNewLines().castSafelyTo<PsiComment>()?.takeIf { it.isDocComment }
+
+fun PsiElement.prevDocComment(includeTrailing: Boolean = false): PsiComment? {
+    var prev = prevSibling
+    if (prev is PsiWhiteSpace && StringUtil.countNewLines(prev.text) <= 1) prev = prev.prevSibling
+    return prev?.takeIf { it.isDocComment && (includeTrailing || !it.isTrailingComment) }.castSafelyTo()
+}
+
+fun PsiElement.nextDocComment(includeTrailing: Boolean = false): PsiComment? {
+    var next = nextSibling
+    if (next is PsiWhiteSpace && StringUtil.countNewLines(next.text) <= 1) next = next.nextSibling
+    return next?.takeIf { it.isDocComment && (includeTrailing || !it.isTrailingComment) }.castSafelyTo()
+}
+
+val PsiElement.isDocComment
+    get() = elementType == PrismaParserDefinition.DOC_COMMENT
+
+fun PsiElement.collectPrecedingDocComments(strict: Boolean = true): List<PsiComment> =
+    generateSequence(if (strict) prevDocComment() else this) { it.prevDocComment() }
+        .filterIsInstance<PsiComment>()
+        .toList()
+        .asReversed()

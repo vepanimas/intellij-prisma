@@ -36,6 +36,14 @@ fun <T : PsiElement, Self : ObjectPattern<T, Self>> ObjectPattern<T, Self>.after
         prev.elementType == TokenType.WHITE_SPACE && prev.textContains('\n')
     }
 
+fun <T : PsiElement, Self : ObjectPattern<T, Self>, P : PsiElement> ObjectPattern<T, Self>.afterSiblingIncludingNewLines(
+    pattern: PsiElementPattern.Capture<P>
+): Self =
+    with("afterSiblingWithoutNewLines") { element ->
+        val prev = element.skipWhitespacesBackwardWithoutNewLines() ?: return@with true
+        pattern.accepts(prev)
+    }
+
 fun <T : Any, Self : ObjectPattern<T, Self>> ObjectPattern<T, Self>.with(name: String, cond: (T) -> Boolean): Self =
     with(object : PatternCondition<T>(name) {
         override fun accepts(t: T, context: ProcessingContext?): Boolean = cond(t)

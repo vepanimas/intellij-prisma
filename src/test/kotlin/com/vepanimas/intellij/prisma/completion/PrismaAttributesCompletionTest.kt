@@ -1,6 +1,7 @@
 package com.vepanimas.intellij.prisma.completion
 
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldAttributes
 
 class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
     override fun getBasePath(): String = "/completion/attributes"
@@ -176,5 +177,43 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent()
         )
         assertDoesntContain(lookupElements.strings, BlockAttributes.ALL)
+    }
+
+    fun testFieldAttributes() {
+        val lookupElements = completeSelected(
+            """
+            model User {
+            }
+            model M {
+              user User <caret>
+            }
+        """.trimIndent(), """
+            model User {
+            }
+            model M {
+              user User @relation(<caret>)
+            }
+        """.trimIndent(),
+            FieldAttributes.RELATION
+        )
+        assertSameElements(lookupElements.strings, FieldAttributes.ALL)
+        checkLookupDocumentation(lookupElements, FieldAttributes.RELATION)
+    }
+
+    fun testFieldAttributeAfterAnother() {
+        val lookupElements = completeSelected(
+            """
+            model M {
+              user User @unique <caret>
+            }
+        """.trimIndent(), """
+            model M {
+              user User @unique @map("<caret>")
+            }
+        """.trimIndent(),
+            FieldAttributes.MAP
+        )
+        assertSameElements(lookupElements.strings, FieldAttributes.ALL)
+        checkLookupDocumentation(lookupElements, FieldAttributes.MAP)
     }
 }

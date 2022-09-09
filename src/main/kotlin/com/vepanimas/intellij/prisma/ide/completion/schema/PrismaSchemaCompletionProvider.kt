@@ -34,15 +34,13 @@ abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
         context: ProcessingContext
     ): Collection<PrismaSchemaElement> {
         val file = parameters.originalFile as? PrismaFile ?: return emptyList()
+        val datasourceType = file.datasourceType
 
-        val type = file.datasourceType
         return PrismaSchemaProvider.getSchema()
             .getElementsByKind(kind)
             .asSequence()
-            .filter {
-                // filter only when datasource provider is specified
-                it.datasources == null || type == null || it.datasources.contains(type)
-            }.toList()
+            .filter { it.isAvailableForDatasource(datasourceType) }
+            .toList()
     }
 
     private fun createLookupElement(

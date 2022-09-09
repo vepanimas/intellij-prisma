@@ -27,9 +27,9 @@ public class PrismaNamedArgumentImpl extends PrismaNamedArgumentMixin implements
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PrismaExpression getExpression() {
-    return findNotNullChildByClass(PrismaExpression.class);
+    return findChildByClass(PrismaExpression.class);
   }
 
   @Override

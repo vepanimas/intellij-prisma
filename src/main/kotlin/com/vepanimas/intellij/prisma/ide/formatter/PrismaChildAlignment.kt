@@ -2,7 +2,6 @@ package com.vepanimas.intellij.prisma.ide.formatter
 
 import com.intellij.formatting.Alignment
 import com.intellij.lang.ASTNode
-import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
@@ -10,7 +9,6 @@ import com.intellij.refactoring.suggested.endOffset
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldAttribute
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldType
-import com.vepanimas.intellij.prisma.lang.psi.hasTrailingComment
 
 class PrismaChildAlignment(
     private val typeAlignment: Alignment?,

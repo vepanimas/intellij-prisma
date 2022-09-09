@@ -13,6 +13,7 @@ class PrismaCompletionContributor : CompletionContributor() {
         extend(CompletionType.BASIC, PrismaDatasourceFieldsProvider)
         extend(CompletionType.BASIC, PrismaGeneratorFieldsProvider)
         extend(CompletionType.BASIC, PrismaBlockAttributesProvider)
+        extend(CompletionType.BASIC, PrismaFieldAttributesProvider)
         extend(CompletionType.BASIC, PrismaParametersProvider)
     }
 

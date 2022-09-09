@@ -603,13 +603,14 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   public static boolean NamedArgument(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "NamedArgument")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, NAMED_ARGUMENT, null);
     r = Identifier(b, l + 1);
     r = r && consumeToken(b, COLON);
+    p = r; // pin = 2
     r = r && Expression(b, l + 1);
-    exit_section_(b, m, NAMED_ARGUMENT, r);
-    return r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */

@@ -3,11 +3,12 @@ package com.vepanimas.intellij.prisma.ide.schema
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.impl.FakePsiElement
-import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.parentOfTypes
+import com.vepanimas.intellij.prisma.lang.psi.PrismaArgumentsOwner
+import com.vepanimas.intellij.prisma.lang.psi.PrismaDeclaration
+import com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaNamedElement
 import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
 import javax.swing.Icon
@@ -45,11 +46,13 @@ class PrismaSchemaFakeElement(
         }
 
         private fun findSuitableParent(parameters: CompletionParameters): PsiElement {
-            return PsiTreeUtil.skipParentsOfType(
-                parameters.originalPosition,
-                PsiWhiteSpace::class.java,
-                PsiErrorElement::class.java
-            ) ?: parameters.originalFile
+            val context = parameters.originalPosition?.parentOfTypes(
+                PrismaDeclaration::class,
+                PrismaMemberDeclaration::class,
+                PrismaArgumentsOwner::class,
+            )
+
+            return context ?: parameters.originalFile
         }
     }
 }

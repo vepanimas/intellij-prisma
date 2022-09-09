@@ -171,6 +171,7 @@ FieldAttribute ::= '@' Path ArgumentsList? {
 ArgumentsList ::= '(' [Argument (',' Argument)*] ','? ')'
 Argument ::= NamedArgument | ValueArgument
 NamedArgument ::= Identifier ':' Expression {
+    pin=2
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaNamedArgumentMixin"
     implements="com.vepanimas.intellij.prisma.lang.psi.PrismaReferencingElement"
 }

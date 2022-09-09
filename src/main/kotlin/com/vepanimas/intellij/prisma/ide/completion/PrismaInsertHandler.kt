@@ -14,7 +14,9 @@ import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameterContext
 object PrismaInsertHandler {
     val DEFAULT_INSERT_HANDLER = InsertHandler<LookupElement> { context, item ->
         val schemaContext = PrismaSchemaContext.forElement(item.psiElement)
+
         if (schemaContext is PrismaSchemaParameterContext) {
+            COLON_ARGUMENT.handleInsert(context, item)
             return@InsertHandler
         }
 
@@ -43,6 +45,10 @@ object PrismaInsertHandler {
 
     val COLON_QUOTED_ARGUMENT = InsertHandler<LookupElement> { context, item ->
         EditorModificationUtil.insertStringAtCaret(context.editor, ": \"\"", false, true, 3)
+    }
+
+    val COLON_ARGUMENT = InsertHandler<LookupElement> { context, item ->
+        EditorModificationUtil.insertStringAtCaret(context.editor, ": ", false, true)
     }
 
     val COLON_LIST_ARGUMENT = InsertHandler<LookupElement> { context, item ->

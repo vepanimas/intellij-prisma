@@ -1,5 +1,8 @@
 package com.vepanimas.intellij.prisma.lang.psi
 
+import com.vepanimas.intellij.prisma.ide.documentation.collectPrecedingDocComments
+import com.vepanimas.intellij.prisma.ide.documentation.trailingDocComment
+
 interface PrismaDocumentationOwner : PrismaNamedElement {
     val docComment: PrismaVirtualDocumentationComment?
         get() {

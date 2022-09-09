@@ -13,10 +13,7 @@ import com.vepanimas.intellij.prisma.ide.completion.withPrismaInsertHandler
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaFakeElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
-import com.vepanimas.intellij.prisma.lang.psi.PrismaArgumentsOwner
-import com.vepanimas.intellij.prisma.lang.psi.PrismaNamedArgument
-import com.vepanimas.intellij.prisma.lang.psi.PrismaPathExpression
-import com.vepanimas.intellij.prisma.lang.psi.PrismaValueArgument
+import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
 
 object PrismaParametersProvider : PrismaCompletionProvider() {
@@ -31,7 +28,9 @@ object PrismaParametersProvider : PrismaCompletionProvider() {
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
+        val file = parameters.originalFile as? PrismaFile
         val position = parameters.originalPosition ?: parameters.position
+        val datasource = file?.datasourceType
         val argumentsOwner = position.parentOfType<PrismaArgumentsOwner>() ?: return
         val schemaDeclaration =
             PrismaSchemaProvider.getSchema().match(argumentsOwner) as? PrismaSchemaDeclaration ?: return
@@ -44,7 +43,7 @@ object PrismaParametersProvider : PrismaCompletionProvider() {
             ?: emptySet()
 
         schemaDeclaration.params
-            .filter { it.label !in usedParams }
+            .filter { it.label !in usedParams && it.isAvailableForDatasource(datasource) }
             .forEach {
                 val element = LookupElementBuilder.create(it.label)
                     .withPsiElement(PrismaSchemaFakeElement.createForCompletion(parent, it))

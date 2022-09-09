@@ -93,7 +93,14 @@ sealed class PrismaSchemaElement(
     val insertHandler: InsertHandler<LookupElement>? = null,
     val pattern: ElementPattern<out PsiElement>? = null,
     val datasources: Set<PrismaDatasourceType>? = null
-)
+) {
+    fun isAvailableForDatasource(usedDatasource: PrismaDatasourceType?): Boolean {
+        // filter only when datasource provider is specified
+        return datasources == null ||
+                usedDatasource == null ||
+                datasources.contains(usedDatasource)
+    }
+}
 
 open class PrismaSchemaDeclaration(
     val kind: PrismaSchemaKind,
@@ -141,17 +148,19 @@ class PrismaSchemaParameter(
     documentation: String?,
     insertHandler: InsertHandler<LookupElement>? = null,
     val type: String? = null,
-) : PrismaSchemaElement(label, documentation, insertHandler = insertHandler) {
+    datasources: Set<PrismaDatasourceType>? = null
+) : PrismaSchemaElement(label, documentation, insertHandler = insertHandler, datasources = datasources) {
     class Builder : SchemaDslBuilder<PrismaSchemaParameter> {
         var label: String? = null
         var documentation: String? = null
         var type: String? = null
         var insertHandler: InsertHandler<LookupElement>? = null
+        var datasources: Set<PrismaDatasourceType>? = null
 
         override fun build(): PrismaSchemaParameter {
             return label
                 ?.takeIf { it.isNotBlank() }
-                ?.let { PrismaSchemaParameter(it, documentation, insertHandler, type) }
+                ?.let { PrismaSchemaParameter(it, documentation, insertHandler, type, datasources) }
                 ?: error("label is not specified")
         }
     }

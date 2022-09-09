@@ -7,7 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface PrismaNamedArgument extends PrismaArgument, PrismaReferencingElement {
 
-  @NotNull
+  @Nullable
   PrismaExpression getExpression();
 
   @NotNull
