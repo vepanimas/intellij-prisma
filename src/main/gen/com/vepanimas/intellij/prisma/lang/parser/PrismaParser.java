@@ -170,7 +170,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '@@' Path ArgumentsList?
+  // '@@' PathExpression ArgumentsList?
   public static boolean BlockAttribute(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "BlockAttribute")) return false;
     if (!nextTokenIs(b, ATAT)) return false;
@@ -178,7 +178,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, BLOCK_ATTRIBUTE, null);
     r = consumeToken(b, ATAT);
     p = r; // pin = 1
-    r = r && report_error_(b, Path(b, l + 1));
+    r = r && report_error_(b, PathExpression(b, l + 1));
     r = p && BlockAttribute_2(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
@@ -331,7 +331,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '@' Path ArgumentsList?
+  // '@' PathExpression ArgumentsList?
   public static boolean FieldAttribute(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FieldAttribute")) return false;
     if (!nextTokenIs(b, AT)) return false;
@@ -339,7 +339,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, FIELD_ATTRIBUTE, null);
     r = consumeToken(b, AT);
     p = r; // pin = 1
-    r = r && report_error_(b, Path(b, l + 1));
+    r = r && report_error_(b, PathExpression(b, l + 1));
     r = p && FieldAttribute_2(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
@@ -456,13 +456,13 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Path ArgumentsList
+  // PathExpression ArgumentsList
   public static boolean FunctionCall(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionCall")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = Path(b, l + 1);
+    r = PathExpression(b, l + 1);
     r = r && ArgumentsList(b, l + 1);
     exit_section_(b, m, FUNCTION_CALL, r);
     return r;
@@ -627,57 +627,59 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Identifier ('.' Path?)*
+  // Identifier
   public static boolean Path(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Path")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = Identifier(b, l + 1);
-    r = r && Path_1(b, l + 1);
-    exit_section_(b, m, PATH, r);
+    exit_section_(b, m, PATH_EXPRESSION, r);
     return r;
-  }
-
-  // ('.' Path?)*
-  private static boolean Path_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Path_1")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!Path_1_0(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "Path_1", c)) break;
-    }
-    return true;
-  }
-
-  // '.' Path?
-  private static boolean Path_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Path_1_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, DOT);
-    r = r && Path_1_0_1(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // Path?
-  private static boolean Path_1_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Path_1_0_1")) return false;
-    Path(b, l + 1);
-    return true;
   }
 
   /* ********************************************************** */
-  // Path
+  // Path PathMemberAccess*
   public static boolean PathExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "PathExpression")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
+    Marker m = enter_section_(b, l, _COLLAPSE_, PATH_EXPRESSION, null);
     r = Path(b, l + 1);
-    exit_section_(b, m, PATH_EXPRESSION, r);
+    r = r && PathExpression_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
     return r;
+  }
+
+  // PathMemberAccess*
+  private static boolean PathExpression_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PathExpression_1")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!PathMemberAccess(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "PathExpression_1", c)) break;
+    }
+    return true;
+  }
+
+  /* ********************************************************** */
+  // '.' Identifier?
+  public static boolean PathMemberAccess(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PathMemberAccess")) return false;
+    if (!nextTokenIs(b, DOT)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _LEFT_, PATH_EXPRESSION, null);
+    r = consumeToken(b, DOT);
+    r = r && PathMemberAccess_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // Identifier?
+  private static boolean PathMemberAccess_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PathMemberAccess_1")) return false;
+    Identifier(b, l + 1);
+    return true;
   }
 
   /* ********************************************************** */

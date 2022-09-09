@@ -69,7 +69,7 @@ sealed class PrismaSchemaContext(
             val parent =
                 PsiTreeUtil.skipParentsOfType(element, PsiWhiteSpace::class.java, PsiErrorElement::class.java)
 
-            if (parent is PrismaPath) {
+            if (parent is PrismaPathExpression) {
                 val pathParent = parent.findTopmostPathParent()
                 if (pathParent != null) {
                     return pathParent
@@ -114,8 +114,8 @@ sealed class PrismaSchemaContext(
             return when {
                 element.isKeyword -> element.text
                 element is PrismaTypeReference -> psiRenderer.build(element)
-                element is PrismaBlockAttribute -> "@@${psiRenderer.build(element.path)}"
-                element is PrismaFieldAttribute -> "@${psiRenderer.build(element.path)}"
+                element is PrismaBlockAttribute -> "@@${psiRenderer.build(element.pathExpression)}"
+                element is PrismaFieldAttribute -> "@${psiRenderer.build(element.pathExpression)}"
                 element is PrismaUnsupportedType -> PrismaConstants.Types.UNSUPPORTED
                 element is PrismaKeyValue -> psiRenderer.build(element.identifier)
                 element is PrismaReferencingElement -> element.referenceText

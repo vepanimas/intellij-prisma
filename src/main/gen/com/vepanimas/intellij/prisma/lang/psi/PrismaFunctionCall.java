@@ -11,6 +11,6 @@ public interface PrismaFunctionCall extends PrismaExpression {
   PrismaArgumentsList getArgumentsList();
 
   @NotNull
-  PrismaPath getPath();
+  PrismaPathExpression getPathExpression();
 
 }

@@ -34,8 +34,8 @@ public class PrismaBlockAttributeImpl extends PrismaElementImpl implements Prism
 
   @Override
   @Nullable
-  public PrismaPath getPath() {
-    return findChildByClass(PrismaPath.class);
+  public PrismaPathExpression getPathExpression() {
+    return findChildByClass(PrismaPathExpression.class);
   }
 
 }

@@ -104,10 +104,6 @@ public class PrismaVisitor extends PsiElementVisitor {
     visitElement(o);
   }
 
-  public void visitPath(@NotNull PrismaPath o) {
-    visitElement(o);
-  }
-
   public void visitPathExpression(@NotNull PrismaPathExpression o) {
     visitExpression(o);
   }

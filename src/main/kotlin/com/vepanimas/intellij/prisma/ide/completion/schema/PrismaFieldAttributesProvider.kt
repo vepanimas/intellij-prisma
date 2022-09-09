@@ -16,7 +16,7 @@ object PrismaFieldAttributesProvider : PrismaSchemaCompletionProvider() {
                     .afterSiblingIncludingNewLines(psiElement(PrismaFieldDeclaration::class.java))
             ),
             psiElement().withParent(
-                psiElement(PrismaPath::class.java).withParent(
+                psiElement(PrismaPathExpression::class.java).withParent(
                     psiElement(PrismaFieldAttribute::class.java)
                         .afterSiblingIncludingNewLines(
                             psiElement().andOr(

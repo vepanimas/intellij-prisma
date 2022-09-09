@@ -32,7 +32,6 @@ public interface PrismaElementTypes {
   IElementType MODEL_DECLARATION = new PrismaElementType("MODEL_DECLARATION");
   IElementType NAMED_ARGUMENT = new PrismaElementType("NAMED_ARGUMENT");
   IElementType OPTIONAL_TYPE = new PrismaElementType("OPTIONAL_TYPE");
-  IElementType PATH = new PrismaElementType("PATH");
   IElementType PATH_EXPRESSION = new PrismaElementType("PATH_EXPRESSION");
   IElementType TYPE_ALIAS = new PrismaElementType("TYPE_ALIAS");
   IElementType TYPE_DECLARATION = new PrismaElementType("TYPE_DECLARATION");
@@ -133,9 +132,6 @@ public interface PrismaElementTypes {
       }
       else if (type == OPTIONAL_TYPE) {
         return new PrismaOptionalTypeImpl(node);
-      }
-      else if (type == PATH) {
-        return new PrismaPathImpl(node);
       }
       else if (type == PATH_EXPRESSION) {
         return new PrismaPathExpressionImpl(node);

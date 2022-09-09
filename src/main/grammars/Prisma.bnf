@@ -160,10 +160,10 @@ LegacyRequiredType ::= TypeReference '!'
 LegacyListType ::= '[' TypeReference ']'
 
 /* Attributes */
-BlockAttribute ::= '@@' Path ArgumentsList? {
+BlockAttribute ::= '@@' PathExpression ArgumentsList? {
     pin=1
 }
-FieldAttribute ::= '@' Path ArgumentsList? {
+FieldAttribute ::= '@' PathExpression ArgumentsList? {
     pin=1
 }
 
@@ -184,14 +184,16 @@ Expression ::=
     | LiteralExpression
     | PathExpression
 
-FunctionCall ::= Path ArgumentsList
+FunctionCall ::= PathExpression ArgumentsList
 ArrayExpression ::= '[' [Expression (',' Expression)*] ']'
 LiteralExpression ::= NUMERIC_LITERAL | STRING_LITERAL {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaLiteralExpressionMixin"
     methods=[getValue]
 }
-PathExpression ::= Path
+PathExpression ::= Path PathMemberAccess*
 
-/* Identifiers */
+/* Path */
+Path ::= Identifier { elementType=PathExpression }
+left PathMemberAccess ::= '.' Identifier? { elementType=PathExpression }
+
 private Identifier ::= IDENTIFIER
-Path ::= Identifier ('.' Path?)*

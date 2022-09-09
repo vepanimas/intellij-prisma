@@ -7,7 +7,4 @@ import com.intellij.psi.PsiElement;
 
 public interface PrismaPathExpression extends PrismaExpression {
 
-  @NotNull
-  PrismaPath getPath();
-
 }

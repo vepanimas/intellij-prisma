@@ -27,10 +27,4 @@ public class PrismaPathExpressionImpl extends PrismaExpressionImpl implements Pr
     else super.accept(visitor);
   }
 
-  @Override
-  @NotNull
-  public PrismaPath getPath() {
-    return findNotNullChildByClass(PrismaPath.class);
-  }
-
 }

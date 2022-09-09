@@ -18,8 +18,7 @@ import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
 
 object PrismaParametersProvider : PrismaCompletionProvider() {
     override val pattern: ElementPattern<out PsiElement> =
-        psiElement().withSuperParent(
-            2,
+        psiElement().withParent(
             psiElement(PrismaPathExpression::class.java).withParent(PrismaValueArgument::class.java)
         )
 

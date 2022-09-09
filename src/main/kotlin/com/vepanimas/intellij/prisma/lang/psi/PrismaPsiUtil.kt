@@ -5,8 +5,8 @@ import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 
-fun PrismaPath.findTopmostPathParent(): PsiElement? {
-    return PsiTreeUtil.skipParentsOfType(this, PrismaPath::class.java)
+fun PrismaPathExpression.findTopmostPathParent(): PsiElement? {
+    return PsiTreeUtil.skipParentsOfType(this, PrismaPathExpression::class.java)
 }
 
 val PsiElement.isKeyword: Boolean

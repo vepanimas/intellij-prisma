@@ -11,6 +11,6 @@ public interface PrismaBlockAttribute extends PrismaArgumentsOwner {
   PrismaArgumentsList getArgumentsList();
 
   @Nullable
-  PrismaPath getPath();
+  PrismaPathExpression getPathExpression();
 
 }

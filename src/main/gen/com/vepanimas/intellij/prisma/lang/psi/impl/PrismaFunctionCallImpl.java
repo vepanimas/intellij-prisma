@@ -35,8 +35,8 @@ public class PrismaFunctionCallImpl extends PrismaExpressionImpl implements Pris
 
   @Override
   @NotNull
-  public PrismaPath getPath() {
-    return findNotNullChildByClass(PrismaPath.class);
+  public PrismaPathExpression getPathExpression() {
+    return findNotNullChildByClass(PrismaPathExpression.class);
   }
 
 }

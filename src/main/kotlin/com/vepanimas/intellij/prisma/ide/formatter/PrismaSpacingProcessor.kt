@@ -40,7 +40,7 @@ class PrismaSpacingProcessor(private val block: AbstractBlock, context: PrismaFo
         .between(FIELD_ATTRIBUTE, FIELD_ATTRIBUTE).spaces(1, 1)
         .between(TYPE_REFERENCE, ts(QUEST, LBRACKET)).noSpace()
         .between(TYPE_REFERENCE, FIELD_ATTRIBUTE).spaces(1, 1)
-        .between(PATH, ARGUMENTS_LIST).noSpace()
+        .between(PATH_EXPRESSION, ARGUMENTS_LIST).noSpace()
         .between(UNSUPPORTED, LPAREN).noSpace()
         .beforeInside(COLON, NAMED_ARGUMENT).noSpace()
         .afterInside(COLON, NAMED_ARGUMENT).spaces(1, 1)

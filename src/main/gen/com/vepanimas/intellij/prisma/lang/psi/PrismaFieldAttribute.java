@@ -11,6 +11,6 @@ public interface PrismaFieldAttribute extends PrismaArgumentsOwner {
   PrismaArgumentsList getArgumentsList();
 
   @Nullable
-  PrismaPath getPath();
+  PrismaPathExpression getPathExpression();
 
 }
