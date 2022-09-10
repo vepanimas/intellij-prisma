@@ -146,6 +146,7 @@ FieldType ::=
 UnsupportedType ::= UNSUPPORTED '(' STRING_LITERAL ')' {
     pin=1
     recoverWhile=UnsupportedType_recover
+    methods=[identifier="UNSUPPORTED"]
 }
 private UnsupportedType_recover ::= !(')' | '}' | '@' | '@@' | IDENTIFIER | TopLevelKeywords)
 

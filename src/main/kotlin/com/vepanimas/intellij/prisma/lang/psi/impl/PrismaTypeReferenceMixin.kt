@@ -1,22 +1,16 @@
 package com.vepanimas.intellij.prisma.lang.psi.impl
 
 import com.intellij.lang.ASTNode
-import com.vepanimas.intellij.prisma.lang.PrismaConstants
+import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.lang.psi.PrismaReferenceElement
 import com.vepanimas.intellij.prisma.lang.psi.PrismaTypeReference
 
 abstract class PrismaTypeReferenceMixin(node: ASTNode) :
-    PrismaElementImpl(node),
+    PrismaReferenceElementBase(node),
     PrismaTypeReference,
     PrismaReferenceElement {
 
-    override val referenceText: String?
-        get() {
-            val identifier = this.identifier
-            if (identifier != null) {
-                return identifier.text
-            }
+    override val referenceNameElement: PsiElement?
+        get() = identifier ?: unsupportedType?.identifier
 
-            return unsupportedType?.let { PrismaConstants.Types.UNSUPPORTED }
-        }
 }

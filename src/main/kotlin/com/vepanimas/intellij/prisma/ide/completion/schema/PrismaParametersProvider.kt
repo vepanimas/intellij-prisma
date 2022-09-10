@@ -37,7 +37,7 @@ object PrismaParametersProvider : PrismaCompletionProvider() {
         val usedParams = argumentsOwner.getArgumentsList()?.argumentList
             ?.asSequence()
             ?.filterIsInstance<PrismaNamedArgument>()
-            ?.map { it.referenceText }
+            ?.map { it.referenceName }
             ?.toSet()
             ?: emptySet()
 

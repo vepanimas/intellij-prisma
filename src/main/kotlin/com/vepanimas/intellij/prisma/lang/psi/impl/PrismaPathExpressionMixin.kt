@@ -5,13 +5,11 @@ import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes
 import com.vepanimas.intellij.prisma.lang.psi.PrismaPathExpression
 
-abstract class PrismaPathExpressionMixin(node: ASTNode) : PrismaElementImpl(node), PrismaPathExpression {
+abstract class PrismaPathExpressionMixin(node: ASTNode) : PrismaReferenceElementBase(node), PrismaPathExpression {
     override val qualifier: PsiElement?
         get() = findChildByType(PrismaElementTypes.PATH_EXPRESSION)
 
-    override val identifier: PsiElement?
+    override val referenceNameElement: PsiElement?
         get() = findChildByType(PrismaElementTypes.IDENTIFIER)
 
-    override val referenceText: String?
-        get() = identifier?.text
 }

@@ -10,4 +10,7 @@ public interface PrismaUnsupportedType extends PrismaElement {
   @Nullable
   PsiElement getStringLiteral();
 
+  @NotNull
+  PsiElement getIdentifier();
+
 }
