@@ -1,0 +1,16 @@
+{
+  "name": "prisma-language-server",
+  "scripts": {
+    "bundle": "webpack --config webpack.config.js"
+  },
+  "dependencies": {
+    "@prisma/language-server": "^4.3.1",
+    "@prisma/prisma-fmt-wasm": "^4.4.0-17.a652eea41b2f4121560a5651466afa49845a57b9"
+  },
+  "devDependencies": {
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "ts-loader": "^9.3.1",
+    "copy-webpack-plugin": "^11.0.0"
+  }
+}
