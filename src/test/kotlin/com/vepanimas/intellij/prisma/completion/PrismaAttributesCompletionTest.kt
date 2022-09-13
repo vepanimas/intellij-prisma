@@ -196,7 +196,11 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             FieldAttributes.RELATION
         )
-        assertSameElements(lookupElements.strings, FieldAttributes.ALL)
+        assertSameElements(
+            lookupElements.strings,
+            FieldAttributes.ALL - FieldAttributes.ID - FieldAttributes.UPDATED_AT,
+        )
+
         checkLookupDocumentation(lookupElements, FieldAttributes.RELATION)
     }
 
@@ -213,7 +217,95 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             FieldAttributes.MAP
         )
-        assertSameElements(lookupElements.strings, FieldAttributes.ALL)
+        assertSameElements(
+            lookupElements.strings,
+            FieldAttributes.ALL - FieldAttributes.ID - FieldAttributes.UPDATED_AT - FieldAttributes.UNIQUE
+        )
         checkLookupDocumentation(lookupElements, FieldAttributes.MAP)
+    }
+
+    fun testFieldAttributeForCompositeTypeField() {
+        val lookupElements = getLookupElements(
+            """
+            type T {}
+            model M {
+              type T <caret>
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, FieldAttributes.DEFAULT, FieldAttributes.RELATION)
+        assertSameElements(lookupElements.strings, FieldAttributes.IGNORE, FieldAttributes.MAP, FieldAttributes.UNIQUE)
+    }
+
+    fun testFieldAttributeIdAllowedForEnum() {
+        val lookupElements = getLookupElements(
+            """
+            enum Lang {}
+            model M {
+              lang Lang <caret>
+            }
+        """.trimIndent()
+        )
+        assertContainsElements(lookupElements.strings, FieldAttributes.ID)
+    }
+
+    fun testFieldAttributeIdAllowedForInt() {
+        val lookupElements = getLookupElements(
+            """
+            model M {
+              i Int <caret>
+            }
+        """.trimIndent()
+        )
+        assertContainsElements(lookupElements.strings, FieldAttributes.ID)
+    }
+
+    fun testFieldAttributeIdAllowedForString() {
+        val lookupElements = getLookupElements(
+            """
+            model M {
+              s String <caret>
+            }
+        """.trimIndent()
+        )
+        assertContainsElements(lookupElements.strings, FieldAttributes.ID)
+    }
+
+    fun testFieldAttributeNoIdForCompositeTypes() {
+        val lookupElements = getLookupElements(
+            """
+            model M {
+              m1 M1 <caret>
+            }
+            model M1 {
+                id Int @id
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, FieldAttributes.ID)
+    }
+
+    fun testFieldAttributeUpdatedAtForDateTime() {
+        val lookupElements = getLookupElements(
+            """
+            model M {
+              updated DateTime <caret>
+            }
+        """.trimIndent()
+        )
+        assertContainsElements(lookupElements.strings, FieldAttributes.UPDATED_AT)
+    }
+
+    fun testFieldAttributeNoIdIfBlockAttributeExists() {
+        val lookupElements = getLookupElements(
+            """
+            model M {
+              id Int <caret>
+              
+              @@id([id])
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, FieldAttributes.ID)
     }
 }

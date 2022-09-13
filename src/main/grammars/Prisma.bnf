@@ -54,6 +54,8 @@
   implements('(Field|Block)Attribute')='com.vepanimas.intellij.prisma.lang.psi.PrismaArgumentsOwner'
 
   extends('NamedArgument|ValueArgument')=Argument
+
+  extends('UnsupportedOptionalListType|ListType|OptionalType|LegacyRequiredType|LegacyListType|SingleType')=FieldType
 }
 
 Schema ::= Declaration*
@@ -129,7 +131,7 @@ KeyValue ::= Identifier '=' Expression {
     pin=1
 }
 
-TypeAlias ::= TYPE Identifier '=' TypeReference FieldAttribute* {
+TypeAlias ::= TYPE Identifier '=' FieldType FieldAttribute* {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaTypeAliasMixin"
     pin=3
 }
@@ -141,7 +143,11 @@ FieldType ::=
     | OptionalType
     | LegacyRequiredType
     | LegacyListType
-    | TypeReference
+    | SingleType
+    {
+        mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaFieldTypeMixin"
+        methods=[getTypeReference]
+    }
 
 UnsupportedType ::= UNSUPPORTED '(' STRING_LITERAL ')' {
     pin=1
@@ -159,6 +165,7 @@ ListType ::= TypeReference '[' ']'
 OptionalType ::= TypeReference '?'
 LegacyRequiredType ::= TypeReference '!'
 LegacyListType ::= '[' TypeReference ']'
+SingleType ::= TypeReference
 
 /* Attributes */
 BlockAttribute ::= '@@' PathExpression ArgumentsList? {

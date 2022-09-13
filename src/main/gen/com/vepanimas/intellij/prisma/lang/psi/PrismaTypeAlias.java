@@ -11,7 +11,7 @@ public interface PrismaTypeAlias extends PrismaDeclaration {
   List<PrismaFieldAttribute> getFieldAttributeList();
 
   @Nullable
-  PrismaTypeReference getTypeReference();
+  PrismaFieldType getFieldType();
 
   @NotNull
   PsiElement getIdentifier();

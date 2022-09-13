@@ -34,8 +34,8 @@ public class PrismaTypeAliasImpl extends PrismaTypeAliasMixin implements PrismaT
 
   @Override
   @Nullable
-  public PrismaTypeReference getTypeReference() {
-    return findChildByClass(PrismaTypeReference.class);
+  public PrismaFieldType getFieldType() {
+    return findChildByClass(PrismaFieldType.class);
   }
 
   @Override

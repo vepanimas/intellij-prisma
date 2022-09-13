@@ -6,6 +6,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.refactoring.suggested.endOffset
+import com.vepanimas.intellij.prisma.lang.psi.PRISMA_TYPES
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldAttribute
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldType
@@ -19,7 +20,7 @@ class PrismaChildAlignment(
         return when (element.elementType) {
             EQ -> keyValueAlignment
 
-            FIELD_TYPE -> typeAlignment
+            in PRISMA_TYPES -> typeAlignment
 
             FIELD_ATTRIBUTE -> {
                 // align only by the first attribute in the list
@@ -36,7 +37,7 @@ class PrismaChildAlignment(
     }
 
     fun createAlignmentAnchor(node: ASTNode): PrismaAnchorBlock? {
-        if (node.elementType == FIELD_TYPE && attributeAlignment != null) {
+        if (node.elementType in PRISMA_TYPES && attributeAlignment != null) {
             val element = node.psi
             val next = PsiTreeUtil.skipWhitespacesForward(element)
             if (next !is PrismaFieldAttribute) {

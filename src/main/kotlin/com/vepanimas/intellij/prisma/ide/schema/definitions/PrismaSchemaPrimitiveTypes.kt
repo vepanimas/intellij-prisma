@@ -4,48 +4,48 @@ import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
 import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
-import com.vepanimas.intellij.prisma.lang.PrismaConstants.Types
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
 
 val PRISMA_SCHEMA_PRIMITIVE_TYPES = schema {
     group(PrismaSchemaKind.PRIMITIVE_TYPE) {
         element {
-            label = Types.STRING
+            label = PrimitiveTypes.STRING
             documentation = "Variable length text"
         }
         element {
-            label = Types.BOOLEAN
+            label = PrimitiveTypes.BOOLEAN
             documentation = "True or false value"
         }
         element {
-            label = Types.INT
+            label = PrimitiveTypes.INT
             documentation = "Integer value"
         }
         element {
-            label = Types.FLOAT
+            label = PrimitiveTypes.FLOAT
             documentation = "Floating point number"
         }
         element {
-            label = Types.DATETIME
+            label = PrimitiveTypes.DATETIME
             documentation = "Timestamp"
         }
         element {
-            label = Types.JSON
+            label = PrimitiveTypes.JSON
             documentation = "A JSON object"
         }
         element {
-            label = Types.BYTES
+            label = PrimitiveTypes.BYTES
         }
         element {
-            label = Types.DECIMAL
+            label = PrimitiveTypes.DECIMAL
             documentation = "Decimal value"
             datasources = PrismaDatasourceType.except(PrismaDatasourceType.MONGODB)
         }
         element {
-            label = Types.BIGINT
+            label = PrimitiveTypes.BIGINT
             documentation = "Integer values that may be greater than 2^53"
         }
         element {
-            label = Types.UNSUPPORTED
+            label = PrimitiveTypes.UNSUPPORTED
             documentation =
                 "An arbitrary database column type, for which Prisma has no syntax. Fields of type `Unsupported` work with Prisma Migrate and introspection, but are not exposed in Prisma Client."
             signature = "Unsupported(name: String)"

@@ -1,7 +1,7 @@
 package com.vepanimas.intellij.prisma.lang
 
 object PrismaConstants {
-    object Types {
+    object PrimitiveTypes {
         const val STRING = "String"
         const val BOOLEAN = "Boolean"
         const val INT = "Int"
@@ -13,7 +13,7 @@ object PrismaConstants {
         const val BIGINT = "BigInt"
         const val UNSUPPORTED = "Unsupported"
 
-        val PRIMITIVE = setOf(
+        val ALL = setOf(
             STRING, BOOLEAN, INT, FLOAT, DATETIME,
             JSON, BYTES, DECIMAL, BIGINT, UNSUPPORTED,
         )

@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaUnsupportedOptionalListType extends PrismaElement {
+public interface PrismaUnsupportedOptionalListType extends PrismaFieldType {
 
   @NotNull
   PrismaTypeReference getTypeReference();

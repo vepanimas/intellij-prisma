@@ -10,12 +10,13 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaUnsupportedOptionalListTypeImpl extends PrismaElementImpl implements PrismaUnsupportedOptionalListType {
+public class PrismaUnsupportedOptionalListTypeImpl extends PrismaFieldTypeImpl implements PrismaUnsupportedOptionalListType {
 
   public PrismaUnsupportedOptionalListTypeImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull PrismaVisitor visitor) {
     visitor.visitUnsupportedOptionalListType(this);
   }

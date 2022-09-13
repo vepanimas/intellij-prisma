@@ -10,12 +10,13 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaLegacyRequiredTypeImpl extends PrismaElementImpl implements PrismaLegacyRequiredType {
+public class PrismaLegacyRequiredTypeImpl extends PrismaFieldTypeImpl implements PrismaLegacyRequiredType {
 
   public PrismaLegacyRequiredTypeImpl(@NotNull ASTNode node) {
     super(node);
   }
 
+  @Override
   public void accept(@NotNull PrismaVisitor visitor) {
     visitor.visitLegacyRequiredType(this);
   }

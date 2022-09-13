@@ -19,7 +19,7 @@ class PrismaTypesCompletionTest : PrismaCompletionTestBase() {
             """.trimIndent(),
             "DateTime"
         )
-        assertSameElements(lookupElements.strings, PrismaConstants.Types.PRIMITIVE)
+        assertSameElements(lookupElements.strings, PrismaConstants.PrimitiveTypes.ALL)
         checkLookupDocumentation(lookupElements, "DateTime")
     }
 
@@ -34,7 +34,7 @@ class PrismaTypesCompletionTest : PrismaCompletionTestBase() {
                 }
             """.trimIndent(),
         )
-        assertDoesntContain(lookupElements.strings, PrismaConstants.Types.DECIMAL)
+        assertDoesntContain(lookupElements.strings, PrismaConstants.PrimitiveTypes.DECIMAL)
     }
 
     fun testUnsupportedType() {

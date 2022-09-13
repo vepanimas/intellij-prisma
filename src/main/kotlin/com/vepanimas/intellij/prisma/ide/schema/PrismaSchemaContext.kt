@@ -86,7 +86,7 @@ sealed class PrismaSchemaContext(
                 UNSUPPORTED_TYPE -> PrismaSchemaKind.PRIMITIVE_TYPE
 
                 TYPE_REFERENCE ->
-                    if (PrismaConstants.Types.PRIMITIVE.contains((element as? PrismaTypeReference)?.referenceName)) {
+                    if (PrismaConstants.PrimitiveTypes.ALL.contains((element as? PrismaTypeReference)?.referenceName)) {
                         PrismaSchemaKind.PRIMITIVE_TYPE
                     } else {
                         null
@@ -109,14 +109,14 @@ sealed class PrismaSchemaContext(
             }
         }
 
-        private fun getSchemaLabel(element: PsiElement): String? {
+        fun getSchemaLabel(element: PsiElement): String? {
             val psiRenderer = PrismaPsiRenderer()
             return when {
                 element.isKeyword -> element.text
                 element is PrismaTypeReference -> psiRenderer.build(element)
                 element is PrismaBlockAttribute -> "@@${psiRenderer.build(element.pathExpression)}"
                 element is PrismaFieldAttribute -> "@${psiRenderer.build(element.pathExpression)}"
-                element is PrismaUnsupportedType -> PrismaConstants.Types.UNSUPPORTED
+                element is PrismaUnsupportedType -> PrismaConstants.PrimitiveTypes.UNSUPPORTED
                 element is PrismaKeyValue -> psiRenderer.build(element.identifier)
                 element is PrismaReferenceElement -> element.referenceName
                 element is PsiNamedElement -> element.name

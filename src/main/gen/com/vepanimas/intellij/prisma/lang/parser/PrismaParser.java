@@ -39,6 +39,8 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     create_token_set_(ARGUMENT, NAMED_ARGUMENT, VALUE_ARGUMENT),
     create_token_set_(ARRAY_EXPRESSION, EXPRESSION, FUNCTION_CALL, LITERAL_EXPRESSION,
       PATH_EXPRESSION),
+    create_token_set_(FIELD_TYPE, LEGACY_LIST_TYPE, LEGACY_REQUIRED_TYPE, LIST_TYPE,
+      OPTIONAL_TYPE, SINGLE_TYPE, UNSUPPORTED_OPTIONAL_LIST_TYPE),
   };
 
   /* ********************************************************** */
@@ -440,17 +442,17 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   //     | OptionalType
   //     | LegacyRequiredType
   //     | LegacyListType
-  //     | TypeReference
+  //     | SingleType
   public static boolean FieldType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FieldType")) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, FIELD_TYPE, "<field type>");
+    Marker m = enter_section_(b, l, _COLLAPSE_, FIELD_TYPE, "<field type>");
     r = UnsupportedOptionalListType(b, l + 1);
     if (!r) r = ListType(b, l + 1);
     if (!r) r = OptionalType(b, l + 1);
     if (!r) r = LegacyRequiredType(b, l + 1);
     if (!r) r = LegacyListType(b, l + 1);
-    if (!r) r = TypeReference(b, l + 1);
+    if (!r) r = SingleType(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -695,6 +697,18 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // TypeReference
+  public static boolean SingleType(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "SingleType")) return false;
+    if (!nextTokenIs(b, "<single type>", IDENTIFIER, UNSUPPORTED)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, SINGLE_TYPE, "<single type>");
+    r = TypeReference(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // MODEL | TYPE | ENUM | GENERATOR | DATASOURCE
   static boolean TopLevelKeywords(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "TopLevelKeywords")) return false;
@@ -708,7 +722,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // TYPE Identifier '=' TypeReference FieldAttribute*
+  // TYPE Identifier '=' FieldType FieldAttribute*
   public static boolean TypeAlias(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "TypeAlias")) return false;
     if (!nextTokenIs(b, TYPE)) return false;
@@ -718,7 +732,7 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     r = r && Identifier(b, l + 1);
     r = r && consumeToken(b, EQ);
     p = r; // pin = 3
-    r = r && report_error_(b, TypeReference(b, l + 1));
+    r = r && report_error_(b, FieldType(b, l + 1));
     r = p && TypeAlias_4(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;

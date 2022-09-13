@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaLegacyListType extends PrismaElement {
+public interface PrismaLegacyListType extends PrismaFieldType {
 
   @NotNull
   PrismaTypeReference getTypeReference();

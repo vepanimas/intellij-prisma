@@ -33,6 +33,7 @@ public interface PrismaElementTypes {
   IElementType NAMED_ARGUMENT = new PrismaElementType("NAMED_ARGUMENT");
   IElementType OPTIONAL_TYPE = new PrismaElementType("OPTIONAL_TYPE");
   IElementType PATH_EXPRESSION = new PrismaElementType("PATH_EXPRESSION");
+  IElementType SINGLE_TYPE = new PrismaElementType("SINGLE_TYPE");
   IElementType TYPE_ALIAS = new PrismaElementType("TYPE_ALIAS");
   IElementType TYPE_DECLARATION = new PrismaElementType("TYPE_DECLARATION");
   IElementType TYPE_REFERENCE = new PrismaElementType("TYPE_REFERENCE");
@@ -97,9 +98,6 @@ public interface PrismaElementTypes {
       else if (type == FIELD_DECLARATION_BLOCK) {
         return new PrismaFieldDeclarationBlockImpl(node);
       }
-      else if (type == FIELD_TYPE) {
-        return new PrismaFieldTypeImpl(node);
-      }
       else if (type == FUNCTION_CALL) {
         return new PrismaFunctionCallImpl(node);
       }
@@ -135,6 +133,9 @@ public interface PrismaElementTypes {
       }
       else if (type == PATH_EXPRESSION) {
         return new PrismaPathExpressionImpl(node);
+      }
+      else if (type == SINGLE_TYPE) {
+        return new PrismaSingleTypeImpl(node);
       }
       else if (type == TYPE_ALIAS) {
         return new PrismaTypeAliasImpl(node);
