@@ -168,6 +168,34 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         assertDoesntContain(lookupElements.strings, BlockAttributes.ALL)
     }
 
+    fun testBlockAttributesNoIdIfHasIdFieldAttribute() {
+        val lookupElements = getLookupElements(
+            """
+            model M {
+              id Int @id
+              
+              <caret>
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, BlockAttributes.ID)
+    }
+
+    fun testBlockAttributesNoDuplicates() {
+        val lookupElements = getLookupElements(
+            """
+            model M {
+              id Int
+              
+              @@map("foo")
+              @@unique([id])
+              <caret>
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, BlockAttributes.MAP, BlockAttributes.UNIQUE)
+    }
+
     fun testNoBlockAttributesForFieldAfterAt() {
         val lookupElements = getLookupElements(
             """

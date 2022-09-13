@@ -4,11 +4,10 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiWhiteSpace
-import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.elementType
 import com.intellij.util.ProcessingContext
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaContext
+import com.vepanimas.intellij.prisma.ide.completion.collectExistingAttributeNamesForDeclaration
+import com.vepanimas.intellij.prisma.ide.completion.collectExistingAttributeNamesForField
+import com.vepanimas.intellij.prisma.ide.completion.findAssociatedField
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
@@ -75,30 +74,5 @@ object PrismaFieldAttributesProvider : PrismaSchemaCompletionProvider() {
         excluded.addAll(collectExistingAttributeNamesForField(field))
 
         return super.collectSchemaElements(parameters, context).filter { it.label !in excluded }
-    }
-
-    private fun findAssociatedField(position: PsiElement?): PrismaFieldDeclaration? {
-        return when {
-            position is PsiWhiteSpace -> position.skipWhitespacesBackwardWithoutNewLines() as? PrismaFieldDeclaration
-
-            position.elementType == PrismaElementTypes.IDENTIFIER ->
-                PsiTreeUtil.getParentOfType(position, PrismaFieldDeclaration::class.java)
-
-            else -> null
-        }
-    }
-
-    private fun collectExistingAttributeNamesForDeclaration(declaration: PrismaDeclaration): Set<String> {
-        val attributes = PsiTreeUtil.findChildrenOfAnyType(
-            declaration,
-            PrismaBlockAttribute::class.java,
-            PrismaFieldAttribute::class.java
-        )
-
-        return attributes.mapNotNullTo(mutableSetOf()) { PrismaSchemaContext.getSchemaLabel(it) }
-    }
-
-    private fun collectExistingAttributeNamesForField(field: PrismaFieldDeclaration): Set<String> {
-        return field.fieldAttributeList.mapNotNullTo(mutableSetOf()) { PrismaSchemaContext.getSchemaLabel(it) }
     }
 }
