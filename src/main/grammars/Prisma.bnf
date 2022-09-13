@@ -75,13 +75,13 @@ private Declaration_recover ::= !TopLevelKeywords
 private TopLevelKeywords ::= MODEL | TYPE | ENUM | GENERATOR | DATASOURCE
 
 ModelDeclaration ::= MODEL Identifier FieldDeclarationBlock {
-    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEntityDeclarationMixin"
-    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration"
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
+    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration"
     pin=1
 }
 TypeDeclaration ::= TYPE Identifier FieldDeclarationBlock {
-    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEntityDeclarationMixin"
-    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaEntityDeclaration"
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaModelTypeDeclarationMixin"
+    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration"
     pin=1
 }
 
