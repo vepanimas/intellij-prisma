@@ -30,17 +30,17 @@ class PrismaReference(
 
     private fun processCandidates(processor: PrismaResolveProcessor, state: ResolveState, file: PrismaFile): Boolean {
         return when (element) {
-            is PrismaTypeReference -> processTypeDeclarations(processor, state, file)
+            is PrismaTypeReference -> processEntityDeclarations(processor, state, file)
             else -> true
         }
     }
 
-    private fun processTypeDeclarations(
+    private fun processEntityDeclarations(
         processor: PrismaResolveProcessor,
         state: ResolveState,
         file: PrismaFile
     ): Boolean {
-        for (declaration in file.declarations) {
+        for (declaration in file.entityDeclarations) {
             if (!processor.execute(declaration, state)) return false
         }
         return true

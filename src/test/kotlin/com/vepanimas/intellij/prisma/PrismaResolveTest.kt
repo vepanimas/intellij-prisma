@@ -23,6 +23,25 @@ class PrismaResolveTest : PrismaTestCase() {
         )
     }
 
+    fun testTypeReferenceIgnoreConfigurationBlocks() {
+        checkWithTarget(
+            """
+            datasource Database {
+              provider = "sqlite"
+            }    
+                
+            model Post {
+              id Int
+              db Dat<caret>abase
+            }
+            
+            model <target>Database {
+              id Int
+            }
+        """.trimIndent()
+        )
+    }
+
     private fun checkWithTarget(source: String): PrismaNamedElement {
         val targetOffset = findExpectedTargetOffset(source)
         val text = source.replace(TARGET, "")
