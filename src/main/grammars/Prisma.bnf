@@ -101,6 +101,7 @@ private FieldDeclarationBlockItem ::=
 FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute* {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaFieldDeclarationMixin"
     pin=1
+    recoverWhile=UntilNewLine_recover
 }
 
 EnumDeclaration ::= ENUM Identifier EnumDeclarationBlock {
@@ -113,6 +114,7 @@ EnumDeclarationBlock ::= '{' (EnumValueDeclaration | BlockAttribute)* '}' {
 EnumValueDeclaration ::= Identifier FieldAttribute* {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaEnumValueDeclarationMixin"
     pin=1
+    recoverWhile=UntilNewLine_recover
 }
 
 DatasourceDeclaration ::= DATASOURCE Identifier KeyValueBlock {
@@ -130,6 +132,7 @@ KeyValueBlock ::= '{' KeyValue* '}' {
 KeyValue ::= Identifier '=' Expression {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaKeyValueMixin"
     pin=1
+    recoverWhile=UntilNewLine_recover
 }
 
 TypeAlias ::= TYPE Identifier '=' FieldType FieldAttribute* {
@@ -169,10 +172,10 @@ LegacyListType ::= '[' TypeReference ']'
 SingleType ::= TypeReference
 
 /* Attributes */
-BlockAttribute ::= '@@' PathExpression ArgumentsList? {
+BlockAttribute ::= '@@' !<<isWhiteSpace>> PathExpression ArgumentsList? {
     pin=1
 }
-FieldAttribute ::= '@' PathExpression ArgumentsList? {
+FieldAttribute ::= '@' !<<isWhiteSpace>> PathExpression ArgumentsList? {
     pin=1
 }
 
@@ -199,7 +202,7 @@ LiteralExpression ::= NUMERIC_LITERAL | STRING_LITERAL {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaLiteralExpressionMixin"
     methods=[getValue]
 }
-PathExpression ::= Path PathMemberAccess* {
+PathExpression ::= !<<isNewLine>> Path PathMemberAccess* {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaPathExpressionMixin"
     implements="com.vepanimas.intellij.prisma.lang.psi.PrismaQualifiedReferenceElement"
 }
@@ -209,3 +212,6 @@ Path ::= Identifier { elementType=PathExpression }
 left PathMemberAccess ::= '.' Identifier? { elementType=PathExpression }
 
 private Identifier ::= IDENTIFIER
+
+/* Utils */
+private UntilNewLine_recover ::= !<<isNewLine>>

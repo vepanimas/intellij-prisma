@@ -1,7 +1,9 @@
 package com.vepanimas.intellij.prisma.lang.parser
 
 import com.intellij.lang.PsiBuilder
+import com.intellij.lang.PsiBuilderUtil
 import com.intellij.lang.parser.GeneratedParserUtilBase
+import com.intellij.psi.TokenType
 import com.vepanimas.intellij.prisma.PRISMA_BUNDLE
 import com.vepanimas.intellij.prisma.PrismaBundle
 import org.jetbrains.annotations.PropertyKey
@@ -23,6 +25,19 @@ class PrismaParserUtil : GeneratedParserUtilBase() {
                 marker.rollbackTo()
             }
             return result
+        }
+
+        @JvmStatic
+        fun isNewLine(b: PsiBuilder, @Suppress("UNUSED_PARAMETER") level: Int): Boolean {
+            val step = -1
+            val prevTokenType = b.rawLookup(step) ?: return true
+            return prevTokenType == TokenType.WHITE_SPACE &&
+                    PsiBuilderUtil.rawTokenText(b, step).contains('\n')
+        }
+
+        @JvmStatic
+        fun isWhiteSpace(b: PsiBuilder, @Suppress("UNUSED_PARAMETER") level: Int): Boolean {
+            return b.rawLookup(-1) == TokenType.WHITE_SPACE
         }
     }
 }

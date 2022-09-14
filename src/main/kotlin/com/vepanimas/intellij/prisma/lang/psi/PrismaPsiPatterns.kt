@@ -8,6 +8,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.TokenType
 import com.intellij.psi.util.elementType
+import com.intellij.psi.util.prevLeaf
 import com.intellij.util.ProcessingContext
 
 object PrismaPsiPatterns {
@@ -28,15 +29,25 @@ object PrismaPsiPatterns {
         psiElement()
             .withParent(PrismaKeyValue::class.java)
             .withSuperParent(3, PrismaGeneratorDeclaration::class.java)
+
+    val newLine: PsiElementPattern.Capture<PsiElement> = psiElement().with("newLine") { element ->
+        element.elementType == TokenType.WHITE_SPACE && element.textContains('\n')
+    }
 }
 
 fun <T : PsiElement, Self : ObjectPattern<T, Self>> ObjectPattern<T, Self>.afterNewLine(): Self =
     with("afterNewLine") { element ->
         val prev = element.skipWhitespacesBackwardWithoutNewLines() ?: return@with true
-        prev.elementType == TokenType.WHITE_SPACE && prev.textContains('\n')
+        PrismaPsiPatterns.newLine.accepts(prev)
     }
 
-fun <T : PsiElement, Self : ObjectPattern<T, Self>, P : PsiElement> ObjectPattern<T, Self>.afterSiblingIncludingNewLines(
+fun <T : PsiElement, Self : ObjectPattern<T, Self>> ObjectPattern<T, Self>.afterLeafNewLine(): Self =
+    with("afterLeafNewLine") { element ->
+        val prev = element.prevLeaf() ?: return@with true
+        PrismaPsiPatterns.newLine.accepts(prev)
+    }
+
+fun <T : PsiElement, Self : ObjectPattern<T, Self>, P : PsiElement> ObjectPattern<T, Self>.afterSiblingNewLinesAware(
     pattern: PsiElementPattern.Capture<P>
 ): Self =
     with("afterSiblingWithoutNewLines") { element ->

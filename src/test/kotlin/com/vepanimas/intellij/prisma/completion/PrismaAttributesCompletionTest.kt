@@ -232,6 +232,53 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         checkLookupDocumentation(lookupElements, FieldAttributes.RELATION)
     }
 
+    fun testFieldAttributeAfterAt() {
+        completeSelected(
+            """
+            model M {
+              id Int @<caret>
+            }
+        """.trimIndent(), """
+            model M {
+              id Int @id<caret>
+            }
+        """.trimIndent(),
+            FieldAttributes.ID
+        )
+    }
+
+    fun testFieldAttributeWithBeforeNextField() {
+        completeSelected(
+            """
+            model M {
+              id Int @<caret>
+              date DateTime
+            }
+        """.trimIndent(), """
+            model M {
+              id Int @ignore<caret>
+              date DateTime
+            }
+        """.trimIndent(),
+            FieldAttributes.IGNORE
+        )
+    }
+
+    fun testFieldAttributeExistingAttribute() {
+        completeSelected(
+            """
+            model M {
+              id Int @un<caret>
+            }
+        """.trimIndent(), """
+            model M {
+              id Int @unique<caret>
+            }
+        """.trimIndent(),
+            FieldAttributes.UNIQUE
+        )
+    }
+
     fun testFieldAttributeAfterAnother() {
         val lookupElements = completeSelected(
             """
@@ -250,6 +297,21 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
             FieldAttributes.ALL - FieldAttributes.ID - FieldAttributes.UPDATED_AT - FieldAttributes.UNIQUE
         )
         checkLookupDocumentation(lookupElements, FieldAttributes.MAP)
+    }
+
+    fun testFieldAttributeBeforeAnother() {
+        completeSelected(
+            """
+            model M {
+              user User <caret> @map("")
+            }
+        """.trimIndent(), """
+            model M {
+              user User @unique @map("")
+            }
+        """.trimIndent(),
+            FieldAttributes.UNIQUE
+        )
     }
 
     fun testFieldAttributeForCompositeTypeField() {

@@ -1,6 +1,6 @@
 enum   Lang    {
 
-  EN    DE
+  EN
 
 
   FR // 1

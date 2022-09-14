@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiErrorElement
 import com.intellij.util.ProcessingContext
 import com.vepanimas.intellij.prisma.ide.completion.collectExistingAttributeNamesForDeclaration
 import com.vepanimas.intellij.prisma.ide.completion.collectExistingAttributeNamesForField
@@ -18,21 +19,21 @@ import com.vepanimas.intellij.prisma.lang.psi.*
 object PrismaFieldAttributesProvider : PrismaSchemaCompletionProvider() {
     override val kind: PrismaSchemaKind = PrismaSchemaKind.FIELD_ATTRIBUTE
 
+    private val beforeFieldAttribute = psiElement().andOr(
+        psiElement(PrismaFieldType::class.java),
+        psiElement(PrismaFieldAttribute::class.java),
+    )
+
     override val pattern: ElementPattern<out PsiElement> =
         psiElement().andOr(
             psiElement().withParent(
-                psiElement(PrismaFieldDeclaration::class.java)
-                    .afterSiblingIncludingNewLines(psiElement(PrismaFieldDeclaration::class.java))
+                psiElement(PsiErrorElement::class.java)
+                    .afterSibling(beforeFieldAttribute)
             ),
             psiElement().withParent(
                 psiElement(PrismaPathExpression::class.java).withParent(
                     psiElement(PrismaFieldAttribute::class.java)
-                        .afterSiblingIncludingNewLines(
-                            psiElement().andOr(
-                                psiElement(PrismaFieldType::class.java),
-                                psiElement(PrismaFieldAttribute::class.java),
-                            )
-                        )
+                        .afterSiblingNewLinesAware(beforeFieldAttribute)
                 )
             )
         ).inside(psiElement(PrismaModelDeclaration::class.java))
