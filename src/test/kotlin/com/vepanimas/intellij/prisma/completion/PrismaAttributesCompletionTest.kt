@@ -300,7 +300,7 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
     }
 
     fun testFieldAttributeBeforeAnother() {
-        completeSelected(
+        val lookupElements = completeSelected(
             """
             model M {
               user User <caret> @map("")
@@ -311,6 +311,10 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
             }
         """.trimIndent(),
             FieldAttributes.UNIQUE
+        )
+        assertSameElements(
+            lookupElements.strings,
+            FieldAttributes.ALL - FieldAttributes.ID - FieldAttributes.UPDATED_AT - FieldAttributes.MAP
         )
     }
 
