@@ -73,5 +73,6 @@ object PrismaConstants {
         const val LENGTH = "length"
         const val ON_DELETE = "onDelete"
         const val ON_UPDATE = "onUpdate"
+        const val TYPE = "type"
     }
 }

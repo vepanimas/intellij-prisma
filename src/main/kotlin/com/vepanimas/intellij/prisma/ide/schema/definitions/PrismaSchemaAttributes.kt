@@ -90,6 +90,12 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 documentation = "Defines a custom index name in the database."
                 type = "String?"
             }
+            param {
+                label = ParameterNames.TYPE
+                documentation = "Defines the access type of indexes: BTree (default) or Hash."
+                type = "IndexType?"
+                datasources = EnumSet.of(PrismaDatasourceType.POSTGRESQL)
+            }
         }
         element {
             label = BlockAttributes.FULLTEXT

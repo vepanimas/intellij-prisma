@@ -10,7 +10,7 @@ import junit.framework.TestCase
 class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
     override fun getBasePath(): String = "/completion/parameters"
 
-    fun testBlockAttributeParam() {
+    fun testBlockAttributeId() {
         val lookupElements = completeSelected(
             """
             model M {
@@ -31,7 +31,7 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         TestCase.assertEquals("FieldReference[]", presentation.typeText)
     }
 
-    fun testBlockAttributeParamFiltered() {
+    fun testBlockAttributeIdFiltered() {
         val lookupElements = completeSelected(
             """
             model M {
@@ -49,7 +49,7 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         checkLookupDocumentation(lookupElements, ParameterNames.MAP)
     }
 
-    fun testBlockAttributeParamComplete() {
+    fun testBlockAttributeIdComplete() {
         completeBasic(
             """
             model M {
@@ -64,7 +64,7 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         )
     }
 
-    fun testBlockAttributeNoParamsInList() {
+    fun testBlockAttributeIdNoParamsInList() {
         val lookupElements = getLookupElements(
             """
             model M {
@@ -74,6 +74,34 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         )
         val expectedParams = getBlockAttributeParams(BlockAttributes.ID)
         assertDoesntContain(lookupElements.strings, expectedParams)
+    }
+
+    fun testBlockAttributeIndexPostgreSQL() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              @@index(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, ParameterNames.FIELDS, ParameterNames.MAP, ParameterNames.TYPE)
+    }
+
+    fun testBlockAttributeIndexMySQL() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mysql"
+            }
+            model M {
+              @@index(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, ParameterNames.FIELDS, ParameterNames.MAP)
     }
 
     fun testFieldAttributeRelation() {
