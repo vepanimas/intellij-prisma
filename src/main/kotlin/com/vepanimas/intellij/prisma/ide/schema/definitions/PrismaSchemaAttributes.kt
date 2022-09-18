@@ -3,6 +3,7 @@ package com.vepanimas.intellij.prisma.ide.schema.definitions
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler
 import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
 import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
@@ -127,23 +128,15 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 documentation = "Defines a custom primary key name in the database."
                 type = "String?"
             }
-            param {
-                label = ParameterNames.LENGTH
-                documentation =
-                    "Defines a maximum length for the subpart of the value to be indexed in cases where the full value would exceed MySQL's limits for index sizes. See https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html"
-                type = "Int?"
-            }
+            length()
             param {
                 label = ParameterNames.SORT
                 documentation =
                     "Specify in which order the entries of the index are stored in the database. This can have an effect on whether the database is able to use an index for specific queries."
                 type = "SortOrder?"
+                datasources = EnumSet.of(PrismaDatasourceType.SQLSERVER)
             }
-            param {
-                label = ParameterNames.CLUSTERED
-                documentation = "Defines whether the ID is clustered or non-clustered. Defaults to `true`."
-                type = "Boolean?"
-            }
+            clustered()
         }
         element {
             label = FieldAttributes.UNIQUE
@@ -155,18 +148,14 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 documentation = "Defines a custom name for the unique constraint in the database."
                 type = "String?"
             }
-            param {
-                label = ParameterNames.LENGTH
-                documentation =
-                    "Defines a maximum length for the subpart of the value to be indexed in cases where the full value would exceed MySQL's limits for index sizes. See https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html"
-                type = "Int?"
-            }
+            length()
             param {
                 label = ParameterNames.SORT
                 documentation =
                     "Specify in which order the entries of the index are stored in the database. This can have an effect on whether the database is able to use an index for specific queries."
                 type = "String?"
             }
+            clustered()
         }
         element {
             label = FieldAttributes.MAP
@@ -208,6 +197,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 insertHandler = PrismaInsertHandler.COLON_QUOTED_ARGUMENT
                 documentation = "Defines a custom name for the foreign key in the database."
                 type = "String?"
+                datasources = PrismaDatasourceType.except(PrismaDatasourceType.MONGODB)
             }
             param {
                 label = ParameterNames.FIELDS
@@ -226,12 +216,14 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 documentation =
                     "Specifies the action to perform when a referenced entry in the referenced model is being deleted. [Learn more](https://pris.ly/d/referential-actions)."
                 type = "ReferentialAction?"
+                datasources = PrismaDatasourceType.except(PrismaDatasourceType.MONGODB)
             }
             param {
                 label = ParameterNames.ON_UPDATE
                 documentation =
                     "Specifies the action to perform when a referenced field in the referenced model is being updated to a new value. [Learn more](https://pris.ly/d/referential-actions)."
                 type = "ReferentialAction?"
+                datasources = PrismaDatasourceType.except(PrismaDatasourceType.MONGODB)
             }
         }
         element {
@@ -243,5 +235,25 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
             documentation =
                 "A field with an `@ignore` attribute can be kept in sync with the database schema using Prisma Migrate and Introspection, but won't be exposed in Prisma Client."
         }
+    }
+}
+
+private fun PrismaSchemaDeclaration.Builder.length() {
+    param {
+        label = ParameterNames.LENGTH
+        documentation =
+            "Defines a maximum length for the subpart of the value to be indexed in cases where the full value would exceed MySQL's limits for index sizes. See https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html"
+        type = "Int?"
+        datasources = EnumSet.of(PrismaDatasourceType.MYSQL)
+    }
+}
+
+private fun PrismaSchemaDeclaration.Builder.clustered() {
+    param {
+        label = ParameterNames.CLUSTERED
+        documentation =
+            "An index, unique constraint or primary key can be created as clustered or non-clustered; altering the storage and retrieve behavior of the index."
+        type = "Boolean?"
+        datasources = EnumSet.of(PrismaDatasourceType.SQLSERVER)
     }
 }

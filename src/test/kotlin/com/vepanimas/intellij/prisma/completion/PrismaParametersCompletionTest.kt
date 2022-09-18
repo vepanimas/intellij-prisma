@@ -76,13 +76,19 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         assertDoesntContain(lookupElements.strings, expectedParams)
     }
 
-    fun testFieldAttributeParam() {
+    fun testFieldAttributeRelation() {
         val lookupElements = completeSelected(
             """
+            datasource db {
+              provider = "mysql"
+            }
             model M {
               user User @relation(<caret>)
             }
         """.trimIndent(), """
+            datasource db {
+              provider = "mysql"
+            }
             model M {
               user User @relation(fields: [<caret>])
             }
@@ -94,13 +100,19 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         checkLookupDocumentation(lookupElements, ParameterNames.FIELDS)
     }
 
-    fun testFieldAttributeParamOnUpdate() {
+    fun testFieldAttributeRelationOnUpdate() {
         val lookupElements = completeSelected(
             """
+            datasource db {
+              provider = "mysql"
+            }
             model M {
               user User @relation(on<caret>)
             }
         """.trimIndent(), """
+            datasource db {
+              provider = "mysql"
+            }
             model M {
               user User @relation(onUpdate: <caret>)
             }
@@ -108,6 +120,86 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
             ParameterNames.ON_UPDATE
         )
         checkLookupDocumentation(lookupElements, ParameterNames.ON_UPDATE)
+    }
+
+    fun testFieldAttributeRelationMongoDB() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mongodb"
+            }
+            model M {
+              user User @relation(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(
+            lookupElements.strings,
+            ParameterNames.ON_UPDATE,
+            ParameterNames.ON_DELETE,
+            ParameterNames.MAP
+        )
+    }
+
+    fun testFieldAttributeIdMySQL() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mysql"
+            }
+            model M {
+              user User @id(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, ParameterNames.LENGTH, ParameterNames.MAP)
+    }
+
+    fun testFieldAttributeIdSQLServer() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "sqlserver"
+            }
+            model M {
+              user User @id(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, ParameterNames.MAP, ParameterNames.SORT, ParameterNames.CLUSTERED)
+    }
+
+    fun testFieldAttributeUniqueMySQL() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mysql"
+            }
+            model M {
+              user User @unique(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, ParameterNames.LENGTH, ParameterNames.MAP, ParameterNames.SORT)
+    }
+
+    fun testFieldAttributeUniqueSQLServer() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "sqlserver"
+            }
+            model M {
+              user User @unique(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            ParameterNames.CLUSTERED,
+            ParameterNames.MAP,
+            ParameterNames.SORT
+        )
     }
 
     private fun getBlockAttributeParams(label: String) = getAttributeParams(PrismaSchemaKind.BLOCK_ATTRIBUTE, label)
