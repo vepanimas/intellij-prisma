@@ -46,12 +46,8 @@ object PrismaParametersProvider : PrismaCompletionProvider() {
             ?.toSet()
             ?: emptySet()
 
-        schemaDeclaration.params
-            .filter {
-                it.label !in usedParams &&
-                        it.isAvailableForDatasource(datasource) &&
-                        it.isOnFieldLevel == isFieldArgument
-            }
+        schemaDeclaration.getAvailableParams(datasource, isFieldArgument)
+            .filter { it.label !in usedParams }
             .forEach {
                 val element = LookupElementBuilder.create(it.label)
                     .withPsiElement(PrismaSchemaFakeElement.createForCompletion(parent, it))
