@@ -76,6 +76,45 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         assertDoesntContain(lookupElements.strings, expectedParams)
     }
 
+    fun testBlockAttributeIdMySQL() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mysql"
+            }
+            model M {
+              @@id(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            ParameterNames.FIELDS,
+            ParameterNames.MAP,
+            ParameterNames.NAME,
+        )
+    }
+
+    fun testBlockAttributeIdSQLServer() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "sqlserver"
+            }
+            model M {
+              @@id(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            ParameterNames.FIELDS,
+            ParameterNames.MAP,
+            ParameterNames.NAME,
+            ParameterNames.CLUSTERED
+        )
+    }
+
     fun testBlockAttributeIndexPostgreSQL() {
         val lookupElements = getLookupElements(
             """
@@ -102,6 +141,40 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent()
         )
         assertSameElements(lookupElements.strings, ParameterNames.FIELDS, ParameterNames.MAP)
+    }
+
+    fun testBlockAttributeIndexSQLServer() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "sqlserver"
+            }
+            model M {
+              @@index(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, ParameterNames.FIELDS, ParameterNames.MAP, ParameterNames.CLUSTERED)
+    }
+
+    fun testBlockAttributeUniqueSQLServer() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "sqlserver"
+            }
+            model M {
+              @@unique(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            ParameterNames.FIELDS,
+            ParameterNames.MAP,
+            ParameterNames.NAME,
+            ParameterNames.CLUSTERED
+        )
     }
 
     fun testFieldAttributeRelation() {

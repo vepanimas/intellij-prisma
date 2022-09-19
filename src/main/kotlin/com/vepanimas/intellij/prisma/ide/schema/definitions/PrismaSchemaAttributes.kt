@@ -48,6 +48,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 documentation = "Defines a custom name for the primary key in the database."
                 type = "String?"
             }
+            clustered()
         }
         element {
             label = BlockAttributes.UNIQUE
@@ -72,6 +73,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 documentation = "Defines a custom constraint name in the database."
                 type = "String?"
             }
+            clustered()
         }
         element {
             label = BlockAttributes.INDEX
@@ -96,6 +98,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = "IndexType?"
                 datasources = EnumSet.of(PrismaDatasourceType.POSTGRESQL)
             }
+            clustered()
         }
         element {
             label = BlockAttributes.FULLTEXT
