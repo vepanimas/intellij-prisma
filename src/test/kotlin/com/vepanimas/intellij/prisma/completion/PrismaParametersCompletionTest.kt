@@ -396,6 +396,20 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         )
     }
 
+    fun testFieldAttributeDefaultMySQL() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mysql"
+            }
+            model M {
+              id String @default(<caret>)
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, ParameterNames.EXPRESSION)
+    }
+
     private fun getBlockAttributeParams(label: String) = getAttributeParams(PrismaSchemaKind.BLOCK_ATTRIBUTE, label)
 
     private fun getFieldAttributeParams(label: String) = getAttributeParams(PrismaSchemaKind.FIELD_ATTRIBUTE, label)

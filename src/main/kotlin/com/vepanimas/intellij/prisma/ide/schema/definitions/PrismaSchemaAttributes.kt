@@ -189,6 +189,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 label = ParameterNames.EXPRESSION
                 documentation = "An expression (e.g. `5`, `true`, `now()`)."
                 type = "Expression"
+                skipInCompletion = true
             }
         }
 

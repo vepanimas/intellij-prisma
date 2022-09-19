@@ -158,6 +158,7 @@ class PrismaSchemaParameter(
     datasources: Set<PrismaDatasourceType>? = null,
     val type: String? = null,
     val isOnFieldLevel: Boolean = false,
+    val skipInCompletion: Boolean = false,
 ) : PrismaSchemaElement(label, documentation, insertHandler = insertHandler, datasources = datasources) {
     class Builder : SchemaDslBuilder<PrismaSchemaParameter> {
         var label: String? = null
@@ -166,11 +167,17 @@ class PrismaSchemaParameter(
         var insertHandler: InsertHandler<LookupElement>? = null
         var datasources: Set<PrismaDatasourceType>? = null
         var isOnFieldLevel: Boolean = false
+        var skipInCompletion: Boolean = false
 
         override fun build(): PrismaSchemaParameter {
             return label
                 ?.takeIf { it.isNotBlank() }
-                ?.let { PrismaSchemaParameter(it, documentation, insertHandler, datasources, type, isOnFieldLevel) }
+                ?.let {
+                    PrismaSchemaParameter(
+                        it, documentation, insertHandler, datasources,
+                        type, isOnFieldLevel, skipInCompletion
+                    )
+                }
                 ?: error("label is not specified")
         }
     }
