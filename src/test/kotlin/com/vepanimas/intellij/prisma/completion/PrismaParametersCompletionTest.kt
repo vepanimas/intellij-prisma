@@ -23,8 +23,13 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             ParameterNames.FIELDS
         )
-        val expectedParams = getBlockAttributeParams(BlockAttributes.ID)
-        assertSameElements(lookupElements.strings, expectedParams)
+        assertSameElements(
+            lookupElements.strings,
+            ParameterNames.FIELDS,
+            ParameterNames.MAP,
+            ParameterNames.NAME,
+            ParameterNames.CLUSTERED,
+        )
         checkLookupDocumentation(lookupElements, ParameterNames.FIELDS)
 
         val presentation = lookupElements.find(ParameterNames.FIELDS).presentation!!
@@ -44,8 +49,12 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent(),
             ParameterNames.MAP
         )
-        val expectedParams = getBlockAttributeParams(BlockAttributes.ID)
-        assertSameElements(lookupElements.strings, expectedParams - ParameterNames.FIELDS)
+        assertSameElements(
+            lookupElements.strings,
+            ParameterNames.MAP,
+            ParameterNames.NAME,
+            ParameterNames.CLUSTERED,
+        )
         checkLookupDocumentation(lookupElements, ParameterNames.MAP)
     }
 
@@ -95,6 +104,38 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         )
     }
 
+    fun testBlockAttributeIdMySQLOnField() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mysql"
+            }
+            model M {
+              id String
+            
+              @@id([id(<caret>)])
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, ParameterNames.LENGTH)
+    }
+
+    fun testBlockAttributeIdMySQLNoLengthInArray() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mysql"
+            }
+            model M {
+              id String
+            
+              @@id([id(), <caret>])
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, ParameterNames.LENGTH)
+    }
+
     fun testBlockAttributeIdSQLServer() {
         val lookupElements = getLookupElements(
             """
@@ -113,6 +154,22 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
             ParameterNames.NAME,
             ParameterNames.CLUSTERED
         )
+    }
+
+    fun testBlockAttributeIdSQLServerOnField() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "sqlserver"
+            }
+            model M {
+              id String
+              
+              @@id([id(<caret>)])
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, ParameterNames.SORT)
     }
 
     fun testBlockAttributeIndexPostgreSQL() {
@@ -141,6 +198,22 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent()
         )
         assertSameElements(lookupElements.strings, ParameterNames.FIELDS, ParameterNames.MAP)
+    }
+
+    fun testBlockAttributeIndexMySQLOnField() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mysql"
+            }
+            model M {
+              id String
+            
+              @@index([id(<caret>)])
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, ParameterNames.LENGTH, ParameterNames.SORT)
     }
 
     fun testBlockAttributeIndexSQLServer() {
@@ -174,6 +247,26 @@ class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
             ParameterNames.MAP,
             ParameterNames.NAME,
             ParameterNames.CLUSTERED
+        )
+    }
+
+    fun testBlockAttributeUniqueMySQLOnField() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mysql"
+            }
+            model M {
+              id String
+            
+              @@unique([id(<caret>)])
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            ParameterNames.LENGTH,
+            ParameterNames.SORT,
         )
     }
 

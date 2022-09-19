@@ -112,6 +112,14 @@ open class PrismaSchemaDeclaration(
     pattern: ElementPattern<out PsiElement>? = null,
     datasources: Set<PrismaDatasourceType>? = null
 ) : PrismaSchemaElement(label, documentation, insertHandler, pattern, datasources) {
+
+    fun getAvailableParams(
+        usedDatasource: PrismaDatasourceType?,
+        isOnFieldLevel: Boolean,
+    ): List<PrismaSchemaParameter> {
+        return params.filter { it.isAvailableForDatasource(usedDatasource) && it.isOnFieldLevel == isOnFieldLevel }
+    }
+
     open class Builder(private val kind: PrismaSchemaKind) : SchemaDslBuilder<PrismaSchemaDeclaration> {
         var label: String? = null
         var documentation: String? = null
@@ -147,8 +155,9 @@ class PrismaSchemaParameter(
     label: String,
     documentation: String?,
     insertHandler: InsertHandler<LookupElement>? = null,
+    datasources: Set<PrismaDatasourceType>? = null,
     val type: String? = null,
-    datasources: Set<PrismaDatasourceType>? = null
+    val isOnFieldLevel: Boolean = false,
 ) : PrismaSchemaElement(label, documentation, insertHandler = insertHandler, datasources = datasources) {
     class Builder : SchemaDslBuilder<PrismaSchemaParameter> {
         var label: String? = null
@@ -156,11 +165,12 @@ class PrismaSchemaParameter(
         var type: String? = null
         var insertHandler: InsertHandler<LookupElement>? = null
         var datasources: Set<PrismaDatasourceType>? = null
+        var isOnFieldLevel: Boolean = false
 
         override fun build(): PrismaSchemaParameter {
             return label
                 ?.takeIf { it.isNotBlank() }
-                ?.let { PrismaSchemaParameter(it, documentation, insertHandler, type, datasources) }
+                ?.let { PrismaSchemaParameter(it, documentation, insertHandler, datasources, type, isOnFieldLevel) }
                 ?: error("label is not specified")
         }
     }

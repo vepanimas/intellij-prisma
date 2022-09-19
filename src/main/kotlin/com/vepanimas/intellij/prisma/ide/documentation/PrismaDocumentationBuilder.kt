@@ -9,8 +9,9 @@ import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
-import com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
+import com.vepanimas.intellij.prisma.lang.psi.PrismaFile
+import com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
 
 private const val PARAM_INDENT = "\n\t\t"
@@ -39,7 +40,9 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
     private fun buildDocumentationForSchemaElement(element: PsiElement): String? {
         val schemaElement = PrismaSchemaProvider.getSchema().match(element) ?: return null
         val declaration = schemaElement.castSafelyTo<PrismaSchemaDeclaration>()
-        val definition = declaration?.signature ?: buildDefinitionFromSchema(schemaElement)
+        val file = element.containingFile.castSafelyTo<PrismaFile>()
+        val params = declaration?.getAvailableParams(file?.datasourceType, false) ?: emptyList()
+        val definition = declaration?.signature ?: buildDefinitionFromSchema(schemaElement, params)
 
         return buildString {
             definition { append(toHtml(element.project, definition)) }
@@ -50,16 +53,18 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
                 }
             }
 
-            paramsSection(schemaElement as? PrismaSchemaDeclaration)
+            paramsSection(params)
         }
     }
 
-    private fun buildDefinitionFromSchema(schemaElement: PrismaSchemaElement): String {
+    private fun buildDefinitionFromSchema(
+        schemaElement: PrismaSchemaElement,
+        params: List<PrismaSchemaParameter>,
+    ): String {
         return buildString {
             append(schemaElement.label)
 
-            if (schemaElement is PrismaSchemaDeclaration && schemaElement.params.isNotEmpty()) {
-                val params = schemaElement.params
+            if (schemaElement is PrismaSchemaDeclaration && params.isNotEmpty()) {
                 val indent = if (params.size > PARAMS_WRAP_LIMIT) {
                     PARAM_INDENT
                 } else {
@@ -84,11 +89,11 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
         }
     }
 
-    private fun StringBuilder.paramsSection(declaration: PrismaSchemaDeclaration?) {
-        if (declaration == null || declaration.params.isEmpty()) return
+    private fun StringBuilder.paramsSection(params: List<PrismaSchemaParameter>) {
+        if (params.isEmpty()) return
 
         sections {
-            for ((i, param) in declaration.params.withIndex()) {
+            for ((i, param) in params.withIndex()) {
                 val header = if (i == 0) {
                     PrismaBundle.message("prisma.doc.section.params")
                 } else {

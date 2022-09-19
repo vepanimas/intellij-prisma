@@ -25,6 +25,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = "String"
             }
         }
+
         element {
             label = BlockAttributes.ID
             insertHandler = PrismaInsertHandler.PARENS_LIST_ARGUMENT
@@ -48,8 +49,11 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 documentation = "Defines a custom name for the primary key in the database."
                 type = "String?"
             }
+            length(true)
+            sort(true, datasourceTypes = EnumSet.of(PrismaDatasourceType.SQLSERVER))
             clustered()
         }
+
         element {
             label = BlockAttributes.UNIQUE
             insertHandler = PrismaInsertHandler.PARENS_LIST_ARGUMENT
@@ -73,8 +77,11 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 documentation = "Defines a custom constraint name in the database."
                 type = "String?"
             }
+            length(true)
+            sort(true)
             clustered()
         }
+
         element {
             label = BlockAttributes.INDEX
             insertHandler = PrismaInsertHandler.PARENS_LIST_ARGUMENT
@@ -98,8 +105,11 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = "IndexType?"
                 datasources = EnumSet.of(PrismaDatasourceType.POSTGRESQL)
             }
+            length(true)
+            sort(true)
             clustered()
         }
+
         element {
             label = BlockAttributes.FULLTEXT
             insertHandler = PrismaInsertHandler.PARENS_LIST_ARGUMENT
@@ -119,6 +129,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = "String?"
             }
         }
+
         element {
             label = BlockAttributes.IGNORE
             documentation =
@@ -138,15 +149,10 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = "String?"
             }
             length()
-            param {
-                label = ParameterNames.SORT
-                documentation =
-                    "Specify in which order the entries of the index are stored in the database. This can have an effect on whether the database is able to use an index for specific queries."
-                type = "SortOrder?"
-                datasources = EnumSet.of(PrismaDatasourceType.SQLSERVER)
-            }
+            sort(datasourceTypes = EnumSet.of(PrismaDatasourceType.SQLSERVER))
             clustered()
         }
+
         element {
             label = FieldAttributes.UNIQUE
             documentation = "Defines a unique constraint for this field."
@@ -158,14 +164,10 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = "String?"
             }
             length()
-            param {
-                label = ParameterNames.SORT
-                documentation =
-                    "Specify in which order the entries of the index are stored in the database. This can have an effect on whether the database is able to use an index for specific queries."
-                type = "String?"
-            }
+            sort()
             clustered()
         }
+
         element {
             label = FieldAttributes.MAP
             insertHandler = PrismaInsertHandler.PARENS_QUOTED_ARGUMENT
@@ -177,6 +179,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = "String"
             }
         }
+
         element {
             label = FieldAttributes.DEFAULT
             insertHandler = ParenthesesInsertHandler.WITH_PARAMETERS
@@ -188,6 +191,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = "Expression"
             }
         }
+
         element {
             label = FieldAttributes.RELATION
             insertHandler = ParenthesesInsertHandler.WITH_PARAMETERS
@@ -235,10 +239,12 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 datasources = PrismaDatasourceType.except(PrismaDatasourceType.MONGODB)
             }
         }
+
         element {
             label = FieldAttributes.UPDATED_AT
             documentation = "Automatically stores the time when a record was last updated."
         }
+
         element {
             label = FieldAttributes.IGNORE
             documentation =
@@ -247,13 +253,28 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
     }
 }
 
-private fun PrismaSchemaDeclaration.Builder.length() {
+private fun PrismaSchemaDeclaration.Builder.sort(
+    isOnField: Boolean = false,
+    datasourceTypes: Set<PrismaDatasourceType>? = null
+) {
+    param {
+        label = ParameterNames.SORT
+        documentation =
+            "Specify in which order the entries of the index are stored in the database. This can have an effect on whether the database is able to use an index for specific queries."
+        type = "SortOrder?"
+        datasources = datasourceTypes
+        isOnFieldLevel = isOnField
+    }
+}
+
+private fun PrismaSchemaDeclaration.Builder.length(isOnField: Boolean = false) {
     param {
         label = ParameterNames.LENGTH
         documentation =
             "Defines a maximum length for the subpart of the value to be indexed in cases where the full value would exceed MySQL's limits for index sizes. See https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html"
         type = "Int?"
         datasources = EnumSet.of(PrismaDatasourceType.MYSQL)
+        isOnFieldLevel = isOnField
     }
 }
 

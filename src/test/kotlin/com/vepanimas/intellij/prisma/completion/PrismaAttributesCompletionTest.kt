@@ -9,10 +9,16 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
     fun testBlockAttributes() {
         val lookupElements = completeSelected(
             """
+            datasource db {
+              provider = "mysql"
+            }
             model M {
               <caret>
             }
         """.trimIndent(), """
+            datasource db {
+              provider = "mysql"
+            }
             model M {
               @@id([<caret>])
             }

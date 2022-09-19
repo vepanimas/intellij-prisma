@@ -90,6 +90,10 @@ class PrismaDocumentationTest : PrismaTestCase() {
         doTest()
     }
 
+    fun testBlockAttributeFieldArgument() {
+        doTest()
+    }
+
     fun testFieldAttribute() {
         doTest()
     }

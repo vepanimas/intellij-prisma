@@ -28,7 +28,10 @@ sealed class PrismaSchemaContext(
 
             val contextElement = findContextElement(element) ?: return null
             if (contextElement is PrismaNamedArgument) {
-                val parentElement = contextElement.parentOfType<PrismaArgumentsOwner>() ?: return null
+                var parentElement = contextElement.parentOfType<PrismaArgumentsOwner>() ?: return null
+                if (parentElement.elementType == FUNCTION_CALL && parentElement.parent is PrismaArrayExpression) {
+                    parentElement = parentElement.parentOfType() ?: return null
+                }
                 val parentContext = forElement(parentElement) as? PrismaSchemaDeclarationContext ?: return null
                 val label = contextElement.referenceName ?: return null
                 return PrismaSchemaParameterContext(label, contextElement, parentContext)
@@ -59,13 +62,13 @@ sealed class PrismaSchemaContext(
 
         private fun findContextElement(element: PsiElement): PsiElement? {
             return when (element.elementType) {
-                UNSUPPORTED -> element.parent
                 IDENTIFIER -> findIdentifierParent(element)
+                AT, ATAT, UNSUPPORTED -> element.parent
                 else -> element
             }
         }
 
-        private fun findIdentifierParent(element: PsiElement): PsiElement? {
+        private fun findIdentifierParent(element: PsiElement?): PsiElement? {
             val parent =
                 PsiTreeUtil.skipParentsOfType(element, PsiWhiteSpace::class.java, PsiErrorElement::class.java)
 

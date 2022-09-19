@@ -196,7 +196,9 @@ Expression ::=
     | LiteralExpression
     | PathExpression
 
-FunctionCall ::= PathExpression ArgumentsList
+FunctionCall ::= PathExpression ArgumentsList {
+    implements="com.vepanimas.intellij.prisma.lang.psi.PrismaArgumentsOwner"
+}
 ArrayExpression ::= '[' [Expression (',' Expression)*] ']'
 LiteralExpression ::= NUMERIC_LITERAL | STRING_LITERAL {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaLiteralExpressionMixin"

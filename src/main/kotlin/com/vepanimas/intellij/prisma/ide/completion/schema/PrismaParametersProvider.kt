@@ -30,7 +30,12 @@ object PrismaParametersProvider : PrismaCompletionProvider() {
         val file = parameters.originalFile as? PrismaFile
         val position = parameters.originalPosition ?: parameters.position
         val datasource = file?.datasourceType
-        val argumentsOwner = position.parentOfType<PrismaArgumentsOwner>() ?: return
+        var argumentsOwner = position.parentOfType<PrismaArgumentsOwner>() ?: return
+        val isFieldArgument =
+            argumentsOwner is PrismaFunctionCall && argumentsOwner.parent is PrismaArrayExpression
+        if (isFieldArgument) {
+            argumentsOwner = argumentsOwner.parentOfType() ?: return
+        }
         val schemaDeclaration =
             PrismaSchemaProvider.getSchema().match(argumentsOwner) as? PrismaSchemaDeclaration ?: return
         val parent = PrismaSchemaFakeElement.createForCompletion(parameters, schemaDeclaration)
@@ -42,7 +47,11 @@ object PrismaParametersProvider : PrismaCompletionProvider() {
             ?: emptySet()
 
         schemaDeclaration.params
-            .filter { it.label !in usedParams && it.isAvailableForDatasource(datasource) }
+            .filter {
+                it.label !in usedParams &&
+                        it.isAvailableForDatasource(datasource) &&
+                        it.isOnFieldLevel == isFieldArgument
+            }
             .forEach {
                 val element = LookupElementBuilder.create(it.label)
                     .withPsiElement(PrismaSchemaFakeElement.createForCompletion(parent, it))

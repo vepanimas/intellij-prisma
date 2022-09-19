@@ -61,6 +61,7 @@ public class PrismaVisitor extends PsiElementVisitor {
 
   public void visitFunctionCall(@NotNull PrismaFunctionCall o) {
     visitExpression(o);
+    // visitArgumentsOwner(o);
   }
 
   public void visitGeneratorDeclaration(@NotNull PrismaGeneratorDeclaration o) {
