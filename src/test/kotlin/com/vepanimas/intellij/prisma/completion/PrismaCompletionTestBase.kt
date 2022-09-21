@@ -5,6 +5,7 @@ import com.intellij.codeInsight.lookup.Lookup
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementPresentation
 import com.intellij.testFramework.UsefulTestCase
+import com.intellij.testFramework.fixtures.TestLookupElementPresentation
 import com.vepanimas.intellij.prisma.PrismaTestCase
 import com.vepanimas.intellij.prisma.ide.documentation.PrismaDocumentationProvider
 import com.vepanimas.intellij.prisma.lang.PrismaFileType
@@ -83,9 +84,5 @@ abstract class PrismaCompletionTestBase : PrismaTestCase() {
         this?.find { it.lookupString == lookupString }
 
     protected val LookupElement?.presentation: LookupElementPresentation?
-        get() = if (this == null) {
-            null
-        } else {
-            LookupElementPresentation().also { renderElement(it) }
-        }
+        get() = this?.let { TestLookupElementPresentation.renderReal(it) }
 }

@@ -5,7 +5,8 @@
     <vendor>vepanimas</vendor>
     <resource-bundle>messages.PrismaBundle</resource-bundle>
 
-    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.ultimate</depends>
+    <depends>JavaScript</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Language -->
@@ -56,5 +57,9 @@
         <completion.contributor language="Prisma"
                                 implementationClass="com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionContributor"/>
         <lookup.charFilter implementation="com.vepanimas.intellij.prisma.ide.completion.PrismaCharFilter"/>
+
+        <!-- Indexing -->
+        <additionalLibraryRootsProvider
+                implementation="com.vepanimas.intellij.prisma.ide.indexing.PrismaAdditionalLibraryRootsProvider"/>
     </extensions>
 </idea-plugin>
