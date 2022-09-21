@@ -1,8 +1,7 @@
 package com.vepanimas.intellij.prisma.ide.schema
 
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.DatasourceTypes
-import kotlinx.collections.immutable.toImmutableSet
-import java.util.EnumSet
+import java.util.*
 
 enum class PrismaDatasourceType(val label: String) {
     MYSQL(DatasourceTypes.MYSQL),

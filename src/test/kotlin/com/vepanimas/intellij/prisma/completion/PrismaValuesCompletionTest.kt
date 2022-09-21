@@ -24,7 +24,7 @@ class PrismaValuesCompletionTest : PrismaCompletionTestBase() {
         )
         val element = PrismaSchemaProvider.getSchema()
             .getElement(PrismaSchemaKind.DATASOURCE_FIELD, PrismaConstants.DatasourceFields.PROVIDER)!!
-        assertSameElements(lookupElements.strings, element.values.map { StringUtil.wrapWithDoubleQuote(it.label) })
+        assertSameElements(lookupElements.strings, element.variants.map { StringUtil.wrapWithDoubleQuote(it.label) })
         checkLookupDocumentation(lookupElements, "\"sqlserver\"")
     }
 

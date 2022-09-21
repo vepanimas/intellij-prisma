@@ -27,6 +27,6 @@ val PrismaSchemaElement.icon: Icon?
             PrismaSchemaKind.BLOCK_ATTRIBUTE, PrismaSchemaKind.FIELD_ATTRIBUTE -> PrismaIcons.ATTRIBUTE
             else -> null
         }
-        is PrismaSchemaValue -> null
+        is PrismaSchemaVariant -> null
     }
 

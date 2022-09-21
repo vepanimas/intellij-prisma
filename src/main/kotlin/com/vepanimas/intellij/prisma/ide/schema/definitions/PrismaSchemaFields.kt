@@ -11,37 +11,37 @@ val PRISMA_SCHEMA_FIELDS = schema {
             documentation =
                 "Describes which datasource connector to use. Can be one of the following datasource providers: `postgresql`, `mysql`, `sqlserver`, `sqlite`, `mongodb` or `cockroachdb`."
 
-            value {
+            variant {
                 label = "mysql"
                 documentation =
                     "Specifies a MySQL datasource. Learn more about this connector [here](https://pris.ly/d/mysql-connector)."
                 type = PrimitiveTypes.STRING
             }
-            value {
+            variant {
                 label = "postgresql"
                 documentation =
                     "Specifies a PostgreSQL datasource. Learn more about this connector [here](https://pris.ly/d/postgresql-connector)."
                 type = PrimitiveTypes.STRING
             }
-            value {
+            variant {
                 label = "sqlite"
                 documentation =
                     "Specifies a SQLite datasource. Learn more about this connector [here](https://pris.ly/d/sqlite-connector)."
                 type = PrimitiveTypes.STRING
             }
-            value {
+            variant {
                 label = "sqlserver"
                 documentation =
                     "Specifies a Microsoft SQL Server datasource. Learn more about this connector [here](https://pris.ly/d/sqlserver-connector)."
                 type = PrimitiveTypes.STRING
             }
-            value {
+            variant {
                 label = "mongodb"
                 documentation =
                     "Specifies a MongoDB datasource. Learn more about this connector [here](https://pris.ly/d/mongodb-connector)."
                 type = PrimitiveTypes.STRING
             }
-            value {
+            variant {
                 label = "cockroachdb"
                 documentation =
                     "Specifies a CockroachDB datasource. Learn more about this connector [here](https://pris.ly/d/cockroachdb-connector)."

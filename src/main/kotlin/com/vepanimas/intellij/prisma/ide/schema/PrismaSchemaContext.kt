@@ -28,7 +28,7 @@ sealed class PrismaSchemaContext(
             val contextElement = adjustContextElement(element) ?: return null
             return when (contextElement) {
                 is PrismaNamedArgument -> createParameterContext(contextElement)
-                is PrismaLiteralExpression -> createValueContext(contextElement)
+                is PrismaLiteralExpression -> createVariantContext(contextElement)
                 else -> createDeclarationContext(contextElement)
             }
         }
@@ -43,12 +43,12 @@ sealed class PrismaSchemaContext(
             return PrismaSchemaParameterContext(label, element, parentContext)
         }
 
-        private fun createValueContext(element: PrismaLiteralExpression): PrismaSchemaValueContext? {
+        private fun createVariantContext(element: PrismaLiteralExpression): PrismaSchemaVariantContext? {
             val parent =
                 element.parentOfTypes(PrismaArgument::class, PrismaMemberDeclaration::class) ?: return null
             val parentContext = forElement(parent) ?: return null
-            val label = element.value?.toString() ?: return null
-            return PrismaSchemaValueContext(label, element, parentContext)
+            val label = getSchemaLabel(element) ?: return null
+            return PrismaSchemaVariantContext(label, element, parentContext)
         }
 
         private fun createDeclarationContext(element: PsiElement): PrismaSchemaDeclarationContext? {
@@ -126,6 +126,7 @@ sealed class PrismaSchemaContext(
                 element is PrismaUnsupportedType -> PrismaConstants.PrimitiveTypes.UNSUPPORTED
                 element is PrismaKeyValue -> psiRenderer.build(element.identifier)
                 element is PrismaReferenceElement -> element.referenceName
+                element is PrismaLiteralExpression -> element.value?.toString()
                 element is PsiNamedElement -> element.name
                 else -> null
             }
@@ -145,7 +146,7 @@ class PrismaSchemaParameterContext(
     val parent: PrismaSchemaDeclarationContext,
 ) : PrismaSchemaContext(label, element)
 
-class PrismaSchemaValueContext(
+class PrismaSchemaVariantContext(
     label: String,
     element: PsiElement,
     val parent: PrismaSchemaContext,

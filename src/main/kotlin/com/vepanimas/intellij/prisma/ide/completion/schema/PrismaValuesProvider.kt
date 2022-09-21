@@ -31,10 +31,10 @@ object PrismaValuesProvider : PrismaCompletionProvider() {
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
-        val parent = findValuesProvider(parameters) ?: return
+        val parent = findVariantsProvider(parameters) ?: return
         val schemaElement = PrismaSchemaProvider.getSchema().match(parent) ?: return
 
-        schemaElement.values.forEach {
+        schemaElement.variants.forEach {
             val wrapInQuotes = it.type == PrimitiveTypes.STRING &&
                     parameters.originalPosition?.elementType != STRING_LITERAL
             val label = if (wrapInQuotes) StringUtil.wrapWithDoubleQuote(it.label) else it.label
@@ -48,7 +48,7 @@ object PrismaValuesProvider : PrismaCompletionProvider() {
         }
     }
 
-    private fun findValuesProvider(parameters: CompletionParameters): PsiElement? {
+    private fun findVariantsProvider(parameters: CompletionParameters): PsiElement? {
         return PrismaSchemaFakeElement.findSuitableParent(parameters)
     }
 }
