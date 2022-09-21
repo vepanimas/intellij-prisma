@@ -4,9 +4,12 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.TokenType.ERROR_ELEMENT
+import com.intellij.psi.TokenType.WHITE_SPACE
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
 import com.intellij.psi.util.parentOfType
+import com.intellij.psi.util.parentOfTypes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
@@ -18,52 +21,53 @@ sealed class PrismaSchemaContext(
 ) {
     companion object {
         fun forElement(element: PsiElement?): PrismaSchemaContext? {
-            if (element == null) {
+            if (element == null || element is PrismaSchemaFakeElement) {
                 return null
             }
 
-            if (element is PrismaSchemaFakeElement) {
-                return forElement(element)
-            }
-
-            val contextElement = findContextElement(element) ?: return null
-            if (contextElement is PrismaNamedArgument) {
-                var parentElement = contextElement.parentOfType<PrismaArgumentsOwner>() ?: return null
-                if (parentElement.elementType == FUNCTION_CALL && parentElement.parent is PrismaArrayExpression) {
-                    parentElement = parentElement.parentOfType() ?: return null
-                }
-                val parentContext = forElement(parentElement) as? PrismaSchemaDeclarationContext ?: return null
-                val label = contextElement.referenceName ?: return null
-                return PrismaSchemaParameterContext(label, contextElement, parentContext)
-            } else {
-                val kind = getSchemaKind(contextElement) ?: return null
-                val label = getSchemaLabel(contextElement) ?: return null
-                return PrismaSchemaDeclarationContext(label, contextElement, kind)
+            val contextElement = adjustContextElement(element) ?: return null
+            return when (contextElement) {
+                is PrismaNamedArgument -> createParameterContext(contextElement)
+                is PrismaLiteralExpression -> createValueContext(contextElement)
+                else -> createDeclarationContext(contextElement)
             }
         }
 
-        private fun forElement(element: PrismaSchemaFakeElement): PrismaSchemaContext? {
-            return when (val schemaElement = element.schemaElement) {
-                is PrismaSchemaDeclaration -> {
-                    PrismaSchemaDeclarationContext(schemaElement.label, element, schemaElement.kind)
-                }
-
-                is PrismaSchemaParameter -> {
-                    val parentContext =
-                        forElement(element.parent) as? PrismaSchemaDeclarationContext ?: return null
-                    return PrismaSchemaParameterContext(
-                        schemaElement.label,
-                        element,
-                        parentContext
-                    )
-                }
+        private fun createParameterContext(element: PrismaNamedArgument): PrismaSchemaParameterContext? {
+            var parentElement = element.parentOfType<PrismaArgumentsOwner>() ?: return null
+            if (parentElement is PrismaFunctionCall && parentElement.parent is PrismaArrayExpression) {
+                parentElement = parentElement.parentOfType() ?: return null
             }
+            val parentContext = forElement(parentElement) as? PrismaSchemaDeclarationContext ?: return null
+            val label = element.referenceName ?: return null
+            return PrismaSchemaParameterContext(label, element, parentContext)
         }
 
-        private fun findContextElement(element: PsiElement): PsiElement? {
+        private fun createValueContext(element: PrismaLiteralExpression): PrismaSchemaValueContext? {
+            val parent =
+                element.parentOfTypes(PrismaArgument::class, PrismaMemberDeclaration::class) ?: return null
+            val parentContext = forElement(parent) ?: return null
+            val label = element.value?.toString() ?: return null
+            return PrismaSchemaValueContext(label, element, parentContext)
+        }
+
+        private fun createDeclarationContext(element: PsiElement): PrismaSchemaDeclarationContext? {
+            val kind = getSchemaKind(element) ?: return null
+            val label = getSchemaLabel(element) ?: return null
+            return PrismaSchemaDeclarationContext(label, element, kind)
+        }
+
+        fun adjustContextElement(element: PsiElement): PsiElement? {
             return when (element.elementType) {
                 IDENTIFIER -> findIdentifierParent(element)
+
                 AT, ATAT, UNSUPPORTED -> element.parent
+
+                in PRISMA_LITERALS -> element.parent
+
+                WHITE_SPACE, ERROR_ELEMENT ->
+                    PsiTreeUtil.skipParentsOfType(element, PsiWhiteSpace::class.java, PsiErrorElement::class.java)
+
                 else -> element
             }
         }
@@ -139,4 +143,10 @@ class PrismaSchemaParameterContext(
     label: String,
     element: PsiElement,
     val parent: PrismaSchemaDeclarationContext,
+) : PrismaSchemaContext(label, element)
+
+class PrismaSchemaValueContext(
+    label: String,
+    element: PsiElement,
+    val parent: PrismaSchemaContext,
 ) : PrismaSchemaContext(label, element)

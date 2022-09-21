@@ -12,13 +12,12 @@ object PrismaKeywordProvider : PrismaSchemaCompletionProvider() {
 
     override val pattern = PrismaPsiPatterns.topKeyword
 
-    override fun processLookupElement(
-        builder: LookupElementBuilder,
+    override fun createLookupElement(
         schemaElement: PrismaSchemaElement,
         parameters: CompletionParameters,
         context: ProcessingContext
     ): LookupElementBuilder {
-        return builder.bold()
+        return super.createLookupElement(schemaElement, parameters, context).bold()
     }
 }
 

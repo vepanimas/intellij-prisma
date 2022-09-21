@@ -6,28 +6,27 @@ import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.editor.EditorModificationUtil
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaContext
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclarationContext
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaFakeElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameterContext
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
 
 object PrismaInsertHandler {
     val DEFAULT_INSERT_HANDLER = InsertHandler<LookupElement> { context, item ->
-        val schemaContext = PrismaSchemaContext.forElement(item.psiElement)
+        val element = item.psiElement as? PrismaSchemaFakeElement
+        val schemaElement = element?.schemaElement
 
-        if (schemaContext is PrismaSchemaParameterContext) {
+        if (schemaElement is PrismaSchemaParameter) {
             COLON_ARGUMENT.handleInsert(context, item)
             return@InsertHandler
         }
 
-        when ((schemaContext as? PrismaSchemaDeclarationContext)?.kind) {
-            PrismaSchemaKind.KEYWORD -> {
+        when ((schemaElement as? PrismaSchemaDeclaration)?.kind) {
+            PrismaSchemaKind.KEYWORD ->
                 AddSpaceInsertHandler.INSTANCE.handleInsert(context, item)
-            }
 
-            PrismaSchemaKind.DATASOURCE_FIELD, PrismaSchemaKind.GENERATOR_FIELD -> {
+            PrismaSchemaKind.DATASOURCE_FIELD, PrismaSchemaKind.GENERATOR_FIELD ->
                 EQUALS_INSERT_HANDLER.handleInsert(context, item)
-            }
 
             else -> {}
         }

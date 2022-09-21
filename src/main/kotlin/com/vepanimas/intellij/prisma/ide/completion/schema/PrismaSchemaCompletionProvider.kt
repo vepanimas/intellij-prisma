@@ -22,8 +22,7 @@ abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
         result: CompletionResultSet
     ) {
         collectSchemaElements(parameters, context).forEach { schemaElement ->
-            val lookupElementBuilder = createLookupElement(schemaElement, parameters, context)
-            lookupElementBuilder?.let { builder ->
+            createLookupElement(schemaElement, parameters, context).let { builder ->
                 result.addElement(builder)
             }
         }
@@ -43,24 +42,14 @@ abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
             .toList()
     }
 
-    private fun createLookupElement(
+    protected open fun createLookupElement(
         schemaElement: PrismaSchemaElement,
         parameters: CompletionParameters,
         context: ProcessingContext,
-    ): LookupElementBuilder? {
+    ): LookupElementBuilder {
         return LookupElementBuilder.create(schemaElement.label)
             .withPsiElement(PrismaSchemaFakeElement.createForCompletion(parameters, schemaElement))
             .withPrismaInsertHandler(schemaElement.insertHandler)
             .withIcon(schemaElement.icon)
-            .let { processLookupElement(it, schemaElement, parameters, context) }
-    }
-
-    protected open fun processLookupElement(
-        builder: LookupElementBuilder,
-        schemaElement: PrismaSchemaElement,
-        parameters: CompletionParameters,
-        context: ProcessingContext,
-    ): LookupElementBuilder? {
-        return builder
     }
 }

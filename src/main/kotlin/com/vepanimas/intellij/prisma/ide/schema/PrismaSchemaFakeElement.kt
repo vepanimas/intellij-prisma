@@ -4,8 +4,13 @@ import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.PsiWhiteSpace
+import com.intellij.psi.TokenType
 import com.intellij.psi.impl.FakePsiElement
+import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.parentOfTypes
+import com.intellij.psi.util.prevLeafs
+import com.intellij.psi.util.skipTokens
 import com.vepanimas.intellij.prisma.lang.psi.PrismaArgumentsOwner
 import com.vepanimas.intellij.prisma.lang.psi.PrismaDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration
@@ -34,7 +39,7 @@ class PrismaSchemaFakeElement(
             parameters: CompletionParameters,
             schemaElement: PrismaSchemaElement,
         ): PrismaSchemaFakeElement {
-            val parent = findSuitableParent(parameters)
+            val parent = findSuitableParent(parameters) ?: parameters.originalFile
             return createForCompletion(parent, schemaElement)
         }
 
@@ -45,14 +50,26 @@ class PrismaSchemaFakeElement(
             return PrismaSchemaFakeElement(parent, schemaElement)
         }
 
-        private fun findSuitableParent(parameters: CompletionParameters): PsiElement {
-            val context = parameters.originalPosition?.parentOfTypes(
+        fun findSuitableParent(parameters: CompletionParameters): PsiElement? {
+            var context = parameters.originalPosition
+
+            if (context is PsiWhiteSpace) {
+                val prevLeaf = context.prevLeafs.skipTokens(IGNORE_TOKENS).firstOrNull()
+                if (prevLeaf != null) {
+                    context = prevLeaf
+                }
+            }
+
+            context = context?.parentOfTypes(
                 PrismaDeclaration::class,
                 PrismaMemberDeclaration::class,
                 PrismaArgumentsOwner::class,
+                withSelf = true
             )
 
-            return context ?: parameters.originalFile
+            return context
         }
+
+        private val IGNORE_TOKENS = TokenSet.create(TokenType.WHITE_SPACE, TokenType.ERROR_ELEMENT)
     }
 }

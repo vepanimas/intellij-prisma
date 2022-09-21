@@ -15,17 +15,30 @@ class PrismaSchema(private val elements: Map<PrismaSchemaKind, PrismaSchemaEleme
     }
 
     fun match(element: PsiElement?): PrismaSchemaElement? {
+        if (element is PrismaSchemaFakeElement) {
+            return element.schemaElement
+        }
+
         val context = PrismaSchemaContext.forElement(element) ?: return null
-        when (context) {
+        return match(context)
+    }
+
+    private fun match(context: PrismaSchemaContext): PrismaSchemaElement? {
+        return when (context) {
             is PrismaSchemaDeclarationContext -> {
-                val declaration = getElement(context.kind, context.label) ?: return null
-                return filterByPattern(context.element, declaration)
+                val declaration = getElement(context.kind, context.label)
+                filterByPattern(context.element, declaration)
             }
 
             is PrismaSchemaParameterContext -> {
-                val declaration = getElement(context.parent.kind, context.parent.label) ?: return null
-                val parameter = declaration.params.find { it.label == context.label }
-                return filterByPattern(context.element, parameter)
+                val declaration = match(context.parent) as? PrismaSchemaDeclaration
+                val parameter = declaration?.params?.find { it.label == context.label }
+                filterByPattern(context.element, parameter)
+            }
+
+            is PrismaSchemaValueContext -> {
+                val parent = match(context.parent)
+                parent?.values?.find { it.label == context.label }
             }
         }
     }
@@ -69,8 +82,7 @@ class PrismaSchema(private val elements: Map<PrismaSchemaKind, PrismaSchemaEleme
 class PrismaSchemaElementGroup(val group: Map<String, PrismaSchemaDeclaration>) :
     Map<String, PrismaSchemaDeclaration> by group {
 
-    class Builder(private val kind: PrismaSchemaKind) :
-        SchemaDslBuilder<PrismaSchemaElementGroup> {
+    class Builder(private val kind: PrismaSchemaKind) : SchemaDslBuilder<PrismaSchemaElementGroup> {
         private val group: MutableMap<String, PrismaSchemaDeclaration> = mutableMapOf()
 
         fun element(block: PrismaSchemaDeclaration.Builder.() -> Unit) {
@@ -92,7 +104,8 @@ sealed class PrismaSchemaElement(
     val documentation: String? = null,
     val insertHandler: InsertHandler<LookupElement>? = null,
     val pattern: ElementPattern<out PsiElement>? = null,
-    val datasources: Set<PrismaDatasourceType>? = null
+    val datasources: Set<PrismaDatasourceType>? = null,
+    val values: List<PrismaSchemaValue> = emptyList(),
 ) {
     fun isAvailableForDatasource(usedDatasource: PrismaDatasourceType?): Boolean {
         // filter only when datasource provider is specified
@@ -110,8 +123,9 @@ open class PrismaSchemaDeclaration(
     insertHandler: InsertHandler<LookupElement>? = null,
     val params: List<PrismaSchemaParameter> = emptyList(),
     pattern: ElementPattern<out PsiElement>? = null,
-    datasources: Set<PrismaDatasourceType>? = null
-) : PrismaSchemaElement(label, documentation, insertHandler, pattern, datasources) {
+    datasources: Set<PrismaDatasourceType>? = null,
+    values: List<PrismaSchemaValue> = emptyList(),
+) : PrismaSchemaElement(label, documentation, insertHandler, pattern, datasources, values) {
 
     fun getAvailableParams(
         usedDatasource: PrismaDatasourceType?,
@@ -129,12 +143,18 @@ open class PrismaSchemaDeclaration(
         var datasources: Set<PrismaDatasourceType>? = null
 
         private var params: MutableList<PrismaSchemaParameter> = mutableListOf()
+        private var values: MutableList<PrismaSchemaValue> = mutableListOf()
 
         fun param(block: PrismaSchemaParameter.Builder.() -> Unit) {
             val builder = PrismaSchemaParameter.Builder()
             builder.block()
-            val parameter = builder.build()
-            params.add(parameter)
+            params.add(builder.build())
+        }
+
+        fun value(block: PrismaSchemaValue.Builder.() -> Unit) {
+            val builder = PrismaSchemaValue.Builder()
+            builder.block()
+            values.add(builder.build())
         }
 
         override fun build(): PrismaSchemaDeclaration {
@@ -142,8 +162,8 @@ open class PrismaSchemaDeclaration(
                 ?.takeIf { it.isNotBlank() }
                 ?.let {
                     PrismaSchemaDeclaration(
-                        kind, it, documentation, signature,
-                        insertHandler, params, pattern, datasources
+                        kind, it, documentation, signature, insertHandler,
+                        params, pattern, datasources, values
                     )
                 }
                 ?: error("label is not specified")
@@ -156,10 +176,17 @@ class PrismaSchemaParameter(
     documentation: String?,
     insertHandler: InsertHandler<LookupElement>? = null,
     datasources: Set<PrismaDatasourceType>? = null,
+    values: List<PrismaSchemaValue> = emptyList(),
     val type: String? = null,
     val isOnFieldLevel: Boolean = false,
     val skipInCompletion: Boolean = false,
-) : PrismaSchemaElement(label, documentation, insertHandler = insertHandler, datasources = datasources) {
+) : PrismaSchemaElement(
+    label,
+    documentation,
+    insertHandler = insertHandler,
+    datasources = datasources,
+    values = values
+) {
     class Builder : SchemaDslBuilder<PrismaSchemaParameter> {
         var label: String? = null
         var documentation: String? = null
@@ -169,15 +196,44 @@ class PrismaSchemaParameter(
         var isOnFieldLevel: Boolean = false
         var skipInCompletion: Boolean = false
 
+        private var values: MutableList<PrismaSchemaValue> = mutableListOf()
+
+        fun value(block: PrismaSchemaValue.Builder.() -> Unit) {
+            val builder = PrismaSchemaValue.Builder()
+            builder.block()
+            values.add(builder.build())
+        }
+
         override fun build(): PrismaSchemaParameter {
             return label
                 ?.takeIf { it.isNotBlank() }
                 ?.let {
                     PrismaSchemaParameter(
                         it, documentation, insertHandler, datasources,
-                        type, isOnFieldLevel, skipInCompletion
+                        values, type, isOnFieldLevel, skipInCompletion
                     )
                 }
+                ?: error("label is not specified")
+        }
+    }
+}
+
+class PrismaSchemaValue(
+    label: String,
+    documentation: String?,
+    insertHandler: InsertHandler<LookupElement>? = null,
+    val type: String? = null,
+) : PrismaSchemaElement(label, documentation, insertHandler) {
+    class Builder : SchemaDslBuilder<PrismaSchemaValue> {
+        var label: String? = null
+        var documentation: String? = null
+        var insertHandler: InsertHandler<LookupElement>? = null
+        var type: String? = null
+
+        override fun build(): PrismaSchemaValue {
+            return label
+                ?.takeIf { it.isNotBlank() }
+                ?.let { PrismaSchemaValue(it, documentation, insertHandler, type) }
                 ?: error("label is not specified")
         }
     }

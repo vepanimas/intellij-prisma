@@ -29,9 +29,9 @@ class PrismaDocumentationProvider : AbstractDocumentationProvider() {
         contextElement: PsiElement?,
         targetOffset: Int
     ): PsiElement? {
-        val context = PrismaSchemaContext.forElement(contextElement)
+        val context = contextElement?.let { PrismaSchemaContext.adjustContextElement(it) }
         if (context != null) {
-            return context.element
+            return context
         }
 
         return super.getCustomDocumentationElement(editor, file, contextElement, targetOffset)
