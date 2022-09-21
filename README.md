@@ -15,6 +15,7 @@ The following features are available:
 * Line commenter 
 * Reader mode for comments with Markdown support
 * Braces and quotes automatic insertion
+* Improved completion and resolve for generated Prisma client
 <!-- Plugin description end -->
 
 ## Installation
