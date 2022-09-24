@@ -65,6 +65,12 @@ val PRISMA_SCHEMA_FIELDS = schema {
             label = "provider"
             documentation =
                 "Describes which generator to use. This can point to a file that implements a generator or specify a built-in generator directly."
+
+            variant {
+                label = "prisma-client-js"
+                documentation = "Built-in generator."
+                type = PrimitiveTypes.STRING
+            }
         }
         element {
             label = "output"
