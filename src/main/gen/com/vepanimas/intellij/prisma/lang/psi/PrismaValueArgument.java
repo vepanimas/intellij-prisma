@@ -10,4 +10,6 @@ public interface PrismaValueArgument extends PrismaArgument {
   @NotNull
   PrismaExpression getExpression();
 
+  boolean isDefault();
+
 }

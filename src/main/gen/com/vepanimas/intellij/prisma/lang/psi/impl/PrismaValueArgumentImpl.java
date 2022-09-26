@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaValueArgumentImpl extends PrismaArgumentImpl implements PrismaValueArgument {
+public class PrismaValueArgumentImpl extends PrismaValueArgumentMixin implements PrismaValueArgument {
 
   public PrismaValueArgumentImpl(@NotNull ASTNode node) {
     super(node);

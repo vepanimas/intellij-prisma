@@ -27,20 +27,31 @@ sealed class PrismaSchemaContext(
 
             val contextElement = adjustContextElement(element) ?: return null
             return when (contextElement) {
-                is PrismaNamedArgument -> createParameterContext(contextElement)
+                is PrismaArgument -> createParameterContext(contextElement)
                 is PrismaLiteralExpression -> createVariantContext(contextElement)
                 else -> createDeclarationContext(contextElement)
             }
         }
 
-        private fun createParameterContext(element: PrismaNamedArgument): PrismaSchemaParameterContext? {
+        private fun createParameterContext(element: PrismaArgument): PrismaSchemaParameterContext? {
             var parentElement = element.parentOfType<PrismaArgumentsOwner>() ?: return null
             if (parentElement is PrismaFunctionCall && parentElement.parent is PrismaArrayExpression) {
                 parentElement = parentElement.parentOfType() ?: return null
             }
             val parentContext = forElement(parentElement) as? PrismaSchemaDeclarationContext ?: return null
-            val label = element.referenceName ?: return null
-            return PrismaSchemaParameterContext(label, element, parentContext)
+            return when (element) {
+                is PrismaNamedArgument -> element.referenceName?.let {
+                    PrismaSchemaParameterContext(it, element, parentContext)
+                }
+
+                is PrismaValueArgument -> if (element.isDefault) {
+                    PrismaSchemaDefaultParameterContext(element, parentContext)
+                } else {
+                    null
+                }
+
+                else -> null
+            }
         }
 
         private fun createVariantContext(element: PrismaLiteralExpression): PrismaSchemaVariantContext? {
@@ -143,11 +154,16 @@ class PrismaSchemaDeclarationContext(
     val kind: PrismaSchemaKind,
 ) : PrismaSchemaContext(label, element)
 
-class PrismaSchemaParameterContext(
+open class PrismaSchemaParameterContext(
     label: String,
     element: PsiElement,
     val parent: PrismaSchemaDeclarationContext,
 ) : PrismaSchemaContext(label, element)
+
+class PrismaSchemaDefaultParameterContext(
+    element: PsiElement,
+    parent: PrismaSchemaDeclarationContext,
+) : PrismaSchemaParameterContext("#DEFAULT", element, parent)
 
 class PrismaSchemaVariantContext(
     label: String,

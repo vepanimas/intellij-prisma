@@ -18,6 +18,7 @@ val PRISMA_SCHEMA_FUNCTIONS = schema {
                 label = "environmentVariable"
                 documentation = "The environment variable in which the database connection URL is stored."
                 type = PrimitiveTypes.STRING
+                skipInCompletion = true
 
                 variant {
                     label = "DATABASE_URL"

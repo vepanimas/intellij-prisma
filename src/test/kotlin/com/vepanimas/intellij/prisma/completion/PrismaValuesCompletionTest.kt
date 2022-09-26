@@ -65,4 +65,43 @@ class PrismaValuesCompletionTest : PrismaCompletionTestBase() {
         assertSameElements(lookupElements.strings, Functions.ENV)
         checkLookupDocumentation(lookupElements, Functions.ENV)
     }
+
+    fun testDatasourceUrlFunctionArgs() {
+        val item = StringUtil.wrapWithDoubleQuote("DATABASE_URL")
+        val lookupElements = completeSelected(
+            """
+                datasource db {
+                  provider = "postgresql"
+                  url = env(<caret>)
+                }
+            """.trimIndent(),
+            """
+                datasource db {
+                  provider = "postgresql"
+                  url = env("DATABASE_URL")
+                }
+            """.trimIndent(),
+            item
+        )
+        assertSameElements(lookupElements.strings, item)
+    }
+
+    fun testDatasourceUrlFunctionArgsInQuoted() {
+        val item = "DATABASE_URL"
+        completeSelected(
+            """
+                datasource db {
+                  provider = "postgresql"
+                  url = env("<caret>")
+                }
+            """.trimIndent(),
+            """
+                datasource db {
+                  provider = "postgresql"
+                  url = env("DATABASE_URL")
+                }
+            """.trimIndent(),
+            item
+        )
+    }
 }

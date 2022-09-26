@@ -187,7 +187,10 @@ NamedArgument ::= Identifier ':' Expression {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaNamedArgumentMixin"
     implements="com.vepanimas.intellij.prisma.lang.psi.PrismaReferenceElement"
 }
-ValueArgument ::= Expression
+ValueArgument ::= Expression {
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaValueArgumentMixin"
+    methods=[isDefault]
+}
 
 /* Expressions */
 Expression ::=

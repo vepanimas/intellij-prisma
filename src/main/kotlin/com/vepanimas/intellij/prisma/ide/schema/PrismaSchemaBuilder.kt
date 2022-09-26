@@ -32,7 +32,12 @@ class PrismaSchema(private val elements: Map<PrismaSchemaKind, PrismaSchemaEleme
 
             is PrismaSchemaParameterContext -> {
                 val declaration = match(context.parent) as? PrismaSchemaDeclaration
-                val parameter = declaration?.params?.find { it.label == context.label }
+                val params = declaration?.params
+                val parameter = if (context is PrismaSchemaDefaultParameterContext) {
+                    params?.firstOrNull()
+                } else {
+                    params?.find { it.label == context.label }
+                }
                 filterByPattern(context.element, parameter)
             }
 
