@@ -19,6 +19,10 @@ object PrismaConstants {
         )
     }
 
+    object Functions {
+        const val ENV = "env"
+    }
+
     object DatasourceTypes {
         const val MYSQL = "mysql"
         const val POSTGRESQL = "postgresql"

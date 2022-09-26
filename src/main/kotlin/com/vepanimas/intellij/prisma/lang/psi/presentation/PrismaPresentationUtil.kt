@@ -21,12 +21,15 @@ fun getPresentation(element: PrismaElement): ItemPresentation = object : ItemPre
 val PrismaSchemaElement.icon: Icon?
     get() = when (this) {
         is PrismaSchemaParameter -> PrismaIcons.PARAMETER
+
         is PrismaSchemaDeclaration -> when (kind) {
             PrismaSchemaKind.PRIMITIVE_TYPE -> PrismaIcons.TYPE
             PrismaSchemaKind.GENERATOR_FIELD, PrismaSchemaKind.DATASOURCE_FIELD -> PrismaIcons.KEY_VALUE
             PrismaSchemaKind.BLOCK_ATTRIBUTE, PrismaSchemaKind.FIELD_ATTRIBUTE -> PrismaIcons.ATTRIBUTE
+            PrismaSchemaKind.FUNCTION -> PrismaIcons.FUNCTION
             else -> null
         }
+
         is PrismaSchemaVariant -> null
     }
 

@@ -2,7 +2,6 @@ package com.vepanimas.intellij.prisma.ide.completion.schema
 
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
-import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns.psiElement
@@ -11,12 +10,9 @@ import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.util.elementType
 import com.intellij.util.ProcessingContext
 import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
-import com.vepanimas.intellij.prisma.ide.completion.withPrismaInsertHandler
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaFakeElement
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
+import com.vepanimas.intellij.prisma.ide.schema.*
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
-import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
 
 
 object PrismaValuesProvider : PrismaCompletionProvider() {
@@ -34,17 +30,24 @@ object PrismaValuesProvider : PrismaCompletionProvider() {
         val parent = findVariantsProvider(parameters) ?: return
         val schemaElement = PrismaSchemaProvider.getSchema().match(parent) ?: return
 
-        schemaElement.variants.forEach {
-            val wrapInQuotes = it.type == PrimitiveTypes.STRING &&
-                    parameters.originalPosition?.elementType != STRING_LITERAL
-            val label = if (wrapInQuotes) StringUtil.wrapWithDoubleQuote(it.label) else it.label
+        schemaElement.variants.expandRefs()
+            .asSequence()
+            .map {
+                val label = computeLabel(it, parameters)
+                createLookupElement(label, it, PrismaSchemaFakeElement.createForCompletion(parent, it))
+            }
+            .forEach { result.addElement(it) }
+    }
 
-            val element = LookupElementBuilder.create(label)
-                .withPsiElement(PrismaSchemaFakeElement.createForCompletion(parent, it))
-                .withPrismaInsertHandler(it.insertHandler)
-                .withIcon(it.icon)
+    private fun computeLabel(schemaElement: PrismaSchemaElement, parameters: CompletionParameters): String {
+        return when (schemaElement) {
+            is PrismaSchemaVariant -> {
+                val wrapInQuotes =
+                    schemaElement.type == PrimitiveTypes.STRING && parameters.originalPosition?.elementType != STRING_LITERAL
+                return if (wrapInQuotes) StringUtil.wrapWithDoubleQuote(schemaElement.label) else schemaElement.label
+            }
 
-            result.addElement(element)
+            else -> schemaElement.label
         }
     }
 

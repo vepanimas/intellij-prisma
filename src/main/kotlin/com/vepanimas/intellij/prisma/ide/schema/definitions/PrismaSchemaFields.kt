@@ -1,7 +1,10 @@
 package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaRef
 import com.vepanimas.intellij.prisma.ide.schema.schema
+import com.vepanimas.intellij.prisma.lang.PrismaConstants
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
 
 val PRISMA_SCHEMA_FIELDS = schema {
@@ -52,6 +55,10 @@ val PRISMA_SCHEMA_FIELDS = schema {
             label = "url"
             documentation =
                 "Connection URL including authentication info. Each datasource provider documents the URL syntax. Most providers use the syntax provided by the database [learn more](https://pris.ly/d/connection-strings)."
+
+            variant {
+                ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.ENV)
+            }
         }
         element {
             label = "shadowDatabaseUrl"

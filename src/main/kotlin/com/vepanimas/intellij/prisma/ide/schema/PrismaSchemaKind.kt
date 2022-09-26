@@ -7,4 +7,5 @@ enum class PrismaSchemaKind {
     GENERATOR_FIELD,
     BLOCK_ATTRIBUTE,
     FIELD_ATTRIBUTE,
+    FUNCTION,
 }

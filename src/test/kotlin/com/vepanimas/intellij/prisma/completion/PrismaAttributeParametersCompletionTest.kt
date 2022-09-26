@@ -7,8 +7,8 @@ import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldAttributes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.ParameterNames
 import junit.framework.TestCase
 
-class PrismaParametersCompletionTest : PrismaCompletionTestBase() {
-    override fun getBasePath(): String = "/completion/parameters"
+class PrismaAttributeParametersCompletionTest : PrismaCompletionTestBase() {
+    override fun getBasePath(): String = "/completion/attributeParameters"
 
     fun testBlockAttributeId() {
         val lookupElements = completeSelected(

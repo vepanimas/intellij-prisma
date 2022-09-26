@@ -112,6 +112,8 @@ sealed class PrismaSchemaContext(
                 BLOCK_ATTRIBUTE -> PrismaSchemaKind.BLOCK_ATTRIBUTE
                 FIELD_ATTRIBUTE -> PrismaSchemaKind.FIELD_ATTRIBUTE
 
+                FUNCTION_CALL -> PrismaSchemaKind.FUNCTION
+
                 else -> null
             }
         }
@@ -126,6 +128,7 @@ sealed class PrismaSchemaContext(
                 element is PrismaUnsupportedType -> PrismaConstants.PrimitiveTypes.UNSUPPORTED
                 element is PrismaKeyValue -> psiRenderer.build(element.identifier)
                 element is PrismaReferenceElement -> element.referenceName
+                element is PrismaFunctionCall -> psiRenderer.build(element.pathExpression)
                 element is PrismaLiteralExpression -> element.value?.toString()
                 element is PsiNamedElement -> element.name
                 else -> null

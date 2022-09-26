@@ -2,19 +2,16 @@ package com.vepanimas.intellij.prisma.ide.completion.schema
 
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResultSet
-import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.ElementPattern
 import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
-import com.vepanimas.intellij.prisma.ide.completion.withPrismaInsertHandler
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaFakeElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.psi.*
-import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
 
 object PrismaParametersProvider : PrismaCompletionProvider() {
     override val pattern: ElementPattern<out PsiElement> =
@@ -47,16 +44,10 @@ object PrismaParametersProvider : PrismaCompletionProvider() {
             ?: emptySet()
 
         schemaDeclaration.getAvailableParams(datasource, isFieldArgument)
+            .asSequence()
             .filter { it.label !in usedParams && !it.skipInCompletion }
-            .forEach {
-                val element = LookupElementBuilder.create(it.label)
-                    .withPsiElement(PrismaSchemaFakeElement.createForCompletion(parent, it))
-                    .withTypeText(it.type)
-                    .withPrismaInsertHandler(it.insertHandler)
-                    .withIcon(it.icon)
-
-                result.addElement(element)
-            }
+            .map { createLookupElement(it.label, it, PrismaSchemaFakeElement.createForCompletion(parent, it)) }
+            .forEach { result.addElement(it) }
     }
 }
 

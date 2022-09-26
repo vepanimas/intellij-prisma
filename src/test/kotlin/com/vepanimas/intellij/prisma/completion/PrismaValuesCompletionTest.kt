@@ -4,6 +4,7 @@ import com.intellij.openapi.util.text.StringUtil
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
 
 class PrismaValuesCompletionTest : PrismaCompletionTestBase() {
     override fun getBasePath(): String = "/completion/values"
@@ -42,5 +43,26 @@ class PrismaValuesCompletionTest : PrismaCompletionTestBase() {
             """.trimIndent(),
             "sqlite"
         )
+    }
+
+    fun testDatasourceUrlFunction() {
+        val lookupElements = completeSelected(
+            """
+                datasource db {
+                  provider = "postgresql"
+                  url = <caret>
+                }
+            """.trimIndent(),
+            """
+                datasource db {
+                  provider = "postgresql"
+                  url = env("<caret>")
+                }
+            """.trimIndent(),
+            "env"
+        )
+
+        assertSameElements(lookupElements.strings, Functions.ENV)
+        checkLookupDocumentation(lookupElements, Functions.ENV)
     }
 }

@@ -5,13 +5,11 @@ import com.intellij.codeInsight.completion.CompletionResultSet
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.ProcessingContext
 import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
-import com.vepanimas.intellij.prisma.ide.completion.withPrismaInsertHandler
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaFakeElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.psi.PrismaFile
-import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
 
 abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
     abstract val kind: PrismaSchemaKind
@@ -47,9 +45,10 @@ abstract class PrismaSchemaCompletionProvider : PrismaCompletionProvider() {
         parameters: CompletionParameters,
         context: ProcessingContext,
     ): LookupElementBuilder {
-        return LookupElementBuilder.create(schemaElement.label)
-            .withPsiElement(PrismaSchemaFakeElement.createForCompletion(parameters, schemaElement))
-            .withPrismaInsertHandler(schemaElement.insertHandler)
-            .withIcon(schemaElement.icon)
+        return createLookupElement(
+            schemaElement.label,
+            schemaElement,
+            PrismaSchemaFakeElement.createForCompletion(parameters, schemaElement),
+        )
     }
 }
