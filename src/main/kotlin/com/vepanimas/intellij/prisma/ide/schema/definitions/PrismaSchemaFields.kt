@@ -89,6 +89,22 @@ val PRISMA_SCHEMA_FIELDS = schema {
         element {
             label = "engineType"
             documentation = "Defines the query engine type for Prisma Client."
+
+            variant {
+                label = "library"
+                documentation = "Node-API library. (Default)"
+                type = PrimitiveTypes.STRING
+            }
+            variant {
+                label = "binary"
+                documentation = "Executable binary."
+                type = PrimitiveTypes.STRING
+            }
+            variant {
+                label = "dataproxy"
+                documentation = "Prisma Data Proxy."
+                type = PrimitiveTypes.STRING
+            }
         }
     }
 }
