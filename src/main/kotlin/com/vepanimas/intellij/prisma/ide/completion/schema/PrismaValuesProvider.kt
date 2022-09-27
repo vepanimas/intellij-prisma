@@ -8,21 +8,30 @@ import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.patterns.StandardPatterns
 import com.intellij.psi.PsiElement
 import com.intellij.psi.tree.TokenSet
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
+import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.parentOfTypes
 import com.intellij.util.ProcessingContext
 import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
+import com.vepanimas.intellij.prisma.ide.completion.isListType
 import com.vepanimas.intellij.prisma.ide.schema.*
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
 import com.vepanimas.intellij.prisma.lang.psi.PrismaArgument
+import com.vepanimas.intellij.prisma.lang.psi.PrismaArrayExpression
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
+import com.vepanimas.intellij.prisma.lang.psi.PrismaExpression
 import com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration
 
 
 object PrismaValuesProvider : PrismaCompletionProvider() {
     private val keyValue = psiElement()
         .withElementType(TokenSet.create(STRING_LITERAL, IDENTIFIER))
-        .afterLeaf(psiElement(EQ))
+        .withParent(PrismaExpression::class.java)
+        .afterLeafSkipping(
+            psiElement().andOr(psiElement().whitespaceCommentEmptyOrError(), psiElement(LBRACKET)),
+            psiElement().withElementType(TokenSet.create(EQ, COMMA)),
+        )
         .inside(psiElement().withElementType(TokenSet.create(DATASOURCE_DECLARATION, GENERATOR_DECLARATION)))
 
     private val paramValue = psiElement()
@@ -40,20 +49,39 @@ object PrismaValuesProvider : PrismaCompletionProvider() {
             parameters.position.parentOfTypes(PrismaArgument::class, PrismaMemberDeclaration::class) ?: return
         val schemaElement = PrismaSchemaProvider.getSchema().match(parent) ?: return
 
+        val listExpression = findListExpression(parameters)
+        if (isListType(schemaElement.type) && listExpression == null) {
+            return
+        }
+
+        val usedValues = mutableSetOf<String>()
+        listExpression?.expressionList?.mapNotNullTo(usedValues) { PrismaSchemaContext.getSchemaLabel(it) }
+
         schemaElement.variants.expandRefs()
             .asSequence()
+            .filter { it.label !in usedValues }
             .map {
                 val label = computeLabel(it, parameters)
                 createLookupElement(label, it, PrismaSchemaFakeElement.createForCompletion(parameters, it))
+                    .withPresentableText(it.label)
+                    .withLookupString(it.label)
             }
             .forEach { result.addElement(it) }
+    }
+
+    private fun findListExpression(parameters: CompletionParameters): PrismaArrayExpression? {
+        var position: PsiElement? = parameters.originalPosition ?: parameters.position
+        if (position.elementType == RBRACKET) {
+            position = PsiTreeUtil.skipWhitespacesAndCommentsBackward(position)
+        }
+        return position?.parentOfType()
     }
 
     private fun computeLabel(schemaElement: PrismaSchemaElement, parameters: CompletionParameters): String {
         return when (schemaElement) {
             is PrismaSchemaVariant -> {
                 val wrapInQuotes =
-                    schemaElement.type == PrimitiveTypes.STRING && parameters.originalPosition?.elementType != STRING_LITERAL
+                    schemaElement.type == PrimitiveTypes.STRING && parameters.position.elementType != STRING_LITERAL
                 return if (wrapInQuotes) StringUtil.wrapWithDoubleQuote(schemaElement.label) else schemaElement.label
             }
 

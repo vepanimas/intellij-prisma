@@ -3,7 +3,6 @@ package com.vepanimas.intellij.prisma.ide.schema.definitions
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaRef
 import com.vepanimas.intellij.prisma.ide.schema.schema
-import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
 
@@ -92,6 +91,40 @@ val PRISMA_SCHEMA_FIELDS = schema {
         element {
             label = "previewFeatures"
             documentation = "Enables preview feature flags."
+            type = "String[]"
+
+            variant {
+                label = "ReferentialIntegrity"
+                type = PrimitiveTypes.STRING
+            }
+            variant {
+                label = "InteractiveTransactions"
+                type = PrimitiveTypes.STRING
+            }
+            variant {
+                label = "FullTextSearch"
+                type = PrimitiveTypes.STRING
+            }
+            variant {
+                label = "FullTextIndex"
+                type = PrimitiveTypes.STRING
+            }
+            variant {
+                label = "Tracing"
+                type = PrimitiveTypes.STRING
+            }
+            variant {
+                label = "Metrics"
+                type = PrimitiveTypes.STRING
+            }
+            variant {
+                label = "OrderByNulls"
+                type = PrimitiveTypes.STRING
+            }
+            variant {
+                label = "FilteredRelationCount"
+                type = PrimitiveTypes.STRING
+            }
         }
         element {
             label = "engineType"

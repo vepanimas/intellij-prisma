@@ -1,10 +1,10 @@
 package com.vepanimas.intellij.prisma.completion
 
-import com.intellij.openapi.util.text.StringUtil
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
+import com.intellij.openapi.util.text.StringUtil.wrapWithDoubleQuote as quoted
 
 class PrismaValuesCompletionTest : PrismaCompletionTestBase() {
     override fun getBasePath(): String = "/completion/values"
@@ -25,7 +25,7 @@ class PrismaValuesCompletionTest : PrismaCompletionTestBase() {
         )
         val element = PrismaSchemaProvider.getSchema()
             .getElement(PrismaSchemaKind.DATASOURCE_FIELD, PrismaConstants.DatasourceFields.PROVIDER)!!
-        assertSameElements(lookupElements.strings, element.variants.map { StringUtil.wrapWithDoubleQuote(it.label) })
+        assertSameElements(lookupElements.strings, element.variants.map { quoted(it.label) })
         checkLookupDocumentation(lookupElements, "\"sqlserver\"")
     }
 
@@ -67,7 +67,7 @@ class PrismaValuesCompletionTest : PrismaCompletionTestBase() {
     }
 
     fun testDatasourceUrlFunctionArgs() {
-        val item = StringUtil.wrapWithDoubleQuote("DATABASE_URL")
+        val item = quoted("DATABASE_URL")
         val lookupElements = completeSelected(
             """
                 datasource db {
@@ -102,6 +102,123 @@ class PrismaValuesCompletionTest : PrismaCompletionTestBase() {
                 }
             """.trimIndent(),
             item
+        )
+    }
+
+    fun testGeneratorPreviewFeatures() {
+        completeSelected(
+            """
+                generator client {
+                  previewFeatures = [<caret>]
+                }
+            """.trimIndent(),
+            """
+                generator client {
+                  previewFeatures = ["FullTextIndex"]
+                }
+            """.trimIndent(),
+            quoted("FullTextIndex"),
+        )
+    }
+
+    fun testGeneratorPreviewFeaturesLastItem() {
+        val lookupElements = completeSelected(
+            """
+                generator client {
+                  previewFeatures = ["FullTextIndex", <caret>]
+                }
+            """.trimIndent(),
+            """
+                generator client {
+                  previewFeatures = ["FullTextIndex", "FullTextSearch"]
+                }
+            """.trimIndent(),
+            quoted("FullTextSearch"),
+        )
+
+        assertDoesntContain(lookupElements.strings, quoted("FullTextIndex"))
+    }
+
+    fun testGeneratorPreviewFeaturesCompleteUnquoted() {
+        completeSelected(
+            """
+                generator client {
+                  previewFeatures = [Full<caret>]
+                }
+            """.trimIndent(),
+            """
+                generator client {
+                  previewFeatures = ["FullTextIndex"]
+                }
+            """.trimIndent(),
+            quoted("FullTextIndex"),
+        )
+    }
+
+    fun testGeneratorPreviewFeaturesOnlyInList() {
+        noCompletion(
+            """
+                generator client {
+                  previewFeatures = <caret>
+                }
+            """.trimIndent(),
+        )
+    }
+
+    fun testGeneratorPreviewFeaturesNotAfterComma() {
+        noCompletion(
+            """
+                generator client {
+                  provider = "prisma-client-js"
+                  previewFeatures = ["ReferentialIntegrity", "FilteredRelationCount"<caret>]
+                  engineType = "binary"
+                }
+            """.trimIndent(),
+        )
+    }
+
+    fun testGeneratorPreviewFeaturesBetweenCommaAndValue() {
+        completeSelected(
+            """
+                generator client {
+                  provider = "prisma-client-js"
+                  previewFeatures = ["ReferentialIntegrity", <caret>"FilteredRelationCount"]
+                  engineType = "binary"
+                }
+            """.trimIndent(),
+            """
+                generator client {
+                  provider = "prisma-client-js"
+                  previewFeatures = ["ReferentialIntegrity", "FullTextIndex""FilteredRelationCount"]
+                  engineType = "binary"
+                }
+            """.trimIndent(),
+            quoted("FullTextIndex")
+        )
+    }
+
+    fun testGeneratorPreviewFeaturesAtStart() {
+        val lookupElements = completeSelected(
+            """
+                generator client {
+                  provider = "prisma-client-js"
+                  previewFeatures = [<caret>"ReferentialIntegrity", "FilteredRelationCount"]
+                  engineType = "binary"
+                }
+            """.trimIndent(),
+            """
+                generator client {
+                  provider = "prisma-client-js"
+                  previewFeatures = ["FullTextIndex""ReferentialIntegrity", "FilteredRelationCount"]
+                  engineType = "binary"
+                }
+            """.trimIndent(),
+            quoted("FullTextIndex")
+        )
+        assertDoesntContain(
+            lookupElements.strings,
+            quoted("ReferentialIntegrity"),
+            quoted("FilteredRelationCount")
         )
     }
 }

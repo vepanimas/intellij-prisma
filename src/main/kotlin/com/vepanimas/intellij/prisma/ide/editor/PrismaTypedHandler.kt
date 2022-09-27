@@ -18,7 +18,7 @@ class PrismaTypedHandler : TypedHandlerDelegate() {
     override fun checkAutoPopup(charTyped: Char, project: Project, editor: Editor, file: PsiFile): Result {
         if (file !is PrismaFile) return Result.CONTINUE
 
-        if (charTyped == '@') {
+        if (charTyped == '@' || charTyped == '"') {
             AutoPopupController.getInstance(project).scheduleAutoPopup(editor)
             return Result.STOP
         }

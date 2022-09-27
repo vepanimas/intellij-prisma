@@ -1,5 +1,6 @@
 package com.vepanimas.intellij.prisma.ide.completion
 
+import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
@@ -33,4 +34,13 @@ fun collectExistingAttributeNamesForDeclaration(declaration: PrismaDeclaration):
 
 fun collectExistingAttributeNamesForField(field: PrismaFieldDeclaration): Set<String> {
     return field.fieldAttributeList.mapNotNullTo(mutableSetOf()) { PrismaSchemaContext.getSchemaLabel(it) }
+}
+
+fun collectExistingMemberNames(parameters: CompletionParameters) =
+    parameters.originalPosition?.parentOfType<PrismaDeclaration>()?.let {
+        collectExistingMemberNames(it)
+    } ?: emptySet()
+
+fun collectExistingMemberNames(declaration: PrismaDeclaration): Set<String> {
+    return declaration.getMembers().mapNotNull { PrismaSchemaContext.getSchemaLabel(it) }.toSet()
 }

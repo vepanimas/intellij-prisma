@@ -118,33 +118,35 @@ public class PrismaParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // '[' [Expression (',' Expression)*] ']'
+  // '[' [Expression (',' Expression)* ','?] ']'
   public static boolean ArrayExpression(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayExpression")) return false;
     if (!nextTokenIs(b, LBRACKET)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, ARRAY_EXPRESSION, null);
     r = consumeToken(b, LBRACKET);
-    r = r && ArrayExpression_1(b, l + 1);
-    r = r && consumeToken(b, RBRACKET);
-    exit_section_(b, m, ARRAY_EXPRESSION, r);
-    return r;
+    p = r; // pin = 1
+    r = r && report_error_(b, ArrayExpression_1(b, l + 1));
+    r = p && consumeToken(b, RBRACKET) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
-  // [Expression (',' Expression)*]
+  // [Expression (',' Expression)* ','?]
   private static boolean ArrayExpression_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayExpression_1")) return false;
     ArrayExpression_1_0(b, l + 1);
     return true;
   }
 
-  // Expression (',' Expression)*
+  // Expression (',' Expression)* ','?
   private static boolean ArrayExpression_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayExpression_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = Expression(b, l + 1);
     r = r && ArrayExpression_1_0_1(b, l + 1);
+    r = r && ArrayExpression_1_0_2(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -169,6 +171,13 @@ public class PrismaParser implements PsiParser, LightPsiParser {
     r = r && Expression(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // ','?
+  private static boolean ArrayExpression_1_0_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArrayExpression_1_0_2")) return false;
+    consumeToken(b, COMMA);
+    return true;
   }
 
   /* ********************************************************** */

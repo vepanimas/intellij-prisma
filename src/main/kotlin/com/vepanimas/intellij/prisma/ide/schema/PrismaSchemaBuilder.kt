@@ -132,7 +132,8 @@ open class PrismaSchemaDeclaration(
     pattern: ElementPattern<out PsiElement>? = null,
     datasources: Set<PrismaDatasourceType>? = null,
     variants: List<PrismaSchemaVariant> = emptyList(),
-) : PrismaSchemaElement(label, documentation, insertHandler, pattern, datasources, variants) {
+    type: String? = null,
+) : PrismaSchemaElement(label, documentation, insertHandler, pattern, datasources, variants, type = type) {
 
     fun getAvailableParams(
         usedDatasource: PrismaDatasourceType?,
@@ -148,6 +149,7 @@ open class PrismaSchemaDeclaration(
         var insertHandler: InsertHandler<LookupElement>? = null
         var pattern: ElementPattern<out PsiElement>? = null
         var datasources: Set<PrismaDatasourceType>? = null
+        var type: String? = null
 
         private var params: MutableList<PrismaSchemaParameter> = mutableListOf()
         private var variants: MutableList<PrismaSchemaVariant> = mutableListOf()
@@ -170,7 +172,7 @@ open class PrismaSchemaDeclaration(
                 ?.let {
                     PrismaSchemaDeclaration(
                         kind, it, documentation, signature, insertHandler,
-                        params, pattern, datasources, variants
+                        params, pattern, datasources, variants, type
                     )
                 }
                 ?: error("label is not specified")
