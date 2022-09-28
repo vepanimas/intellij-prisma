@@ -49,17 +49,21 @@ object PrismaValuesProvider : PrismaCompletionProvider() {
             parameters.position.parentOfTypes(PrismaArgument::class, PrismaMemberDeclaration::class) ?: return
         val schemaElement = PrismaSchemaProvider.getSchema().match(parent) ?: return
 
+        val isInString = parameters.position.elementType == STRING_LITERAL
         val listExpression = findListExpression(parameters)
-        if (isListType(schemaElement.type) && listExpression == null) {
+        val isListExpected = isListType(schemaElement.type)
+        if (isListExpected && listExpression == null) {
             return
         }
 
         val usedValues = mutableSetOf<String>()
         listExpression?.expressionList?.mapNotNullTo(usedValues) { PrismaSchemaContext.getSchemaLabel(it) }
 
-        schemaElement.variants.expandRefs()
+        schemaElement.variants
+            .expandRefs()
             .asSequence()
             .filter { it.label !in usedValues }
+            .filterNot { isInString && it is PrismaSchemaDeclaration }
             .map {
                 val label = computeLabel(it, parameters)
                 createLookupElement(label, it, PrismaSchemaFakeElement.createForCompletion(parameters, it))

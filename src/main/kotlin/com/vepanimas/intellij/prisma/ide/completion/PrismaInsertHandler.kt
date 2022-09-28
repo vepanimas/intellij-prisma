@@ -1,7 +1,9 @@
 package com.vepanimas.intellij.prisma.ide.completion
 
+import com.intellij.codeInsight.AutoPopupController
 import com.intellij.codeInsight.completion.AddSpaceInsertHandler
 import com.intellij.codeInsight.completion.InsertHandler
+import com.intellij.codeInsight.completion.InsertionContext
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
@@ -18,13 +20,12 @@ object PrismaInsertHandler {
         val schemaElement = element?.schemaElement
 
         if (schemaElement is PrismaSchemaParameter) {
-            val typeName = parseTypeName(schemaElement.type)
-            val isList = isListType(schemaElement.type)
             when {
-                typeName == PrimitiveTypes.STRING -> COLON_QUOTED_ARGUMENT.handleInsert(context, item)
-                isList -> COLON_LIST_ARGUMENT.handleInsert(context, item)
+                isType(schemaElement.type, PrimitiveTypes.STRING) -> COLON_QUOTED_ARGUMENT.handleInsert(context, item)
+                isListType(schemaElement.type) -> COLON_LIST_ARGUMENT.handleInsert(context, item)
                 else -> COLON_ARGUMENT.handleInsert(context, item)
             }
+            showPopup(context)
             return@InsertHandler
         }
 
@@ -35,9 +36,12 @@ object PrismaInsertHandler {
             PrismaSchemaKind.DATASOURCE_FIELD, PrismaSchemaKind.GENERATOR_FIELD -> {
                 if (isListType(schemaElement.type)) {
                     EQUALS_LIST.handleInsert(context, item)
+                } else if (isType(schemaElement.type, PrimitiveTypes.STRING)) {
+                    EQUALS_QUOTED.handleInsert(context, item)
                 } else {
                     EQUALS.handleInsert(context, item)
                 }
+                showPopup(context)
             }
 
             PrismaSchemaKind.FUNCTION -> {
@@ -45,6 +49,7 @@ object PrismaInsertHandler {
                     ParenthesesInsertHandler.NO_PARAMETERS
                 } else {
                     ParenthesesInsertHandler.WITH_PARAMETERS
+                    showPopup(context)
                 }
             }
 
@@ -55,37 +60,57 @@ object PrismaInsertHandler {
     val PARENS_QUOTED_ARGUMENT = InsertHandler<LookupElement> { context, item ->
         ParenthesesInsertHandler.getInstance(true).handleInsert(context, item)
         EditorModificationUtil.insertStringAtCaret(context.editor, "\"\"", false, true, 1)
+        showPopup(context)
     }
 
     val PARENS_LIST_ARGUMENT = InsertHandler<LookupElement> { context, item ->
         ParenthesesInsertHandler.getInstance(true).handleInsert(context, item)
         EditorModificationUtil.insertStringAtCaret(context.editor, "[]", false, true, 1)
+        showPopup(context)
     }
 
     val COLON_QUOTED_ARGUMENT = InsertHandler<LookupElement> { context, item ->
         EditorModificationUtil.insertStringAtCaret(context.editor, ": \"\"", false, true, 3)
+        showPopup(context)
     }
 
     val COLON_ARGUMENT = InsertHandler<LookupElement> { context, item ->
         EditorModificationUtil.insertStringAtCaret(context.editor, ": ", false, true)
+        showPopup(context)
     }
 
     val COLON_LIST_ARGUMENT = InsertHandler<LookupElement> { context, item ->
         EditorModificationUtil.insertStringAtCaret(context.editor, ": []", false, true, 3)
+        showPopup(context)
     }
 
     val EQUALS = InsertHandler<LookupElement> { context, _ ->
         EditorModificationUtil.insertStringAtCaret(context.editor, " = ", false, true)
+        showPopup(context)
+    }
+
+    val EQUALS_QUOTED = InsertHandler<LookupElement> { context, _ ->
+        EditorModificationUtil.insertStringAtCaret(context.editor, " = \"\"", false, true, 4)
+        showPopup(context)
     }
 
     val EQUALS_LIST = InsertHandler<LookupElement> { context, _ ->
         EditorModificationUtil.insertStringAtCaret(context.editor, " = []", false, true, 4)
+        showPopup(context)
     }
+}
+
+private fun showPopup(context: InsertionContext) {
+    AutoPopupController.getInstance(context.project).scheduleAutoPopup(context.editor)
 }
 
 fun parseTypeName(type: String?): String? {
     // TODO: rework type declarations in schema
     return type?.removeSuffix("?")?.removeSuffix("[]")
+}
+
+fun isType(type: String?, expected: String): Boolean {
+    return parseTypeName(type) == expected
 }
 
 fun isListType(type: String?): Boolean {

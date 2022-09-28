@@ -28,7 +28,7 @@ class PrismaFieldsCompletionTest : PrismaCompletionTestBase() {
             }
         """.trimIndent(), """
             generator client {
-              provider = <caret>
+              provider = "<caret>"
             }
         """.trimIndent(),
             "provider"
@@ -62,5 +62,20 @@ class PrismaFieldsCompletionTest : PrismaCompletionTestBase() {
             "previewFeatures"
         )
         assertSameElements(lookupElements.strings, "output", "binaryTargets", "previewFeatures")
+    }
+
+    fun testGeneratorBinaryTargets() {
+        completeSelected(
+            """
+            generator client {
+              <caret>
+            }
+        """.trimIndent(), """
+            generator client {
+              binaryTargets = [<caret>]
+            }
+        """.trimIndent(),
+            "binaryTargets"
+        )
     }
 }

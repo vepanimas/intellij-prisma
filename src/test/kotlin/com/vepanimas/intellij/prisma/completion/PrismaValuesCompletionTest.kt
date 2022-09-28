@@ -66,6 +66,16 @@ class PrismaValuesCompletionTest : PrismaCompletionTestBase() {
         checkLookupDocumentation(lookupElements, Functions.ENV)
     }
 
+    fun testDatasourceUrlFunctionSkipInQuotes() {
+        noCompletion(
+            """
+                datasource db {
+                  url = "<caret>"
+                }
+            """.trimIndent()
+        )
+    }
+
     fun testDatasourceUrlFunctionArgs() {
         val item = quoted("DATABASE_URL")
         val lookupElements = completeSelected(
