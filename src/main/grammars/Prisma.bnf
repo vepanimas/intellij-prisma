@@ -57,6 +57,8 @@
   extends('NamedArgument|ValueArgument')=Argument
 
   extends('UnsupportedOptionalListType|ListType|OptionalType|LegacyRequiredType|LegacyListType|SingleType')=FieldType
+
+  implements('FieldDeclaration')='com.vepanimas.intellij.prisma.lang.psi.PrismaTypeOwner'
 }
 
 Schema ::= Declaration*
@@ -149,6 +151,7 @@ FieldType ::=
     | LegacyListType
     | SingleType
     {
+        implements="com.vepanimas.intellij.prisma.lang.psi.PrismaTypeSignature"
         mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaFieldTypeMixin"
         methods=[getTypeReference]
     }

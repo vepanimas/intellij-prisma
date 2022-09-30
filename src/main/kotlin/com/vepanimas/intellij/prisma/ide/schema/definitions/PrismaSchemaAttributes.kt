@@ -2,12 +2,10 @@ package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler
 import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
-import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
-import com.vepanimas.intellij.prisma.ide.schema.schema
+import com.vepanimas.intellij.prisma.ide.schema.*
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldAttributes
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.ParameterNames
 import java.util.*
 
@@ -190,6 +188,14 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 documentation = "An expression (e.g. `5`, `true`, `now()`)."
                 type = "Expression"
                 skipInCompletion = true
+
+                variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.DBGENERATED) }
+                variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.AUTO) }
+                variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.SEQUENCE) }
+                variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.AUTOINCREMENT) }
+                variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.NOW) }
+                variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.CUID) }
+                variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.UUID) }
             }
         }
 

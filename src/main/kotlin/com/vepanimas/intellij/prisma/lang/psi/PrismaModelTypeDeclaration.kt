@@ -1,5 +1,5 @@
 package com.vepanimas.intellij.prisma.lang.psi
 
-interface PrismaModelTypeDeclaration : PrismaDeclaration {
+interface PrismaModelTypeDeclaration : PrismaEntityDeclaration {
     fun getFieldDeclarationBlock(): PrismaFieldDeclarationBlock?
 }

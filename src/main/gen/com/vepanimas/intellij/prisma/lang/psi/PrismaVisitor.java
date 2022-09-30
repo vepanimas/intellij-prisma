@@ -49,6 +49,7 @@ public class PrismaVisitor extends PsiElementVisitor {
 
   public void visitFieldDeclaration(@NotNull PrismaFieldDeclaration o) {
     visitMemberDeclaration(o);
+    // visitTypeOwner(o);
   }
 
   public void visitFieldDeclarationBlock(@NotNull PrismaFieldDeclarationBlock o) {
@@ -56,7 +57,7 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitFieldType(@NotNull PrismaFieldType o) {
-    visitElement(o);
+    visitTypeSignature(o);
   }
 
   public void visitFunctionCall(@NotNull PrismaFunctionCall o) {
@@ -164,6 +165,10 @@ public class PrismaVisitor extends PsiElementVisitor {
   }
 
   public void visitReferenceElement(@NotNull PrismaReferenceElement o) {
+    visitElement(o);
+  }
+
+  public void visitTypeSignature(@NotNull PrismaTypeSignature o) {
     visitElement(o);
   }
 

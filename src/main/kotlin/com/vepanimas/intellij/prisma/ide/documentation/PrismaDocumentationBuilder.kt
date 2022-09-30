@@ -3,15 +3,11 @@ package com.vepanimas.intellij.prisma.ide.documentation
 import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.PsiElement
+import com.intellij.psi.util.elementType
 import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.PrismaBundle
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
-import com.vepanimas.intellij.prisma.lang.psi.PrismaFieldDeclaration
-import com.vepanimas.intellij.prisma.lang.psi.PrismaFile
-import com.vepanimas.intellij.prisma.lang.psi.PrismaModelTypeDeclaration
+import com.vepanimas.intellij.prisma.ide.schema.*
+import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
 
 private const val PARAM_INDENT = "\n\t\t"
@@ -38,6 +34,10 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
     }
 
     private fun buildDocumentationForSchemaElement(element: PsiElement): String? {
+        if (skipForDeprecatedElement(element)) {
+            return null
+        }
+
         val schemaElement = PrismaSchemaProvider.getSchema().match(element) ?: return null
         val declaration = schemaElement.castSafelyTo<PrismaSchemaDeclaration>()
         val file = element.containingFile.castSafelyTo<PrismaFile>()
@@ -57,6 +57,10 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
         }
     }
 
+    private fun skipForDeprecatedElement(element: PsiElement): Boolean {
+        return element.elementType == PrismaElementTypes.TYPE && element.parent is PrismaTypeAlias
+    }
+
     private fun buildDefinitionFromSchema(
         schemaElement: PrismaSchemaElement,
         params: List<PrismaSchemaParameter>,
@@ -64,7 +68,9 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
         return buildString {
             append(schemaElement.label)
 
-            if (schemaElement is PrismaSchemaDeclaration && params.isNotEmpty()) {
+            if (schemaElement is PrismaSchemaDeclaration &&
+                (params.isNotEmpty() || schemaElement.kind == PrismaSchemaKind.FUNCTION)
+            ) {
                 val indent = if (params.size > PARAMS_WRAP_LIMIT) {
                     PARAM_INDENT
                 } else {

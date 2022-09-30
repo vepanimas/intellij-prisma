@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismaFieldDeclaration extends PrismaMemberDeclaration {
+public interface PrismaFieldDeclaration extends PrismaMemberDeclaration, PrismaTypeOwner {
 
   @NotNull
   List<PrismaFieldAttribute> getFieldAttributeList();

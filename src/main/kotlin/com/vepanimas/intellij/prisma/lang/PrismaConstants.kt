@@ -21,6 +21,13 @@ object PrismaConstants {
 
     object Functions {
         const val ENV = "env"
+        const val DBGENERATED = "dbgenerated"
+        const val AUTO = "auto"
+        const val AUTOINCREMENT = "autoincrement"
+        const val SEQUENCE = "sequence"
+        const val NOW = "now"
+        const val UUID = "uuid"
+        const val CUID = "cuid"
     }
 
     object DatasourceTypes {

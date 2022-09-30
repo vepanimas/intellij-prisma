@@ -1,10 +1,8 @@
 package com.vepanimas.intellij.prisma.ide.schema.definitions
 
-import com.intellij.patterns.PlatformPatterns
 import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
-import com.vepanimas.intellij.prisma.lang.psi.PrismaTypeDeclaration
 
 val PRISMA_SCHEMA_KEYWORDS = schema {
     group(PrismaSchemaKind.KEYWORD) {
@@ -31,7 +29,6 @@ val PRISMA_SCHEMA_KEYWORDS = schema {
         element {
             label = "type"
             documentation = "Composite types are available for MongoDB only."
-            pattern = PlatformPatterns.psiElement().withParent(PrismaTypeDeclaration::class.java)
         }
     }
 }

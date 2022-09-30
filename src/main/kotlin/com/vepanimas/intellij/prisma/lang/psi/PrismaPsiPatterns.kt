@@ -8,8 +8,11 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.TokenType
 import com.intellij.psi.util.elementType
+import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.prevLeaf
 import com.intellij.util.ProcessingContext
+import com.vepanimas.intellij.prisma.lang.types.PrismaType
+import com.vepanimas.intellij.prisma.lang.types.name
 
 object PrismaPsiPatterns {
     val topKeyword: PsiElementPattern.Capture<PsiElement> =
@@ -32,6 +35,17 @@ object PrismaPsiPatterns {
 
     val newLine: PsiElementPattern.Capture<PsiElement> = psiElement().with("newLine") { element ->
         element.elementType == TokenType.WHITE_SPACE && element.textContains('\n')
+    }
+
+    fun withFieldType(names: Set<String>): PsiElementPattern.Capture<PsiElement> {
+        return withFieldType { type, _ -> type.name in names }
+    }
+
+    fun withFieldType(predicate: (PrismaType, PsiElement) -> Boolean): PsiElementPattern.Capture<PsiElement> {
+        return psiElement().with("withFieldType") { element ->
+            val fieldDeclaration = element.parentOfType<PrismaFieldDeclaration>(true) ?: return@with false
+            predicate(fieldDeclaration.type, element)
+        }
     }
 }
 

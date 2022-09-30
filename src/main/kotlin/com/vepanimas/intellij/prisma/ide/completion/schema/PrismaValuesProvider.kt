@@ -13,15 +13,13 @@ import com.intellij.psi.util.elementType
 import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.parentOfTypes
 import com.intellij.util.ProcessingContext
+import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
 import com.vepanimas.intellij.prisma.ide.completion.isListType
 import com.vepanimas.intellij.prisma.ide.schema.*
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
-import com.vepanimas.intellij.prisma.lang.psi.PrismaArgument
-import com.vepanimas.intellij.prisma.lang.psi.PrismaArrayExpression
+import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
-import com.vepanimas.intellij.prisma.lang.psi.PrismaExpression
-import com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration
 
 
 object PrismaValuesProvider : PrismaCompletionProvider() {
@@ -45,6 +43,7 @@ object PrismaValuesProvider : PrismaCompletionProvider() {
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
+        val file = parameters.originalFile.castSafelyTo<PrismaFile>() ?: return
         val parent =
             parameters.position.parentOfTypes(PrismaArgument::class, PrismaMemberDeclaration::class) ?: return
         val schemaElement = PrismaSchemaProvider.getSchema().match(parent) ?: return
@@ -56,6 +55,7 @@ object PrismaValuesProvider : PrismaCompletionProvider() {
             return
         }
 
+        val datasourceType = file.datasourceType
         val usedValues = mutableSetOf<String>()
         listExpression?.expressionList?.mapNotNullTo(usedValues) { PrismaSchemaContext.getSchemaLabel(it) }
 
@@ -64,6 +64,7 @@ object PrismaValuesProvider : PrismaCompletionProvider() {
             .asSequence()
             .filter { it.label !in usedValues }
             .filterNot { isInString && it is PrismaSchemaDeclaration }
+            .filter { it.isAvailableForDatasource(datasourceType) && it.isAcceptedByPattern(parameters.position) }
             .map {
                 val label = computeLabel(it, parameters)
                 createLookupElement(label, it, PrismaSchemaFakeElement.createForCompletion(parameters, it))

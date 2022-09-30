@@ -4,6 +4,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.elementType
+import com.intellij.util.castSafelyTo
+import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
 
 fun PrismaPathExpression.findTopmostPathParent(): PsiElement? {
     return PsiTreeUtil.skipParentsOfType(this, PrismaPathExpression::class.java)
@@ -11,6 +13,10 @@ fun PrismaPathExpression.findTopmostPathParent(): PsiElement? {
 
 val PsiElement.isKeyword: Boolean
     get() = elementType in PRISMA_KEYWORDS
+
+fun getDatasourceTypeForElement(element: PsiElement): PrismaDatasourceType? {
+    return element.containingFile.castSafelyTo<PrismaFile>()?.datasourceType
+}
 
 fun PsiElement?.skipWhitespacesForwardWithoutNewLines() =
     PsiTreeUtil.skipMatching(this, { it.nextSibling }, { it is PsiWhiteSpace && !it.textContains('\n') })

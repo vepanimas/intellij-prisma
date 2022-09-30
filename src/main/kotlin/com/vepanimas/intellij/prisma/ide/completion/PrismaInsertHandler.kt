@@ -46,9 +46,9 @@ object PrismaInsertHandler {
 
             PrismaSchemaKind.FUNCTION -> {
                 if (schemaElement.params.isEmpty()) {
-                    ParenthesesInsertHandler.NO_PARAMETERS
+                    ParenthesesInsertHandler.NO_PARAMETERS.handleInsert(context, item)
                 } else {
-                    ParenthesesInsertHandler.WITH_PARAMETERS
+                    ParenthesesInsertHandler.WITH_PARAMETERS.handleInsert(context, item)
                     showPopup(context)
                 }
             }

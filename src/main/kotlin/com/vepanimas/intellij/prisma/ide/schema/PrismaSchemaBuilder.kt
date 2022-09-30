@@ -26,19 +26,17 @@ class PrismaSchema(private val elements: Map<PrismaSchemaKind, PrismaSchemaEleme
     private fun match(context: PrismaSchemaContext): PrismaSchemaElement? {
         return when (context) {
             is PrismaSchemaDeclarationContext -> {
-                val declaration = getElement(context.kind, context.label)
-                filterByPattern(context.element, declaration)
+                getElement(context.kind, context.label)
             }
 
             is PrismaSchemaParameterContext -> {
                 val declaration = match(context.parent) as? PrismaSchemaDeclaration
                 val params = declaration?.params
-                val parameter = if (context is PrismaSchemaDefaultParameterContext) {
+                if (context is PrismaSchemaDefaultParameterContext) {
                     params?.firstOrNull()
                 } else {
                     params?.find { it.label == context.label }
                 }
-                filterByPattern(context.element, parameter)
             }
 
             is PrismaSchemaVariantContext -> {
@@ -46,22 +44,6 @@ class PrismaSchema(private val elements: Map<PrismaSchemaKind, PrismaSchemaEleme
                 parent?.variants?.find { it.label == context.label }
             }
         }
-    }
-
-    private fun filterByPattern(
-        element: PsiElement,
-        schemaElement: PrismaSchemaElement?
-    ): PrismaSchemaElement? {
-        if (schemaElement == null) return null
-
-        if (element !is PrismaSchemaFakeElement &&
-            schemaElement.pattern != null &&
-            !schemaElement.pattern.accepts(element)
-        ) {
-            return null
-        }
-
-        return schemaElement
     }
 
     class Builder : SchemaDslBuilder<PrismaSchema> {
@@ -119,6 +101,10 @@ sealed class PrismaSchemaElement(
         return datasources == null ||
                 usedDatasource == null ||
                 datasources.contains(usedDatasource)
+    }
+
+    fun isAcceptedByPattern(element: PsiElement?): Boolean {
+        return pattern?.accepts(element) ?: true
     }
 }
 
