@@ -1,62 +1,63 @@
 package com.vepanimas.intellij.prisma.lang.resolve
 
+import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.PsiElementResolveResult
-import com.intellij.psi.PsiPolyVariantReferenceBase
-import com.intellij.psi.ResolveResult
-import com.intellij.psi.ResolveState
+import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.ResolveCache
-import com.vepanimas.intellij.prisma.lang.psi.PrismaFile
 import com.vepanimas.intellij.prisma.lang.psi.PrismaReferenceElement
-import com.vepanimas.intellij.prisma.lang.psi.PrismaTypeReference
 
-class PrismaReference(
-    element: PrismaReferenceElement,
+abstract class PrismaReference(
+    element: PsiElement,
     range: TextRange,
     soft: Boolean = false,
-) : PsiPolyVariantReferenceBase<PrismaReferenceElement>(element, range, soft) {
+) : PsiPolyVariantReferenceBase<PsiElement>(element, range, soft) {
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         return ResolveCache.getInstance(element.project).resolveWithCaching(this, RESOLVER, false, false)
     }
 
     private fun resolveInner(): Array<ResolveResult> {
-        val file = element.containingFile as? PrismaFile ?: return ResolveResult.EMPTY_ARRAY
-        val processor = createResolveProcessor(element)
+        val processor = createResolveProcessor(element) ?: return ResolveResult.EMPTY_ARRAY
         val state = ResolveState.initial()
-        processCandidates(processor, state, file)
+        processCandidates(processor, state, element)
         return PsiElementResolveResult.createResults(processor.getResults())
     }
 
-    private fun processCandidates(processor: PrismaResolveProcessor, state: ResolveState, file: PrismaFile): Boolean {
-        return when (element) {
-            is PrismaTypeReference -> processEntityDeclarations(processor, state, file)
-            else -> true
-        }
+    protected open fun createResolveProcessor(element: PsiElement): PrismaResolveProcessor? {
+        val name = (element as? PrismaReferenceElement)?.referenceName ?: return null
+        return PrismaResolveProcessor(name, element)
     }
 
-    private fun processEntityDeclarations(
-        processor: PrismaResolveProcessor,
+    protected open fun createCompletionProcessor(element: PsiElement): PrismaProcessor {
+        return PrismaProcessor()
+    }
+
+    override fun getVariants(): Array<Any> {
+        val processor = createCompletionProcessor(element)
+        processCandidates(processor, ResolveState.initial(), element)
+        val results = processor.getResults()
+        return results.map { LookupElementBuilder.createWithIcon(it) }.toTypedArray()
+    }
+
+    protected abstract fun processCandidates(
+        processor: PrismaProcessor,
         state: ResolveState,
-        file: PrismaFile
+        place: PsiElement,
+    )
+
+    protected fun processFileDeclarations(
+        processor: PrismaProcessor,
+        state: ResolveState,
+        place: PsiElement,
     ): Boolean {
-        for (declaration in file.entityDeclarations) {
-            if (!processor.execute(declaration, state)) return false
+        val file = place.containingFile
+        if (!file.processDeclarations(processor, state, null, place)) {
+            return false
         }
         return true
     }
 
-    private fun createResolveProcessor(element: PrismaReferenceElement): PrismaResolveProcessor {
-        return PrismaResolveProcessor(element)
-    }
-
     companion object {
-        fun create(element: PrismaReferenceElement): PrismaReference? {
-            val identifier = element.referenceNameElement ?: return null
-            val range = TextRange.from(identifier.startOffsetInParent, identifier.textLength)
-            return PrismaReference(element, range)
-        }
-
         private val RESOLVER = ResolveCache.PolyVariantResolver<PrismaReference> { ref, _ -> ref.resolveInner() }
     }
 }

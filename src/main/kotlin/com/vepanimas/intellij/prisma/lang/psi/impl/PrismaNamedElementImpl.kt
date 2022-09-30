@@ -8,6 +8,8 @@ import com.vepanimas.intellij.prisma.lang.psi.PrismaElementFactory
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes
 import com.vepanimas.intellij.prisma.lang.psi.PrismaNameIdentifierOwner
 import com.vepanimas.intellij.prisma.lang.psi.presentation.getPresentation
+import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
+import javax.swing.Icon
 
 abstract class PrismaNamedElementImpl(node: ASTNode) : PrismaElementImpl(node), PrismaNameIdentifierOwner {
     override fun getName(): String? = nameIdentifier?.text
@@ -22,4 +24,6 @@ abstract class PrismaNamedElementImpl(node: ASTNode) : PrismaElementImpl(node), 
     override fun getTextOffset(): Int = nameIdentifier?.startOffset ?: super.getTextOffset()
 
     override fun getPresentation(): ItemPresentation? = getPresentation(this)
+
+    override fun getIcon(flags: Int): Icon? = icon
 }

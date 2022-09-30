@@ -8,19 +8,42 @@ class PrismaTypesCompletionTest : PrismaCompletionTestBase() {
     fun testPrimitiveTypes() {
         val lookupElements = completeSelected(
             """
-                model M {
+                model Model {
                   id <caret>
                 }
             """.trimIndent(),
             """
-                model M {
+                model Model {
                   id DateTime<caret>
                 }
             """.trimIndent(),
             "DateTime"
         )
-        assertSameElements(lookupElements.strings, PrismaConstants.PrimitiveTypes.ALL)
+        assertSameElements(lookupElements.strings, PrismaConstants.PrimitiveTypes.ALL + "Model")
         checkLookupDocumentation(lookupElements, "DateTime")
+    }
+
+    fun testTypeDeclarations() {
+        val lookupElements = completeSelected(
+            """
+                model User {}
+                enum Lang {}
+                type Ty {}
+                model M {
+                  language <caret>
+                }
+            """.trimIndent(),
+            """
+                model User {}
+                enum Lang {}
+                type Ty {}
+                model M {
+                  language Lang<caret>
+                }
+            """.trimIndent(),
+            "Lang"
+        )
+        assertContainsElements(lookupElements.strings, "User", "Lang", "Ty", "M")
     }
 
     fun testNoDecimalInMongo() {

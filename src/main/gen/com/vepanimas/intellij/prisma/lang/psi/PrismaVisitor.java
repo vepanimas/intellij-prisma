@@ -24,6 +24,7 @@ public class PrismaVisitor extends PsiElementVisitor {
 
   public void visitDatasourceDeclaration(@NotNull PrismaDatasourceDeclaration o) {
     visitDeclaration(o);
+    // visitKeyValueDeclaration(o);
   }
 
   public void visitEnumDeclaration(@NotNull PrismaEnumDeclaration o) {
@@ -67,6 +68,7 @@ public class PrismaVisitor extends PsiElementVisitor {
 
   public void visitGeneratorDeclaration(@NotNull PrismaGeneratorDeclaration o) {
     visitDeclaration(o);
+    // visitKeyValueDeclaration(o);
   }
 
   public void visitKeyValue(@NotNull PrismaKeyValue o) {

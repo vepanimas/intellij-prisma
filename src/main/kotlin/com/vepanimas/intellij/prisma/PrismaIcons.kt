@@ -16,6 +16,7 @@ object PrismaIcons {
     val ENUM: Icon = PlatformIcons.ENUM_ICON
     val FUNCTION: Icon = PlatformIcons.FUNCTION_ICON
     val KEY_VALUE: Icon = AllIcons.Json.Object
+    val ALIAS: Icon = AllIcons.Nodes.ObjectTypeAttribute
 
     private fun load(path: String): Icon = IconLoader.getIcon(path, PrismaIcons::class.java)
 

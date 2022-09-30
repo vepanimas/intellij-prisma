@@ -3,8 +3,7 @@ package com.vepanimas.intellij.prisma.lang.psi.presentation
 import com.intellij.navigation.ItemPresentation
 import com.vepanimas.intellij.prisma.PrismaIcons
 import com.vepanimas.intellij.prisma.ide.schema.*
-import com.vepanimas.intellij.prisma.lang.psi.PrismaElement
-import com.vepanimas.intellij.prisma.lang.psi.PrismaNamedElement
+import com.vepanimas.intellij.prisma.lang.psi.*
 import javax.swing.Icon
 
 fun getPresentation(element: PrismaElement): ItemPresentation = object : ItemPresentation {
@@ -17,6 +16,15 @@ fun getPresentation(element: PrismaElement): ItemPresentation = object : ItemPre
 
     override fun getIcon(unused: Boolean): Icon? = element.getIcon(0)
 }
+
+val PrismaNamedElement.icon: Icon?
+    get() = when (this) {
+        is PrismaModelTypeDeclaration -> PrismaIcons.TYPE
+        is PrismaKeyValueDeclaration -> PrismaIcons.KEY_VALUE
+        is PrismaEnumDeclaration -> PrismaIcons.ENUM
+        is PrismaTypeAlias -> PrismaIcons.ALIAS
+        else -> null
+    }
 
 val PrismaSchemaElement.icon: Icon?
     get() = when (this) {

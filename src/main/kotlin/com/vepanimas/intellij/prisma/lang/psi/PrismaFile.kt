@@ -3,6 +3,9 @@ package com.vepanimas.intellij.prisma.lang.psi
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiElement
+import com.intellij.psi.ResolveState
+import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.childrenOfType
@@ -30,4 +33,17 @@ class PrismaFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Pri
 
     val entityDeclarations: List<PrismaEntityDeclaration>
         get() = childrenOfType()
+
+    override fun processDeclarations(
+        processor: PsiScopeProcessor,
+        state: ResolveState,
+        lastParent: PsiElement?,
+        place: PsiElement
+    ): Boolean {
+        for (declaration in entityDeclarations) {
+            if (!processor.execute(declaration, state)) return false
+        }
+
+        return super.processDeclarations(processor, state, lastParent, place)
+    }
 }

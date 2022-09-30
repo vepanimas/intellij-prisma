@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaGeneratorDeclarationImpl extends PrismaConfigBlockDeclarationMixin implements PrismaGeneratorDeclaration {
+public class PrismaGeneratorDeclarationImpl extends PrismaKeyValueDeclarationMixin implements PrismaGeneratorDeclaration {
 
   public PrismaGeneratorDeclarationImpl(@NotNull ASTNode node) {
     super(node);

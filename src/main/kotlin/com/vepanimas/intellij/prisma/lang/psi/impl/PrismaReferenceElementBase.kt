@@ -9,11 +9,13 @@ import com.vepanimas.intellij.prisma.lang.resolve.PrismaReference
 
 abstract class PrismaReferenceElementBase(node: ASTNode) : PrismaElementImpl(node), PrismaReferenceElement {
 
-    override fun getReference(): PrismaReference? {
+    final override fun getReference(): PrismaReference? {
         return CachedValuesManager.getCachedValue(this) {
-            CachedValueProvider.Result.create(PrismaReference.create(this), this)
+            CachedValueProvider.Result.create(createReference(), this)
         }
     }
+
+    protected abstract fun createReference(): PrismaReference?
 
     override fun resolve(): PsiElement? = reference?.resolve()
 }
