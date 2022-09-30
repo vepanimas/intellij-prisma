@@ -220,19 +220,21 @@ class PrismaSchemaVariant(
     insertHandler: InsertHandler<LookupElement>? = null,
     type: String? = null,
     ref: PrismaSchemaRef? = null,
-) : PrismaSchemaElement(label, documentation, insertHandler, ref = ref, type = type) {
+    datasources: Set<PrismaDatasourceType>? = null,
+) : PrismaSchemaElement(label, documentation, insertHandler, ref = ref, type = type, datasources = datasources) {
     class Builder : SchemaDslBuilder<PrismaSchemaVariant> {
         var label: String? = null
         var documentation: String? = null
         var insertHandler: InsertHandler<LookupElement>? = null
         var type: String? = null
         var ref: PrismaSchemaRef? = null
+        var datasources: Set<PrismaDatasourceType>? = null
 
         override fun build(): PrismaSchemaVariant {
             val label = ref?.label ?: label
             return label
                 ?.takeIf { it.isNotBlank() }
-                ?.let { PrismaSchemaVariant(it, documentation, insertHandler, type, ref) }
+                ?.let { PrismaSchemaVariant(it, documentation, insertHandler, type, ref, datasources) }
                 ?: error("label is not specified")
         }
     }
@@ -261,6 +263,14 @@ annotation class SchemaDslBuilderMarker
 @SchemaDslBuilderMarker
 interface SchemaDslBuilder<out T> {
     fun build(): T
+
+    fun String.list(): String {
+        return "$this[]"
+    }
+
+    fun String.optional(): String {
+        return "$this?"
+    }
 }
 
 data class PrismaSchemaRef(val kind: PrismaSchemaKind, val label: String)

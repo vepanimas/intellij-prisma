@@ -7,6 +7,8 @@ import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldAttributes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.ParameterNames
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.Types
 import java.util.*
 
 val PRISMA_SCHEMA_ATTRIBUTES = schema {
@@ -100,8 +102,10 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
             param {
                 label = ParameterNames.TYPE
                 documentation = "Defines the access type of indexes: BTree (default) or Hash."
-                type = "IndexType?"
+                type = Types.INDEX_TYPE.optional()
                 datasources = EnumSet.of(PrismaDatasourceType.POSTGRESQL)
+
+                typeBasedVariants(Types.INDEX_TYPE)
             }
             length(true)
             sort(true)
@@ -235,15 +239,19 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 label = ParameterNames.ON_DELETE
                 documentation =
                     "Specifies the action to perform when a referenced entry in the referenced model is being deleted. [Learn more](https://pris.ly/d/referential-actions)."
-                type = "ReferentialAction?"
+                type = Types.REFERENTIAL_ACTION.optional()
                 datasources = PrismaDatasourceType.except(PrismaDatasourceType.MONGODB)
+
+                typeBasedVariants(Types.REFERENTIAL_ACTION)
             }
             param {
                 label = ParameterNames.ON_UPDATE
                 documentation =
                     "Specifies the action to perform when a referenced field in the referenced model is being updated to a new value. [Learn more](https://pris.ly/d/referential-actions)."
-                type = "ReferentialAction?"
+                type = Types.REFERENTIAL_ACTION.optional()
                 datasources = PrismaDatasourceType.except(PrismaDatasourceType.MONGODB)
+
+                typeBasedVariants(Types.REFERENTIAL_ACTION)
             }
         }
 
@@ -268,9 +276,11 @@ private fun PrismaSchemaDeclaration.Builder.sort(
         label = ParameterNames.SORT
         documentation =
             "Specify in which order the entries of the index are stored in the database. This can have an effect on whether the database is able to use an index for specific queries."
-        type = "SortOrder?"
+        type = Types.SORT_ORDER.optional()
         datasources = datasourceTypes
         isOnFieldLevel = isOnField
+
+        typeBasedVariants(Types.SORT_ORDER)
     }
 }
 
@@ -290,7 +300,9 @@ private fun PrismaSchemaDeclaration.Builder.clustered() {
         label = ParameterNames.CLUSTERED
         documentation =
             "An index, unique constraint or primary key can be created as clustered or non-clustered; altering the storage and retrieve behavior of the index."
-        type = "Boolean?"
+        type = PrimitiveTypes.BOOLEAN.optional()
         datasources = EnumSet.of(PrismaDatasourceType.SQLSERVER)
+
+        typeBasedVariants(PrimitiveTypes.BOOLEAN)
     }
 }

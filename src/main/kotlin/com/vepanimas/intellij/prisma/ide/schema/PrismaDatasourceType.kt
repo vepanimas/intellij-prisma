@@ -12,7 +12,7 @@ enum class PrismaDatasourceType(val label: String) {
     COCKROACHDB(DatasourceTypes.COCKROACHDB);
 
     companion object {
-        private val ALL: Set<PrismaDatasourceType> = EnumSet.allOf(PrismaDatasourceType::class.java)
+        val ALL: Set<PrismaDatasourceType> = EnumSet.allOf(PrismaDatasourceType::class.java)
 
         fun fromString(s: String?): PrismaDatasourceType? =
             PrismaDatasourceType.values().find { it.label == s }

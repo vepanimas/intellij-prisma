@@ -13,3 +13,19 @@ val PrismaType.name: String?
         is PrismaTypeImpl -> underlyingType.name
         else -> null
     }
+
+fun parseTypeName(type: String?): String? {
+    return type?.removeSuffix("?")?.removeSuffix("[]")
+}
+
+fun isNamedType(type: String?, expected: String): Boolean {
+    return parseTypeName(type) == expected
+}
+
+fun isListType(type: String?): Boolean {
+    return type?.contains("[]") ?: false
+}
+
+fun isOptionalType(type: String?): Boolean {
+    return type?.contains("?") ?: false
+}

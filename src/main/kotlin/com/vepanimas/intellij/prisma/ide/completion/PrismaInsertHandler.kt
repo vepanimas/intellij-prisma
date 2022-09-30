@@ -13,6 +13,8 @@ import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaFakeElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
+import com.vepanimas.intellij.prisma.lang.types.isListType
+import com.vepanimas.intellij.prisma.lang.types.isNamedType
 
 object PrismaInsertHandler {
     val DEFAULT_INSERT_HANDLER = InsertHandler<LookupElement> { context, item ->
@@ -21,7 +23,11 @@ object PrismaInsertHandler {
 
         if (schemaElement is PrismaSchemaParameter) {
             when {
-                isType(schemaElement.type, PrimitiveTypes.STRING) -> COLON_QUOTED_ARGUMENT.handleInsert(context, item)
+                isNamedType(schemaElement.type, PrimitiveTypes.STRING) -> COLON_QUOTED_ARGUMENT.handleInsert(
+                    context,
+                    item
+                )
+
                 isListType(schemaElement.type) -> COLON_LIST_ARGUMENT.handleInsert(context, item)
                 else -> COLON_ARGUMENT.handleInsert(context, item)
             }
@@ -36,7 +42,7 @@ object PrismaInsertHandler {
             PrismaSchemaKind.DATASOURCE_FIELD, PrismaSchemaKind.GENERATOR_FIELD -> {
                 if (isListType(schemaElement.type)) {
                     EQUALS_LIST.handleInsert(context, item)
-                } else if (isType(schemaElement.type, PrimitiveTypes.STRING)) {
+                } else if (isNamedType(schemaElement.type, PrimitiveTypes.STRING)) {
                     EQUALS_QUOTED.handleInsert(context, item)
                 } else {
                     EQUALS.handleInsert(context, item)
@@ -102,23 +108,6 @@ object PrismaInsertHandler {
 
 private fun showPopup(context: InsertionContext) {
     AutoPopupController.getInstance(context.project).scheduleAutoPopup(context.editor)
-}
-
-fun parseTypeName(type: String?): String? {
-    // TODO: rework type declarations in schema
-    return type?.removeSuffix("?")?.removeSuffix("[]")
-}
-
-fun isType(type: String?, expected: String): Boolean {
-    return parseTypeName(type) == expected
-}
-
-fun isListType(type: String?): Boolean {
-    return type?.contains("[]") ?: false
-}
-
-fun isOptionalType(type: String?): Boolean {
-    return type?.contains("?") ?: false
 }
 
 fun LookupElementBuilder.withPrismaInsertHandler(

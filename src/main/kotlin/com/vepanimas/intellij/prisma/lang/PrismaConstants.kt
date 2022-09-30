@@ -19,6 +19,12 @@ object PrismaConstants {
         )
     }
 
+    object Types {
+        const val INDEX_TYPE = "IndexType"
+        const val SORT_ORDER = "SortOrder"
+        const val REFERENTIAL_ACTION = "ReferentialAction"
+    }
+
     object Functions {
         const val ENV = "env"
         const val DBGENERATED = "dbgenerated"

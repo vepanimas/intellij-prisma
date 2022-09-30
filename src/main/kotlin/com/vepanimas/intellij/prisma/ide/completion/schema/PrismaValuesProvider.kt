@@ -15,11 +15,11 @@ import com.intellij.psi.util.parentOfTypes
 import com.intellij.util.ProcessingContext
 import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
-import com.vepanimas.intellij.prisma.ide.completion.isListType
 import com.vepanimas.intellij.prisma.ide.schema.*
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
 import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
+import com.vepanimas.intellij.prisma.lang.types.isListType
 
 
 object PrismaValuesProvider : PrismaCompletionProvider() {

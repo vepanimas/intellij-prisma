@@ -30,6 +30,6 @@ val PrismaSchemaElement.icon: Icon?
             else -> null
         }
 
-        is PrismaSchemaVariant -> null
+        is PrismaSchemaVariant -> PrismaIcons.FIELD
     }
 
