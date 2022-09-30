@@ -1,5 +1,7 @@
 package com.vepanimas.intellij.prisma.ide.schema.definitions
 
+import com.intellij.patterns.ElementPattern
+import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaIndexAlgorithm
 import com.vepanimas.intellij.prisma.ide.schema.PrismaReferentialAction
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
@@ -9,50 +11,52 @@ import com.vepanimas.intellij.prisma.lang.PrismaConstants.Types
 import com.vepanimas.intellij.prisma.lang.types.parseTypeName
 
 fun PrismaSchemaParameter.Builder.typeBasedVariants(type: String) {
-    when (val typeName = parseTypeName(type)) {
-        PrimitiveTypes.BOOLEAN -> booleanTypeValues(typeName)
-        Types.SORT_ORDER -> sortOrderTypeValues(typeName)
-        Types.INDEX_TYPE -> indexingAlgorithmTypeValues(typeName)
-        Types.REFERENTIAL_ACTION -> referentialActionTypeValues(typeName)
+    when (parseTypeName(type)) {
+        PrimitiveTypes.BOOLEAN -> booleanTypeValues()
+        Types.SORT_ORDER -> sortOrderTypeValues()
+        Types.INDEX_TYPE -> indexingAlgorithmTypeValues()
+        Types.REFERENTIAL_ACTION -> referentialActionTypeValues()
     }
 }
 
-private fun PrismaSchemaParameter.Builder.booleanTypeValues(typeName: String) {
+fun PrismaSchemaParameter.Builder.booleanTypeValues(elementPattern: ElementPattern<out PsiElement>? = null) {
     variant {
         label = "true"
-        type = typeName
+        type = PrimitiveTypes.BOOLEAN
+        pattern = elementPattern
     }
     variant {
         label = "false"
-        type = typeName
+        type = PrimitiveTypes.BOOLEAN
+        pattern = elementPattern
     }
 }
 
-private fun PrismaSchemaParameter.Builder.sortOrderTypeValues(typeName: String) {
+private fun PrismaSchemaParameter.Builder.sortOrderTypeValues() {
     PrismaSortOrder.values().forEach {
         variant {
             label = it.name
-            type = typeName
+            type = Types.SORT_ORDER
         }
     }
 }
 
-private fun PrismaSchemaParameter.Builder.indexingAlgorithmTypeValues(typeName: String) {
+private fun PrismaSchemaParameter.Builder.indexingAlgorithmTypeValues() {
     PrismaIndexAlgorithm.values().forEach {
         variant {
             label = it.name
             documentation = it.documentation
-            type = typeName
+            type = Types.INDEX_TYPE
         }
     }
 }
 
-private fun PrismaSchemaParameter.Builder.referentialActionTypeValues(typeName: String) {
+private fun PrismaSchemaParameter.Builder.referentialActionTypeValues() {
     PrismaReferentialAction.values().forEach {
         variant {
             label = it.name
             documentation = it.documentation
-            type = typeName
+            type = Types.REFERENTIAL_ACTION
             datasources = it.datasources
         }
     }

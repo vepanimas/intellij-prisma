@@ -9,6 +9,8 @@ import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.ParameterNames
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.Types
+import com.vepanimas.intellij.prisma.lang.psi.PrismaPsiPatterns
+import com.vepanimas.intellij.prisma.lang.types.PrismaBooleanType
 import java.util.*
 
 val PRISMA_SCHEMA_ATTRIBUTES = schema {
@@ -200,6 +202,8 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.NOW) }
                 variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.CUID) }
                 variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.UUID) }
+
+                booleanTypeValues(PrismaPsiPatterns.withFieldType { type, _ -> type is PrismaBooleanType })
             }
         }
 

@@ -230,20 +230,19 @@ class PrismaDefaultAttributeCompletionTest : PrismaCompletionTestBase() {
         assertSameElements(lookupElements.strings, Functions.DBGENERATED)
     }
 
-// TODO: boolean completion
-//    fun testForBoolean() {
-//        val lookupElements = completeSelected(
-//            """
-//                model M {
-//                  active Boolean @default(<caret>)
-//                }
-//            """.trimIndent(), """
-//                model M {
-//                  active Boolean @default(false)
-//                }
-//            """.trimIndent(),
-//            "false"
-//        )
-//        assertContainsElements(lookupElements.strings, "true", "false")
-//    }
+    fun testForBoolean() {
+        val lookupElements = completeSelected(
+            """
+                model M {
+                  active Boolean @default(<caret>)
+                }
+            """.trimIndent(), """
+                model M {
+                  active Boolean @default(false)
+                }
+            """.trimIndent(),
+            "false"
+        )
+        assertContainsElements(lookupElements.strings, "true", "false")
+    }
 }
