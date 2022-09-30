@@ -3,6 +3,8 @@ package com.vepanimas.intellij.prisma.lang.psi.impl
 import com.intellij.lang.ASTNode
 import com.intellij.navigation.ItemPresentation
 import com.intellij.psi.PsiElement
+import com.intellij.psi.search.LocalSearchScope
+import com.intellij.psi.search.SearchScope
 import com.intellij.refactoring.suggested.startOffset
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementFactory
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes
@@ -26,4 +28,8 @@ abstract class PrismaNamedElementImpl(node: ASTNode) : PrismaElementImpl(node), 
     override fun getPresentation(): ItemPresentation? = getPresentation(this)
 
     override fun getIcon(flags: Int): Icon? = icon
+
+    override fun getUseScope(): SearchScope {
+        return LocalSearchScope(containingFile)
+    }
 }

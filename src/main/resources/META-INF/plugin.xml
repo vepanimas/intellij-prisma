@@ -61,5 +61,9 @@
         <!-- Indexing -->
         <additionalLibraryRootsProvider
                 implementation="com.vepanimas.intellij.prisma.ide.indexing.PrismaAdditionalLibraryRootsProvider"/>
+
+        <!-- Refactoring -->
+        <lang.refactoringSupport language="Prisma"
+                                 implementationClass="com.vepanimas.intellij.prisma.ide.refactoring.PrismaRefactoringSupport"/>
     </extensions>
 </idea-plugin>

@@ -4,6 +4,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.ResolveCache
+import com.vepanimas.intellij.prisma.lang.psi.PrismaElementFactory
 import com.vepanimas.intellij.prisma.lang.psi.PrismaReferenceElement
 
 abstract class PrismaReference(
@@ -55,6 +56,19 @@ abstract class PrismaReference(
             return false
         }
         return true
+    }
+
+    override fun handleElementRename(newElementName: String): PsiElement {
+        val referenceElement = element as? PrismaReferenceElement
+        if (referenceElement != null) {
+            val nameElement = referenceElement.referenceNameElement
+            if (nameElement != null) {
+                val identifier = PrismaElementFactory.createIdentifier(referenceElement.project, newElementName)
+                return nameElement.replace(identifier)
+            }
+        }
+
+        return super.handleElementRename(newElementName)
     }
 
     companion object {
