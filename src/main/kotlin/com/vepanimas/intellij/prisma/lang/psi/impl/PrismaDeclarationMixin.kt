@@ -1,6 +1,9 @@
 package com.vepanimas.intellij.prisma.lang.psi.impl
 
 import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
+import com.intellij.psi.ResolveState
+import com.intellij.psi.scope.PsiScopeProcessor
 import com.vepanimas.intellij.prisma.lang.psi.PrismaBlock
 import com.vepanimas.intellij.prisma.lang.psi.PrismaDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration
@@ -16,4 +19,19 @@ abstract class PrismaDeclarationMixin(node: ASTNode) :
 
     override fun findMemberByName(name: String): PrismaMemberDeclaration? =
         getBlock()?.findMemberByName(name) as? PrismaMemberDeclaration
+
+    override fun processDeclarations(
+        processor: PsiScopeProcessor,
+        state: ResolveState,
+        lastParent: PsiElement?,
+        place: PsiElement
+    ): Boolean {
+        for (member in getMembers()) {
+            if (!processor.execute(member, state)) {
+                return false
+            }
+        }
+
+        return super.processDeclarations(processor, state, lastParent, place)
+    }
 }

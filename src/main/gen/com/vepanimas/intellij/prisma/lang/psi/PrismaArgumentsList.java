@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface PrismaArgumentsList extends PrismaElement {
 
   @NotNull
-  List<PrismaArgument> getArgumentList();
+  List<PrismaArgument> getArguments();
+
+  @Nullable
+  PrismaNamedArgument findArgumentByName(@NotNull String name);
 
 }

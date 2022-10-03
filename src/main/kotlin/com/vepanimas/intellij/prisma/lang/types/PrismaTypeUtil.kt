@@ -14,6 +14,32 @@ val PrismaType.name: String?
         else -> null
     }
 
+
+fun PrismaType?.anyTypeMatching(predicate: (PrismaType) -> Boolean): Boolean {
+    if (this == null) return false
+
+    var current = this
+    while (current != null) {
+        if (predicate(current)) {
+            return true
+        }
+        if (current is PrismaDecoratedType) {
+            current = current.innerType
+        } else {
+            return false
+        }
+    }
+    return false
+}
+
+fun PrismaType?.isList(): Boolean {
+    return anyTypeMatching { it is PrismaListType }
+}
+
+fun PrismaType?.isOptional(): Boolean {
+    return anyTypeMatching { it is PrismaOptionalType }
+}
+
 fun parseTypeName(type: String?): String? {
     return type?.removeSuffix("?")?.removeSuffix("[]")
 }

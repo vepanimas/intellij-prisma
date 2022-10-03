@@ -17,7 +17,7 @@ object PrismaBytesType : PrismaPrimitiveType(PrimitiveTypes.BYTES)
 object PrismaDecimalType : PrismaPrimitiveType(PrimitiveTypes.DECIMAL)
 object PrismaBigIntType : PrismaPrimitiveType(PrimitiveTypes.BIGINT)
 
-class PrismaUnsupportedType(name: String) : PrismaPrimitiveType(name)
+class PrismaUnsupportedType(val value: String) : PrismaPrimitiveType(PrimitiveTypes.UNSUPPORTED)
 
 object PrismaAnyType : PrismaType
 

@@ -47,6 +47,12 @@ object PrismaPsiPatterns {
             predicate(fieldDeclaration.type, element)
         }
     }
+
+    fun namedArgument(name: String): PsiElementPattern.Capture<out PsiElement> {
+        return psiElement(PrismaNamedArgument::class.java).with("namedArgument") { element ->
+            element.identifier.textMatches(name)
+        }
+    }
 }
 
 fun <T : PsiElement, Self : ObjectPattern<T, Self>> ObjectPattern<T, Self>.afterNewLine(): Self =

@@ -105,6 +105,7 @@ FieldDeclaration ::= IDENTIFIER ':'? FieldType? FieldAttribute* {
     mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaFieldDeclarationMixin"
     pin=1
     recoverWhile=UntilNewLine_recover
+    methods=[getNativeType]
 }
 
 EnumDeclaration ::= ENUM Identifier EnumDeclarationBlock {
@@ -184,7 +185,13 @@ FieldAttribute ::= '@' !<<isWhiteSpace>> PathExpression ArgumentsList? {
 }
 
 /* Arguments */
-ArgumentsList ::= '(' [Argument (',' Argument)*] ','? ')'
+ArgumentsList ::= '(' [Argument (',' Argument)*] ','? ')' {
+    mixin="com.vepanimas.intellij.prisma.lang.psi.impl.PrismaArgumentsListMixin"
+    methods=[
+        Arguments="Argument"
+        findArgumentByName
+    ]
+}
 Argument ::= NamedArgument | ValueArgument
 NamedArgument ::= Identifier ':' Expression {
     pin=2

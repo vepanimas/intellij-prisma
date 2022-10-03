@@ -10,7 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*;
 import com.vepanimas.intellij.prisma.lang.psi.*;
 
-public class PrismaArgumentsListImpl extends PrismaElementImpl implements PrismaArgumentsList {
+public class PrismaArgumentsListImpl extends PrismaArgumentsListMixin implements PrismaArgumentsList {
 
   public PrismaArgumentsListImpl(@NotNull ASTNode node) {
     super(node);
@@ -28,7 +28,7 @@ public class PrismaArgumentsListImpl extends PrismaElementImpl implements Prisma
 
   @Override
   @NotNull
-  public List<PrismaArgument> getArgumentList() {
+  public List<PrismaArgument> getArguments() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, PrismaArgument.class);
   }
 

@@ -1,6 +1,6 @@
 package com.vepanimas.intellij.prisma.ide.schema.definitions
 
-import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaDatasourceType
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
 

@@ -10,7 +10,7 @@ import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.childrenOfType
 import com.intellij.util.castSafelyTo
-import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaDatasourceType
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.PrismaFileType
 import com.vepanimas.intellij.prisma.lang.PrismaLanguage

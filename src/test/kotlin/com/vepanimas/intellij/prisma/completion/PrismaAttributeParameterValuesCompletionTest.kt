@@ -1,8 +1,8 @@
 package com.vepanimas.intellij.prisma.completion
 
-import com.vepanimas.intellij.prisma.ide.schema.PrismaIndexAlgorithm
-import com.vepanimas.intellij.prisma.ide.schema.PrismaReferentialAction
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSortOrder
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaIndexAlgorithm
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaReferentialAction
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaSortOrder
 
 class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() {
     fun testBlockAttributeIndexPostgreSQLType() {

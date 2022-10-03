@@ -10,7 +10,9 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.suggested.startOffset
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaContext
-import com.vepanimas.intellij.prisma.lang.psi.*
+import com.vepanimas.intellij.prisma.lang.psi.PrismaFunctionCall
+import com.vepanimas.intellij.prisma.lang.psi.PrismaVirtualDocumentationComment
+import com.vepanimas.intellij.prisma.lang.resolve.PrismaResolver
 import java.util.function.Consumer
 
 class PrismaDocumentationProvider : AbstractDocumentationProvider() {
@@ -30,11 +32,21 @@ class PrismaDocumentationProvider : AbstractDocumentationProvider() {
         targetOffset: Int
     ): PsiElement? {
         val context = contextElement?.let { PrismaSchemaContext.adjustContextElement(it) }
-        if (context != null) {
+        if (acceptCustomElement(context)) {
             return context
         }
 
         return super.getCustomDocumentationElement(editor, file, contextElement, targetOffset)
+    }
+
+    private fun acceptCustomElement(context: PsiElement?): Boolean {
+        if (context == null) {
+            return false
+        }
+        if (context is PrismaFunctionCall) {
+            return !PrismaResolver.isFieldExpression(context)
+        }
+        return true
     }
 
     override fun findDocComment(file: PsiFile, range: TextRange): PsiDocCommentBase? {

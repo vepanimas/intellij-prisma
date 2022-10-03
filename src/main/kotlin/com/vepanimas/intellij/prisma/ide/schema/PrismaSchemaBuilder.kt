@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.InsertHandler
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.patterns.ElementPattern
 import com.intellij.psi.PsiElement
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaDatasourceType
 
 class PrismaSchema(private val elements: Map<PrismaSchemaKind, PrismaSchemaElementGroup>) {
     fun getElementsByKind(kind: PrismaSchemaKind): Collection<PrismaSchemaDeclaration> {

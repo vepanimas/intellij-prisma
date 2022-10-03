@@ -1,13 +1,13 @@
 package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
-import com.vepanimas.intellij.prisma.ide.schema.PrismaDatasourceType
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaDatasourceType
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
 import com.vepanimas.intellij.prisma.ide.schema.schema
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
 import com.vepanimas.intellij.prisma.lang.psi.PrismaPsiPatterns
-import com.vepanimas.intellij.prisma.lang.psi.getDatasourceTypeForElement
+import com.vepanimas.intellij.prisma.lang.psi.resolveDatasourceType
 import com.vepanimas.intellij.prisma.lang.types.PrismaBigIntType
 import com.vepanimas.intellij.prisma.lang.types.PrismaDateTimeType
 import com.vepanimas.intellij.prisma.lang.types.PrismaIntType
@@ -109,7 +109,7 @@ val PRISMA_SCHEMA_FUNCTIONS = schema {
             documentation =
                 "Create a sequence of integers in the underlying database and assign the incremented values to the ID values of the created records based on the sequence."
             pattern = PrismaPsiPatterns.withFieldType { type, element ->
-                type is PrismaIntType && getDatasourceTypeForElement(element) != PrismaDatasourceType.COCKROACHDB ||
+                type is PrismaIntType && element.resolveDatasourceType() != PrismaDatasourceType.COCKROACHDB ||
                         type is PrismaBigIntType
             }
         }
@@ -132,6 +132,17 @@ val PRISMA_SCHEMA_FUNCTIONS = schema {
             documentation =
                 "Generate a globally unique identifier based on the [cuid](https://github.com/ericelliott/cuid) spec."
             pattern = PrismaPsiPatterns.withFieldType { type, _ -> type is PrismaStringType }
+        }
+
+        element {
+            label = Functions.RAW
+            insertHandler = PrismaInsertHandler.PARENS_QUOTED_ARGUMENT
+
+            param {
+                label = "value"
+                type = PrimitiveTypes.STRING
+                skipInCompletion = true
+            }
         }
     }
 }

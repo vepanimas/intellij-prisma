@@ -22,4 +22,12 @@ abstract class PrismaFieldDeclarationMixin(node: ASTNode) :
             CachedValueProvider.Result.create(calculatedType, containingFile)
         }
 
+    override fun getNativeType(): String? = CachedValuesManager.getCachedValue(this) {
+        val nativeType = fieldAttributeList
+            .asSequence()
+            .mapNotNull { it.pathExpression }
+            .find { it.qualifier?.textMatches("db") ?: false }
+            ?.referenceName
+        CachedValueProvider.Result.create(nativeType, containingFile)
+    }
 }

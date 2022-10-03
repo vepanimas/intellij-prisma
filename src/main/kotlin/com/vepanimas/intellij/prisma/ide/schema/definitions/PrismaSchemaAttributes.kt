@@ -3,6 +3,7 @@ package com.vepanimas.intellij.prisma.ide.schema.definitions
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler
 import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
 import com.vepanimas.intellij.prisma.ide.schema.*
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaDatasourceType
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldAttributes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
@@ -107,7 +108,16 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = Types.INDEX_TYPE.optional()
                 datasources = EnumSet.of(PrismaDatasourceType.POSTGRESQL)
 
-                typeBasedVariants(Types.INDEX_TYPE)
+                variantsForType(Types.INDEX_TYPE)
+            }
+            param {
+                label = ParameterNames.OPS
+                documentation = "Specify the operator class for an indexed field."
+                type = Types.OPERATOR_CLASS.optional()
+                datasources = EnumSet.of(PrismaDatasourceType.POSTGRESQL)
+                isOnFieldLevel = true
+
+                variant { ref = PrismaSchemaRef(PrismaSchemaKind.FUNCTION, Functions.RAW) }
             }
             length(true)
             sort(true)
@@ -246,7 +256,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = Types.REFERENTIAL_ACTION.optional()
                 datasources = PrismaDatasourceType.except(PrismaDatasourceType.MONGODB)
 
-                typeBasedVariants(Types.REFERENTIAL_ACTION)
+                variantsForType(Types.REFERENTIAL_ACTION)
             }
             param {
                 label = ParameterNames.ON_UPDATE
@@ -255,7 +265,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
                 type = Types.REFERENTIAL_ACTION.optional()
                 datasources = PrismaDatasourceType.except(PrismaDatasourceType.MONGODB)
 
-                typeBasedVariants(Types.REFERENTIAL_ACTION)
+                variantsForType(Types.REFERENTIAL_ACTION)
             }
         }
 
@@ -284,7 +294,7 @@ private fun PrismaSchemaDeclaration.Builder.sort(
         datasources = datasourceTypes
         isOnFieldLevel = isOnField
 
-        typeBasedVariants(Types.SORT_ORDER)
+        variantsForType(Types.SORT_ORDER)
     }
 }
 
@@ -307,6 +317,6 @@ private fun PrismaSchemaDeclaration.Builder.clustered() {
         type = PrimitiveTypes.BOOLEAN.optional()
         datasources = EnumSet.of(PrismaDatasourceType.SQLSERVER)
 
-        typeBasedVariants(PrimitiveTypes.BOOLEAN)
+        variantsForType(PrimitiveTypes.BOOLEAN)
     }
 }

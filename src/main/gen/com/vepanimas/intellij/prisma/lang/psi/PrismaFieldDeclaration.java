@@ -16,4 +16,7 @@ public interface PrismaFieldDeclaration extends PrismaMemberDeclaration, PrismaT
   @NotNull
   PsiElement getIdentifier();
 
+  @Nullable
+  String getNativeType();
+
 }

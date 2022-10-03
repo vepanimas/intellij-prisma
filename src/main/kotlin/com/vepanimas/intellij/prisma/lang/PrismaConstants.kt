@@ -20,9 +20,10 @@ object PrismaConstants {
     }
 
     object Types {
-        const val INDEX_TYPE = "IndexType"
         const val SORT_ORDER = "SortOrder"
         const val REFERENTIAL_ACTION = "ReferentialAction"
+        const val INDEX_TYPE = "IndexType"
+        const val OPERATOR_CLASS = "OperatorClass"
     }
 
     object Functions {
@@ -34,6 +35,7 @@ object PrismaConstants {
         const val NOW = "now"
         const val UUID = "uuid"
         const val CUID = "cuid"
+        const val RAW = "raw"
     }
 
     object DatasourceTypes {
@@ -71,7 +73,7 @@ object PrismaConstants {
     }
 
     object PreviewFeatures {
-        const val FULL_TEXT_INDEX = "fulltextindex"
+        const val FULLTEXT_INDEX = "fulltextindex"
     }
 
     object DatasourceFields {
@@ -91,5 +93,6 @@ object PrismaConstants {
         const val ON_DELETE = "onDelete"
         const val ON_UPDATE = "onUpdate"
         const val TYPE = "type"
+        const val OPS = "ops"
     }
 }

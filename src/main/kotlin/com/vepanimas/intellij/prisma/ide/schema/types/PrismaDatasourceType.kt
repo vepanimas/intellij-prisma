@@ -1,4 +1,4 @@
-package com.vepanimas.intellij.prisma.ide.schema
+package com.vepanimas.intellij.prisma.ide.schema.types
 
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.DatasourceTypes
 import java.util.*

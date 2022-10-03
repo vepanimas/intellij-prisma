@@ -1,4 +1,4 @@
-package com.vepanimas.intellij.prisma.ide.schema
+package com.vepanimas.intellij.prisma.ide.schema.types
 
 enum class PrismaReferentialAction(val documentation: String, val datasources: Set<PrismaDatasourceType>) {
     Cascade(

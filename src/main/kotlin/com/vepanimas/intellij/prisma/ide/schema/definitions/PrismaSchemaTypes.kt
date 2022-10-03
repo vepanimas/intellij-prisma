@@ -2,15 +2,15 @@ package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.intellij.patterns.ElementPattern
 import com.intellij.psi.PsiElement
-import com.vepanimas.intellij.prisma.ide.schema.PrismaIndexAlgorithm
-import com.vepanimas.intellij.prisma.ide.schema.PrismaReferentialAction
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaIndexAlgorithm
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaReferentialAction
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
-import com.vepanimas.intellij.prisma.ide.schema.PrismaSortOrder
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaSortOrder
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.Types
 import com.vepanimas.intellij.prisma.lang.types.parseTypeName
 
-fun PrismaSchemaParameter.Builder.typeBasedVariants(type: String) {
+fun PrismaSchemaParameter.Builder.variantsForType(type: String) {
     when (parseTypeName(type)) {
         PrimitiveTypes.BOOLEAN -> booleanTypeValues()
         Types.SORT_ORDER -> sortOrderTypeValues()

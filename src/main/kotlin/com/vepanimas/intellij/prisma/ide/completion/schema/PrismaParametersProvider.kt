@@ -36,7 +36,7 @@ object PrismaParametersProvider : PrismaCompletionProvider() {
         val schemaDeclaration =
             PrismaSchemaProvider.getSchema().match(argumentsOwner) as? PrismaSchemaDeclaration ?: return
         val parent = PrismaSchemaFakeElement.createForCompletion(parameters, schemaDeclaration)
-        val usedParams = argumentsOwner.getArgumentsList()?.argumentList
+        val usedParams = argumentsOwner.getArgumentsList()?.arguments
             ?.asSequence()
             ?.filterIsInstance<PrismaNamedArgument>()
             ?.map { it.referenceName }
