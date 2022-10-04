@@ -36,6 +36,11 @@ class PrismaPathReference(
                     processor.filter = { it is PrismaFieldDeclaration }
                     resolveTypeField(context, processor, state, place)
                 }
+
+                PrismaConstants.ParameterNames.EXPRESSION -> {
+                    processor.filter = { it is PrismaEnumValueDeclaration }
+                    resolveTypeField(context, processor, state, place)
+                }
             }
         }
     }
@@ -45,10 +50,10 @@ class PrismaPathReference(
         if (parent is PrismaFunctionCall) {
             parent = parent.parent
         }
-        if (parent !is PrismaArrayExpression || parent.parent !is PrismaArgument) {
-            return null
+        if (parent is PrismaArrayExpression) {
+            return parent.parent as? PrismaArgument
         }
-        return parent.parentOfType<PrismaArgument>(withSelf = true)
+        return parent?.parentOfType<PrismaArgument>(withSelf = true)
     }
 
     private fun resolveTypeField(

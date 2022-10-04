@@ -4,7 +4,7 @@ import com.vepanimas.intellij.prisma.ide.schema.types.PrismaIndexAlgorithm
 import com.vepanimas.intellij.prisma.ide.schema.types.PrismaOperatorClass
 import com.vepanimas.intellij.prisma.ide.schema.types.PrismaReferentialAction
 import com.vepanimas.intellij.prisma.ide.schema.types.PrismaSortOrder
-import com.vepanimas.intellij.prisma.lang.PrismaConstants
+import com.vepanimas.intellij.prisma.lang.PrismaConstants.Functions
 
 class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() {
     fun testBlockAttributeIndexPostgreSQLType() {
@@ -151,7 +151,7 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
         )
         assertSameElements(
             lookupElements.strings,
-            PrismaConstants.Functions.RAW,
+            Functions.RAW,
             PrismaOperatorClass.BpcharBloomOps.name,
             PrismaOperatorClass.BpcharMinMaxOps.name,
         )
@@ -172,7 +172,7 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
         )
         assertSameElements(
             lookupElements.strings,
-            PrismaConstants.Functions.RAW,
+            Functions.RAW,
             PrismaOperatorClass.Float8BloomOps.name,
             PrismaOperatorClass.Float8MinMaxOps.name,
             PrismaOperatorClass.Float8MinMaxMultiOps.name,
@@ -194,7 +194,7 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
         )
         assertSameElements(
             lookupElements.strings,
-            PrismaConstants.Functions.RAW,
+            Functions.RAW,
             PrismaOperatorClass.Int4BloomOps.name,
             PrismaOperatorClass.Int4MinMaxOps.name,
             PrismaOperatorClass.Int4MinMaxMultiOps.name,
@@ -216,7 +216,7 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
         )
         assertSameElements(
             lookupElements.strings,
-            PrismaConstants.Functions.RAW,
+            Functions.RAW,
             PrismaOperatorClass.ArrayOps.name,
         )
     }
@@ -281,5 +281,43 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
         """.trimIndent()
         )
         assertEmpty(lookupElements.strings)
+    }
+
+    fun testFieldAttributeDefaultEnumValues() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model Post {
+              id   Int  @id @default(autoincrement())
+              lang Lang @default(<caret>)
+            }
+            enum Lang {
+              EN
+              FR
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, Functions.DBGENERATED, "EN", "FR")
+    }
+
+    fun testFieldAttributeDefaultNoModelValues() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model Post {
+              id   Int  @id @default(autoincrement())
+              lang Lang @default(<caret>)
+            }
+            model Lang {
+              id   Int
+              name String
+            }
+        """.trimIndent()
+        )
+        assertDoesntContain(lookupElements.strings, "id", "name")
     }
 }
