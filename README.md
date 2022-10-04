@@ -16,6 +16,7 @@ The following features are available:
 * Reader mode for comments with Markdown support
 * Braces and quotes automatic insertion
 * Rename refactoring
+* Structure view
 * Improved completion and resolve for generated Prisma client
 <!-- Plugin description end -->
 
