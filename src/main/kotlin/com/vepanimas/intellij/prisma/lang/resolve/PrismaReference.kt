@@ -5,7 +5,10 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
 import com.intellij.psi.impl.source.resolve.ResolveCache
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementFactory
+import com.vepanimas.intellij.prisma.lang.psi.PrismaNamedElement
 import com.vepanimas.intellij.prisma.lang.psi.PrismaReferenceElement
+import com.vepanimas.intellij.prisma.lang.psi.PrismaTypeOwner
+import com.vepanimas.intellij.prisma.lang.types.typeText
 
 abstract class PrismaReference(
     element: PsiElement,
@@ -42,11 +45,19 @@ abstract class PrismaReference(
             val ignored = collectIgnoredNames()
             return results
                 .filter { it.name !in ignored }
-                .map { LookupElementBuilder.createWithIcon(it) }
+                .map { createLookupElement(it) }
                 .toTypedArray()
         }
 
         return emptyArray()
+    }
+
+    private fun createLookupElement(element: PrismaNamedElement): LookupElementBuilder {
+        var lookup = LookupElementBuilder.createWithIcon(element)
+        if (element is PrismaTypeOwner) {
+            lookup = lookup.withTypeText(element.type.typeText)
+        }
+        return lookup
     }
 
     protected abstract fun processCandidates(

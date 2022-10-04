@@ -4,6 +4,7 @@ import com.intellij.navigation.ItemPresentation
 import com.vepanimas.intellij.prisma.PrismaIcons
 import com.vepanimas.intellij.prisma.ide.schema.*
 import com.vepanimas.intellij.prisma.lang.psi.*
+import com.vepanimas.intellij.prisma.lang.types.typeText
 import javax.swing.Icon
 
 fun getPresentation(element: PrismaElement): ItemPresentation = object : ItemPresentation {
@@ -13,9 +14,10 @@ fun getPresentation(element: PrismaElement): ItemPresentation = object : ItemPre
                 append(element.name)
 
                 if (element is PrismaFieldDeclaration) {
-                    element.fieldType?.let {
+                    val typeText = element.type.typeText
+                    if (typeText.isNotBlank()) {
                         append(": ")
-                        append(PrismaPsiRenderer().build(it))
+                        append(typeText)
                     }
                 }
             }

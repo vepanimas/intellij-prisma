@@ -55,3 +55,6 @@ fun isListType(type: String?): Boolean {
 fun isOptionalType(type: String?): Boolean {
     return type?.contains("?") ?: false
 }
+
+val PrismaType.typeText: String
+    get() = PrismaTypeRenderer().render(this)
