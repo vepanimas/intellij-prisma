@@ -263,4 +263,23 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
             "id", "posts", "name", "createdAt"
         )
     }
+
+    fun testFieldAttributeRelationReferencesNoEnumValues() {
+        val lookupElements = getLookupElements(
+            """
+            model Post {
+              id       Int    @id @default(autoincrement())
+              title    String
+              author   Lang   @relation(fields: [authorId], references: [<caret>])
+              authorId Int
+            }
+            
+            enum Lang {
+              EN
+              FR
+            }
+        """.trimIndent()
+        )
+        assertEmpty(lookupElements.strings)
+    }
 }

@@ -33,6 +33,7 @@ class PrismaPathReference(
                 }
 
                 PrismaConstants.ParameterNames.REFERENCES -> {
+                    processor.filter = { it is PrismaFieldDeclaration }
                     resolveTypeField(context, processor, state, place)
                 }
             }
