@@ -77,6 +77,15 @@ tasks {
         }
     }
 
+    prepareSandbox {
+        doLast {
+            copy {
+                from("${project.projectDir}/language-server/dist")
+                into("${destinationDir.path}/${properties("pluginName")}/")
+            }
+        }
+    }
+
     wrapper {
         gradleVersion = properties("gradleVersion")
     }

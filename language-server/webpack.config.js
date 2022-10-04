@@ -1,8 +1,8 @@
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 
-const root = path.resolve(__dirname, "..");
-const dist = path.resolve(root, "./src/main/resources/languageServer")
+const root = path.resolve(__dirname);
+const dist = path.resolve(root, "./dist")
 
 module.exports = {
     mode: 'production',
