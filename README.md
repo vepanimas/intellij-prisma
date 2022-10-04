@@ -17,6 +17,7 @@ The following features are available:
 * Braces and quotes automatic insertion
 * Rename refactoring
 * Structure view
+* Folding
 * Improved completion and resolve for generated Prisma client
 <!-- Plugin description end -->
 

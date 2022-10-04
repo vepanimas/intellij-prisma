@@ -69,5 +69,9 @@
         <!-- Structure view -->
         <lang.psiStructureViewFactory language="Prisma"
                                       implementationClass="com.vepanimas.intellij.prisma.ide.structureview.PrismaStructureViewFactory"/>
+
+        <!-- Folding -->
+        <lang.foldingBuilder language="Prisma"
+                             implementationClass="com.vepanimas.intellij.prisma.ide.folding.PrismaFoldingBuilder"/>
     </extensions>
 </idea-plugin>
