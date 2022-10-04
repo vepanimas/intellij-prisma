@@ -41,7 +41,5 @@ class PrismaLspServerDescriptor(project: Project, root: VirtualFile) : LspServer
 
     override fun useGenericCompletion(): Boolean = false
 
-    override fun useGenericHighlighting(): Boolean = false
-
     override fun useGenericNavigation(): Boolean = false
 }
