@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaElement
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
-import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
+import com.vepanimas.intellij.prisma.lang.presentation.icon
 
 abstract class PrismaCompletionProvider : CompletionProvider<CompletionParameters>() {
     abstract val pattern: ElementPattern<out PsiElement>

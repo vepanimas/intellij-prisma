@@ -10,7 +10,7 @@ import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.psi.*
-import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
+import com.vepanimas.intellij.prisma.lang.presentation.PrismaPsiRenderer
 
 class PrismaPathReference(
     element: PsiElement,

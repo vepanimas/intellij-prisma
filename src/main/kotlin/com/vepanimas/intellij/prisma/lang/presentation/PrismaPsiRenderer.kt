@@ -1,4 +1,4 @@
-package com.vepanimas.intellij.prisma.lang.psi.presentation
+package com.vepanimas.intellij.prisma.lang.presentation
 
 import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.lang.psi.*

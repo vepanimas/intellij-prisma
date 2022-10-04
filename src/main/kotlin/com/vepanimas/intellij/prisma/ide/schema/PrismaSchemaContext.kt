@@ -13,7 +13,7 @@ import com.intellij.psi.util.parentOfTypes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
-import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
+import com.vepanimas.intellij.prisma.lang.presentation.PrismaPsiRenderer
 
 sealed class PrismaSchemaContext(
     val label: String,

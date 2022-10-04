@@ -1,4 +1,4 @@
-package com.vepanimas.intellij.prisma.lang.psi.presentation
+package com.vepanimas.intellij.prisma.lang.presentation
 
 import com.intellij.navigation.ItemPresentation
 import com.vepanimas.intellij.prisma.PrismaIcons
@@ -7,9 +7,21 @@ import com.vepanimas.intellij.prisma.lang.psi.*
 import javax.swing.Icon
 
 fun getPresentation(element: PrismaElement): ItemPresentation = object : ItemPresentation {
-    override fun getPresentableText(): String? = when (element) {
-        is PrismaNamedElement -> element.name
-        else -> null
+    override fun getPresentableText(): String? {
+        if (element is PrismaNamedElement) {
+            return buildString {
+                append(element.name)
+
+                if (element is PrismaFieldDeclaration) {
+                    element.fieldType?.let {
+                        append(": ")
+                        append(PrismaPsiRenderer().build(it))
+                    }
+                }
+            }
+        }
+
+        return null
     }
 
     override fun getLocationString(): String = element.containingFile.name
@@ -23,6 +35,8 @@ val PrismaNamedElement.icon: Icon?
         is PrismaKeyValueDeclaration -> PrismaIcons.KEY_VALUE
         is PrismaEnumDeclaration -> PrismaIcons.ENUM
         is PrismaTypeAlias -> PrismaIcons.ALIAS
+        is PrismaKeyValue -> PrismaIcons.KEY_VALUE
+        is PrismaMemberDeclaration -> PrismaIcons.FIELD
         else -> null
     }
 

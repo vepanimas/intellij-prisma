@@ -65,5 +65,9 @@
         <!-- Refactoring -->
         <lang.refactoringSupport language="Prisma"
                                  implementationClass="com.vepanimas.intellij.prisma.ide.refactoring.PrismaRefactoringSupport"/>
+
+        <!-- Structure view -->
+        <lang.psiStructureViewFactory language="Prisma"
+                                      implementationClass="com.vepanimas.intellij.prisma.ide.structureview.PrismaStructureViewFactory"/>
     </extensions>
 </idea-plugin>

@@ -15,7 +15,7 @@ import com.vepanimas.intellij.prisma.lang.psi.PrismaArgumentsOwner
 import com.vepanimas.intellij.prisma.lang.psi.PrismaDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaMemberDeclaration
 import com.vepanimas.intellij.prisma.lang.psi.PrismaNamedElement
-import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
+import com.vepanimas.intellij.prisma.lang.presentation.icon
 import javax.swing.Icon
 
 class PrismaSchemaFakeElement(

@@ -9,8 +9,8 @@ import com.intellij.refactoring.suggested.startOffset
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementFactory
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes
 import com.vepanimas.intellij.prisma.lang.psi.PrismaNameIdentifierOwner
-import com.vepanimas.intellij.prisma.lang.psi.presentation.getPresentation
-import com.vepanimas.intellij.prisma.lang.psi.presentation.icon
+import com.vepanimas.intellij.prisma.lang.presentation.getPresentation
+import com.vepanimas.intellij.prisma.lang.presentation.icon
 import javax.swing.Icon
 
 abstract class PrismaNamedElementImpl(node: ASTNode) : PrismaElementImpl(node), PrismaNameIdentifierOwner {

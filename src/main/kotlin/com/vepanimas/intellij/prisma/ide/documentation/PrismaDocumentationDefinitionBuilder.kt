@@ -2,7 +2,7 @@ package com.vepanimas.intellij.prisma.ide.documentation
 
 import com.intellij.psi.PsiElement
 import com.vepanimas.intellij.prisma.lang.psi.*
-import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
+import com.vepanimas.intellij.prisma.lang.presentation.PrismaPsiRenderer
 
 private const val UNKNOWN = "<unknown>"
 

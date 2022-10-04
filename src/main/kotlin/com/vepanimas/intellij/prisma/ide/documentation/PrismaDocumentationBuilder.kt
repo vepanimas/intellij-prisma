@@ -8,7 +8,7 @@ import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.PrismaBundle
 import com.vepanimas.intellij.prisma.ide.schema.*
 import com.vepanimas.intellij.prisma.lang.psi.*
-import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
+import com.vepanimas.intellij.prisma.lang.presentation.PrismaPsiRenderer
 
 private const val PARAM_INDENT = "\n\t\t"
 private const val PARAM_SEP = ","
