@@ -95,7 +95,7 @@ model <info descr="PRISMA_TYPE_NAME">TestResult</info> {
     <info descr="PRISMA_FIELD_NAME">testId</info>    <info descr="PRISMA_TYPE_REFERENCE">Int</info>
     <info descr="PRISMA_FIELD_NAME">test</info>      <info descr="PRISMA_TYPE_REFERENCE">Test</info>     <info descr="PRISMA_ATTRIBUTE">@</info><info descr="PRISMA_ATTRIBUTE">relation</info>(<info descr="PRISMA_PARAMETER">fields</info>: [<info descr="PRISMA_FIELD_REFERENCE">testId</info>], <info descr="PRISMA_PARAMETER">references</info>: [<info descr="PRISMA_FIELD_REFERENCE">id</info>])
 
-    <info descr="PRISMA_ATTRIBUTE">@@</info><info descr="PRISMA_ATTRIBUTE">index</info>([<info descr="PRISMA_FIELD_REFERENCE">result</info>, <info descr="PRISMA_FUNCTION">createdAt</info>(<info descr="PRISMA_PARAMETER">sort</info>: <info descr="PRISMA_FIELD_REFERENCE">Desc</info>)])
+    <info descr="PRISMA_ATTRIBUTE">@@</info><info descr="PRISMA_ATTRIBUTE">index</info>([<info descr="PRISMA_FIELD_REFERENCE">result</info>, <info descr="PRISMA_FIELD_REFERENCE">createdAt</info>(<info descr="PRISMA_PARAMETER">sort</info>: <info descr="PRISMA_FIELD_REFERENCE">Desc</info>)])
 }
 
 type <info descr="PRISMA_TYPE_NAME">TypeDefinition</info> {
@@ -120,4 +120,10 @@ model <info descr="PRISMA_TYPE_NAME">TypeWithReserved</info> {
     <info descr="PRISMA_FIELD_NAME">model</info>      <info descr="PRISMA_TYPE_REFERENCE">String</info>
     <info descr="PRISMA_FIELD_NAME">type</info>       <info descr="PRISMA_TYPE_REFERENCE">String</info>
     <info descr="PRISMA_FIELD_NAME">enum</info>       <info descr="PRISMA_TYPE_REFERENCE">String</info>
+}
+
+model <info descr="PRISMA_TYPE_NAME">Post</info> {
+    <info descr="PRISMA_FIELD_NAME">id</info> <info descr="PRISMA_TYPE_REFERENCE">Int</info> <info descr="PRISMA_ATTRIBUTE">@</info><info descr="PRISMA_ATTRIBUTE">id</info> <info descr="PRISMA_ATTRIBUTE">@</info><info descr="PRISMA_ATTRIBUTE">db</info>.<info descr="PRISMA_ATTRIBUTE">SmallInt</info>
+
+    <info descr="PRISMA_ATTRIBUTE">@@</info><info descr="PRISMA_ATTRIBUTE">index</info>([<info descr="PRISMA_FIELD_REFERENCE">id</info>(<info descr="PRISMA_PARAMETER">ops</info>: <info descr="PRISMA_FIELD_REFERENCE">Int2MinMaxMultiOps</info>)], <info descr="PRISMA_PARAMETER">type</info>: <info descr="PRISMA_FIELD_REFERENCE">Brin</info>)
 }

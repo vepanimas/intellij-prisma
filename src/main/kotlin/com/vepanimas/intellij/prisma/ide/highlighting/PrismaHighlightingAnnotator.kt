@@ -9,6 +9,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.elementType
 import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
+import com.vepanimas.intellij.prisma.lang.resolve.PrismaResolver
 
 class PrismaHighlightingAnnotator : Annotator {
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
@@ -28,12 +29,26 @@ class PrismaHighlightingAnnotator : Annotator {
             is PrismaNamedArgument -> newAnnotation(holder, element, PrismaColors.PARAMETER)
             is PrismaKeyValue -> newAnnotation(holder, element, PrismaColors.FIELD_NAME)
             is PrismaEnumValueDeclaration -> newAnnotation(holder, element, PrismaColors.FIELD_NAME)
-            is PrismaPathExpression -> when (parent.findTopmostPathParent()) {
-                is PrismaFunctionCall -> newAnnotation(holder, element, PrismaColors.FUNCTION)
-                is PrismaExpression, is PrismaArgument -> newAnnotation(holder, element, PrismaColors.FIELD_REFERENCE)
-                is PrismaBlockAttribute, is PrismaFieldAttribute ->
-                    newAnnotation(holder, element, PrismaColors.ATTRIBUTE)
+            is PrismaPathExpression -> highlightPathExpression(parent, holder, element)
+        }
+    }
+
+    private fun highlightPathExpression(
+        expr: PrismaPathExpression,
+        holder: AnnotationHolder,
+        element: PsiElement
+    ) {
+        when (val topmostParent = expr.findTopmostPathParent()) {
+            is PrismaFunctionCall -> if (PrismaResolver.isFieldExpression(topmostParent)) {
+                newAnnotation(holder, element, PrismaColors.FIELD_REFERENCE)
+            } else {
+                newAnnotation(holder, element, PrismaColors.FUNCTION)
             }
+
+            is PrismaBlockAttribute, is PrismaFieldAttribute ->
+                newAnnotation(holder, element, PrismaColors.ATTRIBUTE)
+
+            else -> newAnnotation(holder, element, PrismaColors.FIELD_REFERENCE)
         }
     }
 
