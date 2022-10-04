@@ -7,8 +7,10 @@ import com.intellij.psi.util.elementType
 import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.PrismaBundle
 import com.vepanimas.intellij.prisma.ide.schema.*
-import com.vepanimas.intellij.prisma.lang.psi.*
+import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.presentation.PrismaPsiRenderer
+import com.vepanimas.intellij.prisma.lang.psi.*
+import com.vepanimas.intellij.prisma.lang.types.isNamedType
 
 private const val PARAM_INDENT = "\n\t\t"
 private const val PARAM_SEP = ","
@@ -45,7 +47,18 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
         val definition = declaration?.signature ?: buildDefinitionFromSchema(schemaElement, params)
 
         return buildString {
-            definition { append(toHtml(element.project, definition)) }
+            definition {
+                val renderAsPlainText = schemaElement is PrismaSchemaVariant && isNamedType(
+                    schemaElement.type,
+                    PrismaConstants.PrimitiveTypes.STRING
+                )
+
+                if (renderAsPlainText) {
+                    append(definition)
+                } else {
+                    append(toHtml(element.project, definition))
+                }
+            }
 
             documentationMarkdownToHtml(schemaElement.documentation)?.let {
                 content {
