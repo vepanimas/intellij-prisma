@@ -6,14 +6,11 @@ import com.intellij.psi.PsiNamedElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.TokenType.ERROR_ELEMENT
 import com.intellij.psi.TokenType.WHITE_SPACE
-import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.util.elementType
-import com.intellij.psi.util.parentOfType
-import com.intellij.psi.util.parentOfTypes
+import com.intellij.psi.util.*
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
+import com.vepanimas.intellij.prisma.lang.presentation.PrismaPsiRenderer
 import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementTypes.*
-import com.vepanimas.intellij.prisma.lang.presentation.PrismaPsiRenderer
 
 sealed class PrismaSchemaContext(
     val label: String,
@@ -25,6 +22,12 @@ sealed class PrismaSchemaContext(
                 return null
             }
 
+            return CachedValuesManager.getCachedValue(element) {
+                CachedValueProvider.Result.create(buildContext(element), element)
+            }
+        }
+
+        private fun buildContext(element: PsiElement): PrismaSchemaContext? {
             val contextElement = adjustContextElement(element) ?: return null
             return when (contextElement) {
                 is PrismaArgument -> createParameterContext(contextElement)

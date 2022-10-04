@@ -84,6 +84,22 @@ class PrismaResolveTest : PrismaTestCase() {
         """.trimIndent())
     }
 
+    fun testRelationAttributeReferences() {
+        checkWithTarget("""
+            model Post {
+              id       Int    @id @default(autoincrement())
+              title    String
+              author   User   @relation(fields: [authorId], references: [i<caret>d], onDelete: Cascade)
+              authorId Int
+            }
+            
+            model User {
+              <target>id    Int    @id @default(autoincrement())
+              posts Post[]
+            }
+        """.trimIndent())
+    }
+
     private fun checkWithTarget(source: String): PrismaNamedElement {
         val targetOffset = findExpectedTargetOffset(source)
         val text = source.replace(TARGET, "")

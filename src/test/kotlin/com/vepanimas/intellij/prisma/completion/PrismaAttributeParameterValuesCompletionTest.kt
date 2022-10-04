@@ -239,4 +239,28 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
         )
         assertSameElements(lookupElements.strings, "id", "isDeleted")
     }
+
+    fun testFieldAttributeRelationReferences() {
+        val lookupElements = getLookupElements(
+            """
+            model Post {
+              id       Int    @id @default(autoincrement())
+              title    String
+              author   User   @relation(fields: [authorId], references: [<caret>])
+              authorId Int
+            }
+            
+            model User {
+              id        Int      @id @default(autoincrement())
+              posts     Post[]
+              name      String
+              createdAt DateTime
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            "id", "posts", "name", "createdAt"
+        )
+    }
 }
