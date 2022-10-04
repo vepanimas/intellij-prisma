@@ -10,6 +10,7 @@ import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaParameter
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaProvider
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.psi.*
+import com.vepanimas.intellij.prisma.lang.psi.presentation.PrismaPsiRenderer
 
 class PrismaPathReference(
     element: PsiElement,
@@ -48,6 +49,22 @@ class PrismaPathReference(
         place: PsiElement
     ) {
         argument.parentOfType<PrismaDeclaration>()?.processDeclarations(processor, state, null, place)
+    }
+
+    override fun collectIgnoredNames(): Set<String> {
+        val arrayExpression = element.parentOfType<PrismaArrayExpression>() ?: return emptySet()
+        val psiRenderer = PrismaPsiRenderer()
+        return arrayExpression.expressionList.mapNotNullTo(mutableSetOf()) {
+            var expr = it
+            if (expr is PrismaFunctionCall) {
+                expr = expr.pathExpression
+            }
+            if (expr is PrismaPathExpression) {
+                return@mapNotNullTo psiRenderer.build(expr.leftmostQualifier)
+            }
+
+            null
+        }
     }
 
     companion object {

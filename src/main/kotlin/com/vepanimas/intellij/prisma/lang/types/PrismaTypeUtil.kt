@@ -10,7 +10,7 @@ fun PrismaType.unwrapType(): PrismaType {
 val PrismaType.name: String?
     get() = when (val underlyingType = unwrapType()) {
         is PrismaPrimitiveType -> underlyingType.name
-        is PrismaTypeImpl -> underlyingType.name
+        is PrismaReferencedType -> underlyingType.name
         else -> null
     }
 

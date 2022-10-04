@@ -1,8 +1,10 @@
 package com.vepanimas.intellij.prisma.completion
 
 import com.vepanimas.intellij.prisma.ide.schema.types.PrismaIndexAlgorithm
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaOperatorClass
 import com.vepanimas.intellij.prisma.ide.schema.types.PrismaReferentialAction
 import com.vepanimas.intellij.prisma.ide.schema.types.PrismaSortOrder
+import com.vepanimas.intellij.prisma.lang.PrismaConstants
 
 class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() {
     fun testBlockAttributeIndexPostgreSQLType() {
@@ -132,5 +134,109 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
             PrismaReferentialAction.SetDefault.name,
             PrismaReferentialAction.SetNull.name,
         )
+    }
+
+    fun testBlockAttributeIndexOpsNativeType() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id String @db.Char
+            
+              @@index([id(ops: <caret>)], type: Brin)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            PrismaConstants.Functions.RAW,
+            PrismaOperatorClass.BpcharBloomOps.name,
+            PrismaOperatorClass.BpcharMinMaxOps.name,
+        )
+    }
+
+    fun testBlockAttributeIndexOpsFieldType() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id Float
+            
+              @@index([id(ops: <caret>)], type: Brin)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            PrismaConstants.Functions.RAW,
+            PrismaOperatorClass.Float8BloomOps.name,
+            PrismaOperatorClass.Float8MinMaxOps.name,
+            PrismaOperatorClass.Float8MinMaxMultiOps.name,
+        )
+    }
+
+    fun testBlockAttributeIndexOpsFieldTypeOptional() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id Int?
+            
+              @@index([id(ops: <caret>)], type: Brin)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            PrismaConstants.Functions.RAW,
+            PrismaOperatorClass.Int4BloomOps.name,
+            PrismaOperatorClass.Int4MinMaxOps.name,
+            PrismaOperatorClass.Int4MinMaxMultiOps.name,
+        )
+    }
+
+    fun testBlockAttributeIndexOpsFieldTypeList() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id Int[]
+            
+              @@index([id(ops: <caret>)], type: Gin)
+            }
+        """.trimIndent()
+        )
+        assertSameElements(
+            lookupElements.strings,
+            PrismaConstants.Functions.RAW,
+            PrismaOperatorClass.ArrayOps.name,
+        )
+    }
+
+    fun testBlockAttributeIndexFields() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model Post {
+              id        Int      @id
+              name      String
+              createdAt DateTime
+              isDeleted Boolean
+            
+              @@index([name, createdAt(), <caret>])
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, "id", "isDeleted")
     }
 }

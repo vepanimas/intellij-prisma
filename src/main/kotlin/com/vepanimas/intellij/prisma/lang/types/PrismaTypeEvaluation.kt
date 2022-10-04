@@ -57,6 +57,6 @@ private fun createTypeFromFieldType(element: PrismaFieldType): PrismaType {
         PrimitiveTypes.DATETIME -> PrismaDateTimeType
         PrimitiveTypes.JSON -> PrismaJsonType
         PrimitiveTypes.BYTES -> PrismaBytesType
-        else -> PrismaTypeImpl(name, element)
+        else -> PrismaReferencedType(name, element)
     }
 }

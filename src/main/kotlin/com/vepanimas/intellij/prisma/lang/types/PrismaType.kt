@@ -1,30 +1,12 @@
 package com.vepanimas.intellij.prisma.lang.types
 
-import com.intellij.psi.PsiElement
-import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
+import com.intellij.psi.PsiNamedElement
 
 interface PrismaType
 
-abstract class PrismaPrimitiveType(val name: String) : PrismaType
-
-object PrismaStringType : PrismaPrimitiveType(PrimitiveTypes.STRING)
-object PrismaBooleanType : PrismaPrimitiveType(PrimitiveTypes.BOOLEAN)
-object PrismaIntType : PrismaPrimitiveType(PrimitiveTypes.INT)
-object PrismaFloatType : PrismaPrimitiveType(PrimitiveTypes.FLOAT)
-object PrismaDateTimeType : PrismaPrimitiveType(PrimitiveTypes.DATETIME)
-object PrismaJsonType : PrismaPrimitiveType(PrimitiveTypes.JSON)
-object PrismaBytesType : PrismaPrimitiveType(PrimitiveTypes.BYTES)
-object PrismaDecimalType : PrismaPrimitiveType(PrimitiveTypes.DECIMAL)
-object PrismaBigIntType : PrismaPrimitiveType(PrimitiveTypes.BIGINT)
-
-class PrismaUnsupportedType(val value: String) : PrismaPrimitiveType(PrimitiveTypes.UNSUPPORTED)
-
-object PrismaAnyType : PrismaType
-
-abstract class PrismaTypeBase(protected val element: PsiElement) : PrismaType
-
-class PrismaTypeImpl(val name: String, element: PsiElement) : PrismaTypeBase(element)
-class PrismaCompositeType(val name: String, element: PsiElement) : PrismaTypeBase(element)
+interface PrismaResolvableType {
+    fun resolveDeclaration(): PsiNamedElement?
+}
 
 interface PrismaDecoratedType : PrismaType {
     val innerType: PrismaType

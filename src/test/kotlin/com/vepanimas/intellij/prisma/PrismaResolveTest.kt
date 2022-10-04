@@ -42,6 +42,48 @@ class PrismaResolveTest : PrismaTestCase() {
         )
     }
 
+    fun testFieldExpressionReference() {
+        checkWithTarget("""
+            datasource db {
+              provider = "postgresql"
+            }
+            model Post {
+              id Int @id
+              <target>name String
+            
+              @@index([na<caret>me(ops: TextMinMaxOps)], type: Brin)
+            }
+        """.trimIndent())
+    }
+
+    fun testFieldReference() {
+        checkWithTarget("""
+            datasource db {
+              provider = "postgresql"
+            }
+            model Post {
+              id Int @id
+              <target>name String
+            
+              @@index([na<caret>me], type: Brin)
+            }
+        """.trimIndent())
+    }
+
+    fun testFieldReferenceNamedArgument() {
+        checkWithTarget("""
+            datasource db {
+              provider = "postgresql"
+            }
+            model Post {
+              id Int @id
+              <target>name String
+            
+              @@index(fields: [na<caret>me], type: Brin)
+            }
+        """.trimIndent())
+    }
+
     private fun checkWithTarget(source: String): PrismaNamedElement {
         val targetOffset = findExpectedTargetOffset(source)
         val text = source.replace(TARGET, "")

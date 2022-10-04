@@ -1,7 +1,7 @@
 package com.vepanimas.intellij.prisma.completion
 
-class PrismaFieldsCompletionTest : PrismaCompletionTestBase() {
-    override fun getBasePath(): String = "/completion/fields"
+class PrismaKeyValueCompletionTest : PrismaCompletionTestBase() {
+    override fun getBasePath(): String = "/completion/keyValue"
 
     fun testDatasourceField() {
         val lookupElements = completeSelected(

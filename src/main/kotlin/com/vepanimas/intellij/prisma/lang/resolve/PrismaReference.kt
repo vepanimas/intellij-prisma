@@ -36,8 +36,17 @@ abstract class PrismaReference(
     override fun getVariants(): Array<Any> {
         val processor = createCompletionProcessor(element)
         processCandidates(processor, ResolveState.initial(), element)
+
         val results = processor.getResults()
-        return results.map { LookupElementBuilder.createWithIcon(it) }.toTypedArray()
+        if (results.isNotEmpty()) {
+            val ignored = collectIgnoredNames()
+            return results
+                .filter { it.name !in ignored }
+                .map { LookupElementBuilder.createWithIcon(it) }
+                .toTypedArray()
+        }
+
+        return emptyArray()
     }
 
     protected abstract fun processCandidates(
@@ -45,6 +54,8 @@ abstract class PrismaReference(
         state: ResolveState,
         place: PsiElement,
     )
+
+    protected open fun collectIgnoredNames(): Set<String> = emptySet()
 
     protected fun processFileDeclarations(
         processor: PrismaProcessor,
