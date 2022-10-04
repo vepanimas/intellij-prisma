@@ -10,7 +10,6 @@ import com.intellij.lang.javascript.service.JSLanguageServiceUtil
 import com.intellij.lsp.LspServerDescriptorBase
 import com.intellij.lsp.SocketModeDescriptor
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
 import java.io.File
 
@@ -21,16 +20,9 @@ class PrismaLspServerDescriptor(project: Project, root: VirtualFile) : LspServer
             throw ExecutionException("Local or WSL Node.js interpreter not configured.")
         }
 
-        val targetDir = JSLanguageServiceUtil.getPluginDirectory(javaClass, "languageServer")
-        val lsp = File(targetDir, "prisma-language-server.js")
-        val wasm = File(targetDir, "prisma_fmt_build_bg.wasm")
-
-        FileUtil.ensureExists(targetDir)
-        javaClass.classLoader.getResourceAsStream("languageServer/prisma-language-server.js")!!.use { lspSource ->
-            lsp.outputStream().use { FileUtil.copy(lspSource, it) }
-        }
-        javaClass.classLoader.getResourceAsStream("languageServer/prisma_fmt_build_bg.wasm")!!.use { wasmSource ->
-            wasm.outputStream().use { FileUtil.copy(wasmSource, it) }
+        val lsp = JSLanguageServiceUtil.getPluginDirectory(javaClass, "prisma-language-server.js")
+        if (!lsp.exists()) {
+            throw ExecutionException("Language server is missing.")
         }
 
         return GeneralCommandLine().apply {
@@ -46,4 +38,10 @@ class PrismaLspServerDescriptor(project: Project, root: VirtualFile) : LspServer
     }
 
     override fun getSocketModeDescriptor(): SocketModeDescriptor? = null
+
+    override fun useGenericCompletion(): Boolean = false
+
+    override fun useGenericHighlighting(): Boolean = false
+
+    override fun useGenericNavigation(): Boolean = false
 }
