@@ -320,4 +320,23 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
         )
         assertDoesntContain(lookupElements.strings, "id", "name")
     }
+
+    fun testBlockAttributeNoFieldsInFieldExpression() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model Post {
+              id    Int    @default(autoincrement())
+              title String
+              email String
+            
+              @@id([id(<caret>)])
+            }
+        """.trimIndent()
+        )
+
+        assertDoesntContain(lookupElements.strings, "id", "title", "email")
+    }
 }

@@ -38,8 +38,10 @@ sealed class PrismaSchemaContext(
 
         private fun createParameterContext(element: PrismaArgument): PrismaSchemaParameterContext? {
             var parentElement = element.parentOfType<PrismaArgumentsOwner>() ?: return null
+            var isFieldExpression = false
             if (parentElement is PrismaFunctionCall && parentElement.parent is PrismaArrayExpression) {
                 parentElement = parentElement.parentOfType() ?: return null
+                isFieldExpression = true
             }
             val parentContext = forElement(parentElement) as? PrismaSchemaDeclarationContext ?: return null
             return when (element) {
@@ -47,7 +49,7 @@ sealed class PrismaSchemaContext(
                     PrismaSchemaParameterContext(it, element, parentContext)
                 }
 
-                is PrismaValueArgument -> if (element.isDefault) {
+                is PrismaValueArgument -> if (element.isDefault && !isFieldExpression) {
                     PrismaSchemaDefaultParameterContext(element, parentContext)
                 } else {
                     null

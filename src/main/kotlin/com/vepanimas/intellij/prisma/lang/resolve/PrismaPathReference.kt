@@ -46,14 +46,14 @@ class PrismaPathReference(
     }
 
     private fun findContext(element: PsiElement): PsiElement? {
-        var parent = PsiTreeUtil.skipParentsOfType(element, PrismaPathExpression::class.java)
-        if (parent is PrismaFunctionCall) {
-            parent = parent.parent
+        val parent = PsiTreeUtil.skipParentsOfType(element, PrismaPathExpression::class.java)
+        if (parent is PrismaArgument) {
+            return parent
         }
-        if (parent is PrismaArrayExpression) {
-            return parent.parent as? PrismaArgument
+        if (parent is PrismaArrayExpression || parent is PrismaFunctionCall && parent.parent is PrismaArrayExpression) {
+            return parent.parentOfType<PrismaArgument>()
         }
-        return parent?.parentOfType<PrismaArgument>(withSelf = true)
+        return null
     }
 
     private fun resolveTypeField(
