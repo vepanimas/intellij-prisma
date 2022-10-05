@@ -1,7 +1,5 @@
 import org.jetbrains.changelog.markdownToHTML
 
-val jvmVersion = 11
-
 fun properties(key: String) = project.findProperty(key).toString()
 
 plugins {
@@ -39,7 +37,6 @@ java {
     }
 }
 
-// Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
 kotlin {
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(properties("jvmVersion")))
