@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.vepanimas.intellij.prisma</id>
     <name>Prisma</name>
-    <vendor>JetBrains</vendor>
+    <vendor>Vladimir Panimaskin</vendor>
     <resource-bundle>messages.PrismaBundle</resource-bundle>
 
     <depends>com.intellij.modules.ultimate</depends>
