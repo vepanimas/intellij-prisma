@@ -18,6 +18,7 @@ The following features are available:
 * Rename refactoring
 * Structure view
 * Folding
+* LSP support (since version 2022.3)
 * Improved completion and resolve for generated Prisma client
 <!-- Plugin description end -->
 
