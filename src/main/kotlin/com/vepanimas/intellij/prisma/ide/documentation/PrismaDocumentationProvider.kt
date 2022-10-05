@@ -10,8 +10,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.refactoring.suggested.startOffset
 import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaContext
-import com.vepanimas.intellij.prisma.lang.psi.PrismaFunctionCall
-import com.vepanimas.intellij.prisma.lang.psi.PrismaVirtualDocumentationComment
+import com.vepanimas.intellij.prisma.lang.psi.*
 import com.vepanimas.intellij.prisma.lang.resolve.PrismaResolver
 import java.util.function.Consumer
 
@@ -41,6 +40,12 @@ class PrismaDocumentationProvider : AbstractDocumentationProvider() {
 
     private fun acceptCustomElement(context: PsiElement?): Boolean {
         if (context == null) {
+            return false
+        }
+        if ((context as? PrismaReferenceElement)?.resolve() != null) {
+            return false
+        }
+        if (context is PrismaArrayExpression || context is PrismaValueArgument) {
             return false
         }
         if (context is PrismaFunctionCall) {

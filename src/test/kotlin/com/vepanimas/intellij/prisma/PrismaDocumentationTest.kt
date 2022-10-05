@@ -114,6 +114,14 @@ class PrismaDocumentationTest : PrismaTestCase() {
         doTest()
     }
 
+    fun testRelationField() {
+        doTest()
+    }
+
+    fun testDefaultValue() {
+        doTest()
+    }
+
     private fun doTest() {
         val file = myFixture.configureByFile(getTestName())
         val originalElement = file.findElementAt(myFixture.caretOffset)
