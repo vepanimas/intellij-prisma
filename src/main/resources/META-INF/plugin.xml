@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.vepanimas.intellij.prisma</id>
     <name>Prisma</name>
-    <vendor>vepanimas</vendor>
+    <vendor>Vladimir Panimaskin</vendor>
     <resource-bundle>messages.PrismaBundle</resource-bundle>
 
     <depends>com.intellij.modules.ultimate</depends>
@@ -73,5 +73,9 @@
         <!-- Folding -->
         <lang.foldingBuilder language="Prisma"
                              implementationClass="com.vepanimas.intellij.prisma.ide.folding.PrismaFoldingBuilder"/>
+
+        <!-- LSP -->
+        <lsp.serverSupportProvider language="Prisma"
+                                   implementationClass="com.vepanimas.intellij.prisma.ide.lsp.PrismaLspServerSupportProvider"/>
     </extensions>
 </idea-plugin>
