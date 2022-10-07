@@ -31,10 +31,12 @@ object PrismaFieldAttributesProvider : PrismaSchemaCompletionProvider() {
                     .afterSibling(beforeFieldAttribute)
             ),
             psiElement().withParent(
-                psiElement(PrismaPathExpression::class.java).withParent(
-                    psiElement(PrismaFieldAttribute::class.java)
-                        .afterSiblingNewLinesAware(beforeFieldAttribute)
-                )
+                psiElement(PrismaPathExpression::class.java)
+                    .with("withoutQualifier") { el -> el.qualifier == null }
+                    .withParent(
+                        psiElement(PrismaFieldAttribute::class.java)
+                            .afterSiblingNewLinesAware(beforeFieldAttribute)
+                    )
             )
         ).inside(psiElement(PrismaModelDeclaration::class.java))
 

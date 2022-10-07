@@ -334,7 +334,8 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent()
         )
         assertDoesntContain(lookupElements.strings, FieldAttributes.DEFAULT, FieldAttributes.RELATION)
-        assertSameElements(lookupElements.strings, FieldAttributes.IGNORE, FieldAttributes.MAP, FieldAttributes.UNIQUE)
+        assertSameElements(lookupElements.strings,
+            FieldAttributes.IGNORE, FieldAttributes.MAP, FieldAttributes.UNIQUE, FieldAttributes.DB)
     }
 
     fun testFieldAttributeIdAllowedForEnum() {

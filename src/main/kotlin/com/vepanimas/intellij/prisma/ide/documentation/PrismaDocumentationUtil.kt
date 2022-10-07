@@ -12,7 +12,6 @@ import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.elementType
-import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.lang.parser.PrismaParserDefinition
 import com.vepanimas.intellij.prisma.lang.psi.PrismaDocumentationOwner
 import com.vepanimas.intellij.prisma.lang.psi.PrismaElementFactory
@@ -139,18 +138,18 @@ val PsiElement?.isTrailingComment: Boolean
     }
 
 val PsiElement?.trailingDocComment: PsiComment?
-    get() = skipWhitespacesForwardWithoutNewLines().castSafelyTo<PsiComment>()?.takeIf { it.isDocComment }
+    get() = (skipWhitespacesForwardWithoutNewLines() as? PsiComment)?.takeIf { it.isDocComment }
 
 fun PsiElement.prevDocComment(includeTrailing: Boolean = false): PsiComment? {
     var prev = prevSibling
     if (prev is PsiWhiteSpace && StringUtil.countNewLines(prev.text) <= 1) prev = prev.prevSibling
-    return prev?.takeIf { it.isDocComment && (includeTrailing || !it.isTrailingComment) }.castSafelyTo()
+    return prev?.takeIf { it.isDocComment && (includeTrailing || !it.isTrailingComment) } as? PsiComment
 }
 
 fun PsiElement.nextDocComment(includeTrailing: Boolean = false): PsiComment? {
     var next = nextSibling
     if (next is PsiWhiteSpace && StringUtil.countNewLines(next.text) <= 1) next = next.nextSibling
-    return next?.takeIf { it.isDocComment && (includeTrailing || !it.isTrailingComment) }.castSafelyTo()
+    return next?.takeIf { it.isDocComment && (includeTrailing || !it.isTrailingComment) } as? PsiComment
 }
 
 val PsiElement.isDocComment

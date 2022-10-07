@@ -13,7 +13,6 @@ import com.intellij.psi.util.elementType
 import com.intellij.psi.util.parentOfType
 import com.intellij.psi.util.parentOfTypes
 import com.intellij.util.ProcessingContext
-import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
 import com.vepanimas.intellij.prisma.ide.schema.*
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.PrimitiveTypes
@@ -43,7 +42,7 @@ object PrismaValuesProvider : PrismaCompletionProvider() {
         context: ProcessingContext,
         result: CompletionResultSet
     ) {
-        val file = parameters.originalFile.castSafelyTo<PrismaFile>() ?: return
+        val file = parameters.originalFile as? PrismaFile ?: return
         val parent =
             parameters.position.parentOfTypes(PrismaArgument::class, PrismaMemberDeclaration::class) ?: return
         val schemaElement = PrismaSchemaProvider.getSchema().match(parent) ?: return

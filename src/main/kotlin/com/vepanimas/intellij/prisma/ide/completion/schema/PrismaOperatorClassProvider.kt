@@ -8,7 +8,6 @@ import com.intellij.patterns.PlatformPatterns.psiElement
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
-import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.PrismaIcons
 import com.vepanimas.intellij.prisma.ide.completion.PrismaCompletionProvider
 import com.vepanimas.intellij.prisma.ide.schema.types.PrismaIndexAlgorithm
@@ -28,9 +27,12 @@ object PrismaOperatorClassProvider : PrismaCompletionProvider() {
     override fun addCompletions(
         parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet
     ) {
-        val indexAlgorithm = parameters.position.parentOfType<PrismaBlockAttribute>()?.getArgumentsList()
-            ?.findArgumentByName(PrismaConstants.ParameterNames.TYPE)?.expression?.castSafelyTo<PrismaPathExpression>()
-            ?.let { PrismaIndexAlgorithm.fromString(it.referenceName) } ?: return
+        val indexAlgorithm = (parameters.position.parentOfType<PrismaBlockAttribute>()
+            ?.getArgumentsList()
+            ?.findArgumentByName(PrismaConstants.ParameterNames.TYPE)
+            ?.expression as? PrismaPathExpression)
+            ?.let { PrismaIndexAlgorithm.fromString(it.referenceName) }
+            ?: return
 
         val fieldExpression =
             parameters.position.parentOfType<PrismaNamedArgument>()?.parentOfType<PrismaFunctionCall>() ?: return

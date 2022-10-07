@@ -2,7 +2,10 @@ package com.vepanimas.intellij.prisma.ide.schema.definitions
 
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler
 import com.vepanimas.intellij.prisma.ide.completion.PrismaInsertHandler
-import com.vepanimas.intellij.prisma.ide.schema.*
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaDeclaration
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaKind
+import com.vepanimas.intellij.prisma.ide.schema.PrismaSchemaRef
+import com.vepanimas.intellij.prisma.ide.schema.schema
 import com.vepanimas.intellij.prisma.ide.schema.types.PrismaDatasourceType
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldAttributes
@@ -278,6 +281,13 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
             label = FieldAttributes.IGNORE
             documentation =
                 "A field with an `@ignore` attribute can be kept in sync with the database schema using Prisma Migrate and Introspection, but won't be exposed in Prisma Client."
+        }
+
+        element {
+            label = FieldAttributes.DB
+            documentation =
+                "Defines a native database type that should be used for this field. See https://www.prisma.io/docs/concepts/components/prisma-schema/data-model#native-types-mapping."
+            insertHandler = PrismaInsertHandler.QUALIFIED_NAME
         }
     }
 }

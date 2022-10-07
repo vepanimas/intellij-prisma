@@ -9,7 +9,6 @@ import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.util.CachedValueProvider
 import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.childrenOfType
-import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.ide.schema.types.PrismaDatasourceType
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
 import com.vepanimas.intellij.prisma.lang.PrismaFileType
@@ -23,7 +22,7 @@ class PrismaFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, Pri
             val declaration = declarations.find { it is PrismaDatasourceDeclaration } as? PrismaDatasourceDeclaration
             val provider =
                 declaration?.findMemberByName(PrismaConstants.DatasourceFields.PROVIDER) as? PrismaKeyValue
-            val providerValue = provider?.expression.castSafelyTo<PrismaLiteralExpression>()?.value as? String
+            val providerValue = (provider?.expression as? PrismaLiteralExpression)?.value as? String
             val type = PrismaDatasourceType.fromString(providerValue)
             CachedValueProvider.Result.create(type, this)
         }

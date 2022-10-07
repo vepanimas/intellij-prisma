@@ -4,7 +4,6 @@ import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.elementType
-import com.intellij.util.castSafelyTo
 import com.vepanimas.intellij.prisma.PrismaBundle
 import com.vepanimas.intellij.prisma.ide.schema.*
 import com.vepanimas.intellij.prisma.lang.PrismaConstants
@@ -41,8 +40,8 @@ class PrismaDocumentationBuilder(private val element: PsiElement) {
         }
 
         val schemaElement = PrismaSchemaProvider.getSchema().match(element) ?: return null
-        val declaration = schemaElement.castSafelyTo<PrismaSchemaDeclaration>()
-        val file = element.containingFile.castSafelyTo<PrismaFile>()
+        val declaration = schemaElement as? PrismaSchemaDeclaration
+        val file = element.containingFile as? PrismaFile
         val params = declaration?.getAvailableParams(file?.datasourceType, false) ?: emptyList()
         val definition = declaration?.signature ?: buildDefinitionFromSchema(schemaElement, params)
 

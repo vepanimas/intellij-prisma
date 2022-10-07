@@ -104,6 +104,11 @@ object PrismaInsertHandler {
         EditorModificationUtil.insertStringAtCaret(context.editor, " = []", false, true, 4)
         showPopup(context)
     }
+
+    val QUALIFIED_NAME = InsertHandler<LookupElement> { context, _ ->
+        EditorModificationUtil.insertStringAtCaret(context.editor, ".")
+        showPopup(context)
+    }
 }
 
 private fun showPopup(context: InsertionContext) {
