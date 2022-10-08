@@ -8,7 +8,7 @@
 Adds support for [Prisma](https://www.prisma.io/) ORM and Prisma Schema Language (PSL). 
 The following features are available:
 
-* Complete Prisma Schema Language grammar implementation
+* Complete Prisma Schema Language grammar support
 * Semantic syntax highlighting
 * Code completion
 * Documentation
