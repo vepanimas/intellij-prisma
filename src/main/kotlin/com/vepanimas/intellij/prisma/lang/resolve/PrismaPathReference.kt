@@ -22,24 +22,24 @@ class PrismaPathReference(
     override fun processCandidates(
         processor: PrismaProcessor,
         state: ResolveState,
-        place: PsiElement,
+        element: PsiElement,
     ) {
         val context = findContext(element) ?: return
         val schemaElement = PrismaSchemaProvider.getSchema().match(context) ?: return
         if (schemaElement is PrismaSchemaParameter) {
             when (schemaElement.label) {
                 PrismaConstants.ParameterNames.FIELDS -> {
-                    resolveLocalField(context, processor, state, place)
+                    resolveField(processor, state, element)
                 }
 
                 PrismaConstants.ParameterNames.REFERENCES -> {
                     processor.filter = { it is PrismaFieldDeclaration }
-                    resolveTypeField(context, processor, state, place)
+                    resolveTypeField(processor, state, element)
                 }
 
                 PrismaConstants.ParameterNames.EXPRESSION -> {
                     processor.filter = { it is PrismaEnumValueDeclaration }
-                    resolveTypeField(context, processor, state, place)
+                    resolveTypeField(processor, state, element)
                 }
             }
         }
@@ -57,25 +57,51 @@ class PrismaPathReference(
     }
 
     private fun resolveTypeField(
-        context: PsiElement,
         processor: PrismaProcessor,
         state: ResolveState,
-        place: PsiElement
+        element: PsiElement
     ) {
-        val typeOwner = context.parentOfType<PrismaTypeOwner>() ?: return
+        val typeOwner = element.parentOfType<PrismaTypeOwner>() ?: return
         val type = typeOwner.type.unwrapType()
         if (type is PrismaResolvableType) {
-            type.resolveDeclaration()?.processDeclarations(processor, state, null, place)
+            type.resolveDeclaration()?.processDeclarations(processor, state, null, element)
+        }
+    }
+
+    private fun resolveField(
+        processor: PrismaProcessor,
+        state: ResolveState,
+        element: PsiElement
+    ) {
+        if (element is PrismaQualifiedReferenceElement && element.qualifier != null) {
+            resolveQualifiedField(processor, state, element)
+        } else {
+            resolveLocalField(processor, state, element)
         }
     }
 
     private fun resolveLocalField(
-        context: PsiElement,
         processor: PrismaProcessor,
         state: ResolveState,
-        place: PsiElement
+        element: PsiElement,
     ) {
-        context.parentOfType<PrismaDeclaration>()?.processDeclarations(processor, state, null, place)
+        element.parentOfType<PrismaDeclaration>()?.processDeclarations(processor, state, null, element)
+    }
+
+    private fun resolveQualifiedField(
+        processor: PrismaProcessor,
+        state: ResolveState,
+        element: PsiElement,
+    ) {
+        val qualifier = (element as? PrismaQualifiedReferenceElement)?.qualifier as? PrismaReferenceElement ?: return
+        val memberDeclaration = qualifier.resolve() as? PrismaMemberDeclaration ?: return
+        if (memberDeclaration !is PrismaTypeOwner) {
+            return
+        }
+        val type = memberDeclaration.type.unwrapType() as? PrismaResolvableType ?: return
+        // only composite types
+        val typeDeclaration = type.resolveDeclaration() as? PrismaTypeDeclaration ?: return
+        typeDeclaration.processDeclarations(processor, state, null, element)
     }
 
     override fun collectIgnoredNames(): Set<String> {

@@ -339,4 +339,33 @@ class PrismaAttributeParameterValuesCompletionTest : PrismaCompletionTestBase() 
 
         assertDoesntContain(lookupElements.strings, "id", "title", "email")
     }
+
+    fun testBlockAttributeUniqueCompositeType() {
+        val lookupElements = getLookupElements(
+            """
+            datasource db {
+              provider = "mongodb"
+            }
+
+            type City {
+              name String
+              size Int
+              zip  String
+            }
+
+            type Address {
+              number Int
+              city   City
+            }
+
+            model User {
+              id      Int     @id @map("_id")
+              address Address
+
+              @@unique([address.city.<caret>])
+            }
+        """.trimIndent()
+        )
+        assertSameElements(lookupElements.strings, "name", "size", "zip")
+    }
 }

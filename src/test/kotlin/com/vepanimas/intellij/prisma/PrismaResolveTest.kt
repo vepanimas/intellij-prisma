@@ -100,6 +100,54 @@ class PrismaResolveTest : PrismaTestCase() {
         """.trimIndent())
     }
 
+    fun testBlockAttributeUniqueCompositeType() {
+        checkWithTarget("""
+            datasource db {
+              provider = "mongodb"
+            }
+
+            type City {
+              <target>name String
+            }
+
+            type Address {
+              number Int
+              city   City
+            }
+
+            model User {
+              id      Int     @id @map("_id")
+              address Address
+
+              @@unique([address.city.na<caret>me])
+            }
+        """.trimIndent())
+    }
+
+    fun testBlockAttributeIndexCompositeType() {
+        checkWithTarget("""
+            datasource db {
+              provider = "mongodb"
+            }
+
+            type City {
+              <target>name String
+            }
+
+            type Address {
+              number Int
+              city   City
+            }
+
+            model User {
+              id      Int     @id @map("_id")
+              address Address
+
+              @@index([address.city.na<caret>me])
+            }
+        """.trimIndent())
+    }
+
     private fun checkWithTarget(source: String): PrismaNamedElement {
         val targetOffset = findExpectedTargetOffset(source)
         val text = source.replace(TARGET, "")

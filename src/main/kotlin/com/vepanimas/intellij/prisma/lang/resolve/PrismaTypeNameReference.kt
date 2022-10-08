@@ -14,9 +14,9 @@ class PrismaTypeNameReference(
     override fun processCandidates(
         processor: PrismaProcessor,
         state: ResolveState,
-        place: PsiElement,
+        element: PsiElement,
     ) {
-        processFileDeclarations(processor, state, place)
+        processFileDeclarations(processor, state, element)
     }
 
     companion object {

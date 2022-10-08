@@ -63,7 +63,7 @@ abstract class PrismaReference(
     protected abstract fun processCandidates(
         processor: PrismaProcessor,
         state: ResolveState,
-        place: PsiElement,
+        element: PsiElement,
     )
 
     protected open fun collectIgnoredNames(): Set<String> = emptySet()
@@ -71,10 +71,10 @@ abstract class PrismaReference(
     protected fun processFileDeclarations(
         processor: PrismaProcessor,
         state: ResolveState,
-        place: PsiElement,
+        element: PsiElement,
     ): Boolean {
-        val file = place.containingFile
-        if (!file.processDeclarations(processor, state, null, place)) {
+        val file = element.containingFile
+        if (!file.processDeclarations(processor, state, null, element)) {
             return false
         }
         return true
