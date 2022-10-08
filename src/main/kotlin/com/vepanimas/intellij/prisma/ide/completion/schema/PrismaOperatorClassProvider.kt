@@ -63,7 +63,7 @@ object PrismaOperatorClassProvider : PrismaCompletionProvider() {
         classes: MutableList<PrismaOperatorClass>,
         nativeType: String?
     ) {
-        if (nativeType == PostgreSQL.Inet) {
+        if (nativeType == PostgreSQL.INET_TYPE_NAME) {
             classes.add(PrismaOperatorClass.InetOps)
         }
     }
@@ -86,13 +86,13 @@ object PrismaOperatorClassProvider : PrismaCompletionProvider() {
         fieldType: PrismaType?,
         nativeType: String?
     ) {
-        if (nativeType == PostgreSQL.Inet) {
+        if (nativeType == PostgreSQL.INET_TYPE_NAME) {
             classes.add(PrismaOperatorClass.InetOps)
         } else if (
             fieldType is PrismaStringType && (
                     nativeType == null ||
-                            nativeType == PostgreSQL.Text ||
-                            nativeType == PostgreSQL.VarChar)
+                            nativeType == PostgreSQL.TEXT_TYPE_NAME ||
+                            nativeType == PostgreSQL.VARCHAR_TYPE_NAME)
         ) {
             classes.add(PrismaOperatorClass.TextOps)
         }
@@ -103,18 +103,18 @@ object PrismaOperatorClassProvider : PrismaCompletionProvider() {
         fieldType: PrismaType?,
         nativeType: String?
     ) {
-        if (nativeType == PostgreSQL.Bit) {
+        if (nativeType == PostgreSQL.BIT_TYPE_NAME) {
             classes.add(PrismaOperatorClass.BitMinMaxOps)
-        } else if (nativeType == PostgreSQL.VarBit) {
+        } else if (nativeType == PostgreSQL.VAR_BIT_TYPE_NAME) {
             classes.add(PrismaOperatorClass.VarBitMinMaxOps)
-        } else if (nativeType == PostgreSQL.Char) {
+        } else if (nativeType == PostgreSQL.CHAR_TYPE_NAME) {
             classes.add(PrismaOperatorClass.BpcharBloomOps)
             classes.add(PrismaOperatorClass.BpcharMinMaxOps)
-        } else if (nativeType == PostgreSQL.Date) {
+        } else if (nativeType == PostgreSQL.DATE_TYPE_NAME) {
             classes.add(PrismaOperatorClass.DateBloomOps)
             classes.add(PrismaOperatorClass.DateMinMaxOps)
             classes.add(PrismaOperatorClass.DateMinMaxMultiOps)
-        } else if (nativeType == PostgreSQL.Real) {
+        } else if (nativeType == PostgreSQL.REAL_TYPE_NAME) {
             classes.add(PrismaOperatorClass.Float4BloomOps)
             classes.add(PrismaOperatorClass.Float4MinMaxOps)
             classes.add(PrismaOperatorClass.Float4MinMaxMultiOps)
@@ -122,16 +122,16 @@ object PrismaOperatorClassProvider : PrismaCompletionProvider() {
             classes.add(PrismaOperatorClass.Float8BloomOps)
             classes.add(PrismaOperatorClass.Float8MinMaxOps)
             classes.add(PrismaOperatorClass.Float8MinMaxMultiOps)
-        } else if (nativeType == PostgreSQL.Inet) {
+        } else if (nativeType == PostgreSQL.INET_TYPE_NAME) {
             classes.add(PrismaOperatorClass.InetBloomOps)
             classes.add(PrismaOperatorClass.InetInclusionOps)
             classes.add(PrismaOperatorClass.InetMinMaxOps)
             classes.add(PrismaOperatorClass.InetMinMaxMultiOps)
-        } else if (nativeType == PostgreSQL.SmallInt) {
+        } else if (nativeType == PostgreSQL.SMALL_INT_TYPE_NAME) {
             classes.add(PrismaOperatorClass.Int2BloomOps)
             classes.add(PrismaOperatorClass.Int2MinMaxOps)
             classes.add(PrismaOperatorClass.Int2MinMaxMultiOps)
-        } else if (fieldType is PrismaIntType && (nativeType == null || nativeType == PostgreSQL.Integer)) {
+        } else if (fieldType is PrismaIntType && (nativeType == null || nativeType == PostgreSQL.INTEGER_TYPE_NAME)) {
             classes.add(PrismaOperatorClass.Int4BloomOps)
             classes.add(PrismaOperatorClass.Int4MinMaxOps)
             classes.add(PrismaOperatorClass.Int4MinMaxMultiOps)
@@ -143,40 +143,40 @@ object PrismaOperatorClassProvider : PrismaCompletionProvider() {
             classes.add(PrismaOperatorClass.NumericBloomOps)
             classes.add(PrismaOperatorClass.NumericMinMaxOps)
             classes.add(PrismaOperatorClass.NumericMinMaxMultiOps)
-        } else if (nativeType == PostgreSQL.Oid) {
+        } else if (nativeType == PostgreSQL.OID_TYPE_NAME) {
             classes.add(PrismaOperatorClass.OidBloomOps)
             classes.add(PrismaOperatorClass.OidMinMaxOps)
             classes.add(PrismaOperatorClass.OidMinMaxMultiOps)
-        } else if (fieldType is PrismaBytesType && (nativeType == null || nativeType == PostgreSQL.ByteA)) {
+        } else if (fieldType is PrismaBytesType && (nativeType == null || nativeType == PostgreSQL.BYTE_A_TYPE_NAME)) {
             classes.add(PrismaOperatorClass.ByteaBloomOps)
             classes.add(PrismaOperatorClass.ByteaMinMaxOps)
         } else if (fieldType is PrismaStringType && (
                     nativeType == null ||
-                            nativeType == PostgreSQL.Text ||
-                            nativeType == PostgreSQL.VarChar)
+                            nativeType == PostgreSQL.TEXT_TYPE_NAME ||
+                            nativeType == PostgreSQL.VARCHAR_TYPE_NAME)
         ) {
             classes.add(PrismaOperatorClass.TextBloomOps)
             classes.add(PrismaOperatorClass.TextMinMaxOps)
         } else if (fieldType is PrismaDateTimeType && (
                     nativeType == null ||
-                            nativeType == PostgreSQL.Timestamp)
+                            nativeType == PostgreSQL.TIMESTAMP_TYPE_NAME)
         ) {
             classes.add(PrismaOperatorClass.TimestampBloomOps)
             classes.add(PrismaOperatorClass.TimestampMinMaxOps)
             classes.add(PrismaOperatorClass.TimestampMinMaxMultiOps)
-        } else if (nativeType == PostgreSQL.Timestamptz) {
+        } else if (nativeType == PostgreSQL.TIMESTAMP_TZ_TYPE_NAME) {
             classes.add(PrismaOperatorClass.TimestampTzBloomOps)
             classes.add(PrismaOperatorClass.TimestampTzMinMaxOps)
             classes.add(PrismaOperatorClass.TimestampTzMinMaxMultiOps)
-        } else if (nativeType == PostgreSQL.Time) {
+        } else if (nativeType == PostgreSQL.TIME_TYPE_NAME) {
             classes.add(PrismaOperatorClass.TimeBloomOps)
             classes.add(PrismaOperatorClass.TimeMinMaxOps)
             classes.add(PrismaOperatorClass.TimeMinMaxMultiOps)
-        } else if (nativeType == PostgreSQL.Timetz) {
+        } else if (nativeType == PostgreSQL.TIME_TZ_TYPE_NAME) {
             classes.add(PrismaOperatorClass.TimeTzBloomOps)
             classes.add(PrismaOperatorClass.TimeTzMinMaxOps)
             classes.add(PrismaOperatorClass.TimeTzMinMaxMultiOps)
-        } else if (nativeType == PostgreSQL.Uuid) {
+        } else if (nativeType == PostgreSQL.UUID_TYPE_NAME) {
             classes.add(PrismaOperatorClass.UuidBloomOps)
             classes.add(PrismaOperatorClass.UuidMinMaxOps)
             classes.add(PrismaOperatorClass.UuidMinMaxMultiOps)

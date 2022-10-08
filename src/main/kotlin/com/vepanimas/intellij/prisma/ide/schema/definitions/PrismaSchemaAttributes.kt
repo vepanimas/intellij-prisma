@@ -288,6 +288,7 @@ val PRISMA_SCHEMA_ATTRIBUTES = schema {
             documentation =
                 "Defines a native database type that should be used for this field. See https://www.prisma.io/docs/concepts/components/prisma-schema/data-model#native-types-mapping."
             insertHandler = PrismaInsertHandler.QUALIFIED_NAME
+            datasources = PrismaDatasourceType.except(PrismaDatasourceType.SQLITE)
         }
     }
 }

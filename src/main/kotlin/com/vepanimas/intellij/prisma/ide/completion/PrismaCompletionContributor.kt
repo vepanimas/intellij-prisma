@@ -17,6 +17,7 @@ class PrismaCompletionContributor : CompletionContributor() {
         extend(CompletionType.BASIC, PrismaParametersProvider)
         extend(CompletionType.BASIC, PrismaValuesProvider)
         extend(CompletionType.BASIC, PrismaOperatorClassProvider)
+        extend(CompletionType.BASIC, PrismaNativeTypeProvider)
     }
 
     private fun extend(type: CompletionType, provider: PrismaCompletionProvider) {

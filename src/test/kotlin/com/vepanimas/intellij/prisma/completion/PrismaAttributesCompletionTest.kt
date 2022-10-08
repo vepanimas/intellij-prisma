@@ -1,5 +1,6 @@
 package com.vepanimas.intellij.prisma.completion
 
+import com.vepanimas.intellij.prisma.ide.schema.types.PrismaNativeType
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.BlockAttributes
 import com.vepanimas.intellij.prisma.lang.PrismaConstants.FieldAttributes
 
@@ -334,8 +335,10 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent()
         )
         assertDoesntContain(lookupElements.strings, FieldAttributes.DEFAULT, FieldAttributes.RELATION)
-        assertSameElements(lookupElements.strings,
-            FieldAttributes.IGNORE, FieldAttributes.MAP, FieldAttributes.UNIQUE, FieldAttributes.DB)
+        assertSameElements(
+            lookupElements.strings,
+            FieldAttributes.IGNORE, FieldAttributes.MAP, FieldAttributes.UNIQUE, FieldAttributes.DB
+        )
     }
 
     fun testFieldAttributeIdAllowedForEnum() {
@@ -408,5 +411,81 @@ class PrismaAttributesCompletionTest : PrismaCompletionTestBase() {
         """.trimIndent()
         )
         assertDoesntContain(lookupElements.strings, FieldAttributes.ID)
+    }
+
+    fun testFieldAttributeDb() {
+        completeSelected(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id Int <caret>
+            }
+        """.trimIndent(), """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id Int @db.<caret>
+            }
+        """.trimIndent(),
+            FieldAttributes.DB
+        )
+    }
+
+    fun testFieldAttributeNativeTypes() {
+        val lookupElements = completeSelected(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id String @db.<caret>
+            }
+        """.trimIndent(), """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id String @db.Uuid<caret>
+            }
+        """.trimIndent(),
+            PrismaNativeType.PostgreSQL.UUID_TYPE_NAME
+        )
+
+        assertSameElements(
+            lookupElements.strings,
+            PrismaNativeType.PostgreSQL.BIT_TYPE_NAME,
+            PrismaNativeType.PostgreSQL.CHAR_TYPE_NAME,
+            PrismaNativeType.PostgreSQL.CITEXT_TYPE_NAME,
+            PrismaNativeType.PostgreSQL.INET_TYPE_NAME,
+            PrismaNativeType.PostgreSQL.TEXT_TYPE_NAME,
+            PrismaNativeType.PostgreSQL.UUID_TYPE_NAME,
+            PrismaNativeType.PostgreSQL.VAR_BIT_TYPE_NAME,
+            PrismaNativeType.PostgreSQL.VARCHAR_TYPE_NAME,
+            PrismaNativeType.PostgreSQL.XML_TYPE_NAME,
+        )
+    }
+
+    fun testFieldAttributeNativeTypesWithArgs() {
+        completeSelected(
+            """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id String @db.<caret>
+            }
+        """.trimIndent(), """
+            datasource db {
+              provider = "postgresql"
+            }
+            model M {
+              id String @db.VarChar(<caret>)
+            }
+        """.trimIndent(),
+            PrismaNativeType.PostgreSQL.VARCHAR_TYPE_NAME
+        )
     }
 }
