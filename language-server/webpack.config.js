@@ -18,7 +18,7 @@ module.exports = {
         new CopyPlugin({
             patterns: [
                 {
-                    from: path.resolve(__dirname, './node_modules/@prisma/prisma-fmt-wasm/**/*.wasm'),
+                    from: './node_modules/@prisma/prisma-fmt-wasm/**/*.wasm',
                     to: '[name][ext]',
                 },
             ],
