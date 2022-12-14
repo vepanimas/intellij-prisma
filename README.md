@@ -4,6 +4,8 @@
 [![Version](https://img.shields.io/jetbrains/plugin/v/com.vepanimas.intellij.prisma.svg)](https://plugins.jetbrains.com/plugin/com.vepanimas.intellij.prisma)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/com.vepanimas.intellij.prisma.svg)](https://plugins.jetbrains.com/plugin/com.vepanimas.intellij.prisma)
 
+# Plugin development is moved to [JetBrains plugin repository](https://github.com/JetBrains/intellij-plugins).
+
 <!-- Plugin description -->
 Adds support for [Prisma](https://www.prisma.io/) ORM and Prisma Schema Language (PSL). 
 The following features are available:
